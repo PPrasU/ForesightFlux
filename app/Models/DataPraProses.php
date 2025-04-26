@@ -9,17 +9,12 @@ class DataPraProses extends Model
 {
     use HasFactory;
 
-    protected $table = 'data_pra_proses';
+    protected $table = 'data_pra-proses';
 
-    protected $fillable = ['data_historis_id', 'date', 'price'];
+    protected $fillable = ['source_id', 'date', 'price', 'category'];
 
-    public function dataApi()
+    public function source()
     {
-        return $this->belongsTo(DataApi::class, 'data_historis_id');
-    }
-
-    public function hasil()
-    {
-        return $this->hasOne(DataHasil::class, 'data_pra_proses_id');
+        return $this->belongsTo(DataSource::class, 'source_id');
     }
 }

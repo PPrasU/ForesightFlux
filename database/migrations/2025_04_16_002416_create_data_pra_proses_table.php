@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('data_pra-proses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('source_id');
             $table->date('date');
             $table->decimal('price', 15, 2);
-            $table->enum('kategori', ['Training', 'Testing']);
+            $table->enum('category', ['Training', 'Testing']);
             $table->timestamps();
-        
+            
+            $table->foreign('source_id')->references('id')->on('data_source')->onDelete('cascade');
         });
         
     }

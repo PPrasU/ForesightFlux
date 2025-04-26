@@ -83,7 +83,6 @@
                                     @if ($source)
                                         <div class="mb-4">
                                             <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
-                                            {{-- <p><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p> --}}
                                             <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->jangka_waktu }} Hari</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
@@ -264,7 +263,7 @@
         <script>
             toastr.options = {
             "positionClass": "toast-top-right",
-            "timeOut": "3000", // 3 detik
+            "timeOut": "5000", // 3 detik
             };
         </script>
             

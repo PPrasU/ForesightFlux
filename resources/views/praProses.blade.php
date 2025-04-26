@@ -39,63 +39,66 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
+                                        @if(session('error'))
+                                            <div class="alert alert-danger" role="alert">
+                                                {{ session('error') }}
+                                            </div>
+                                        @endif
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul class="mb-0">
+                                                    @foreach ($errors->all() as $err)
+                                                        <li>{{ $err }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Pra-Proses Nih</h4>                                                                             
-                                        <button id="prosesBtn" type="button" class="btn btn-primary waves-effect waves-light">
-                                            Proses Peramalan Kripto
-                                        </button>                                          
+                                        <div>
+                                            <button id="hapusPraProses" type="button" class="btn btn-outline-danger waves-effect waves-light">
+                                                Hapus Semua Data Pra Proses
+                                            </button>
+                                            <form id="ProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
+                                                @csrf <!-- Pastikan untuk menyertakan CSRF token -->
+                                            </form>
+                                            <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
+                                                Proses Peramalan Kripto
+                                            </button>
+                                        </div>
                                     </div>
+                                    @php
+                                        $source = $data->first()->source ?? null;
+                                    @endphp
+                                    @if ($source)
+                                        <div class="mb-4">
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $source->name }}</p>
+
+                                            @if ($source->sumber === 'Import')
+                                                <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} s/d {{ $source->periode_akhir }}</p>
+                                            @elseif ($source->sumber === 'API')
+                                                <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->jangka_waktu }} Hari</p>
+                                            @endif
+                                            
+                                            <p class="mb-1"><strong>Total Data:</strong> {{ $data->count() }}</p>
+                                        </div>
+                                    @endif
                                     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>Tanggal</th>
                                                 <th>Harga Terakhir</th>
+                                                <th>Kategori</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th>01-01-2024</th>
-                                                <th>100.000.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>02-01-2024</th>
-                                                <th>101.200.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>03-01-2024</th>
-                                                <th>99.800.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>04-01-2024</th>
-                                                <th>98.500.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>05-01-2024</th>
-                                                <th>100.300.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>06-01-2024</th>
-                                                <th>102.000.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>07-01-2024</th>
-                                                <th>101.500.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>08-01-2024</th>
-                                                <th>103.200.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>09-01-2024</th>
-                                                <th>102.800.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>10-01-2024</th>
-                                                <th>104.500.000</th>
-                                            </tr>
-                                            <tr>
-                                                <th>11-01-2024</th>
-                                                <th>107.500.000</th>
-                                            </tr>
+                                            @foreach ($data as $row)
+                                                <tr>
+                                                    <td>{{ $row->date }}</td>
+                                                    <td>{{ $row->price }}</td>
+                                                    <td>{{ $row->category }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                         
                                     </table>
@@ -144,7 +147,7 @@
             });
         </script>
         
-        {{-- pop up buat pra-proses --}}
+        {{-- pop up buat proses --}}
         <script>
             document.getElementById("prosesBtn").addEventListener("click", function () {
               Swal.fire({
@@ -156,6 +159,30 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#6c757d',
               }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Siap Boskuh!',
+                        text: 'Data bakal diproses. Sabar yaa!',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    setTimeout(() => {
+                        document.getElementById("ProsesForm").submit();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Di Proses!',
+                            text: 'Proses Selesai. Mantap Boskuh. Monggo Dilihat Hasilnya',
+                            timer: 4000,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                        });
+                    }, 5000);
+
+                }
                 if (result.isConfirmed) {
                   Swal.fire({
                     title: 'Oke!',
@@ -171,6 +198,49 @@
                   }, 1000); // delay 1 detik setelah Swal close
                 }
               });
+            });
+        </script>
+
+        {{-- pop up untuk hapus data --}}
+        <script>
+            document.getElementById("hapusPraProses").addEventListener("click", function () {
+                Swal.fire({
+                    title: 'Yakin Mau Hapus Semua Data?',
+                    text: 'Aksi ini akan menghapus semua data pra proses yang ada! Yakin nih?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Hapus!',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Menghapus...',
+                            text: 'Data sedang dihapus.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Dihapus!',
+                                text: 'Penghapusan data selesai.',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                didClose: () => {
+                                    window.location.href = "{{ route('peramalan.hapusProsesPeramalan') }}";
+                                }
+                            });
+                        }, 5000);
+
+                    }
+                });
             });
         </script>
 

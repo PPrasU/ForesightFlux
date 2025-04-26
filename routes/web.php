@@ -48,3 +48,4 @@ Route::prefix('peramalan')->name('peramalan.')->group(function () {
     Route::post('/hasil/export', [DataHasilController::class, 'export'])->name('exportHasil');
 });
 
+// Route::resource(name: 'batagocilok', controller: BatagorCilok::class);

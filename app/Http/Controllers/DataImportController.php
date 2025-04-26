@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DataImport;
 use App\Models\DataSource;
+use App\Models\DataPraProses;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -20,12 +21,11 @@ class DataImporTController extends Controller
         return view('input/dataImport', compact('dataSource', 'dataImport'));
     }
 
-    public function post(Request $request)
-    {
+    public function post(Request $request){
         try {
             $request->validate([
                 'name' => 'required|string|max:50',
-                'sumber' => 'required|in:import',
+                'sumber' => 'required|in:Import',
                 'file' => 'required|file|mimes:csv,txt',
             ]);
     
@@ -60,6 +60,12 @@ class DataImporTController extends Controller
             if ($header !== $expectedHeaders) {
                 return back()->withErrors([
                     'file' => '🚨Format file CSV tidak sesuai. Tolong baca petunjuk penggunaan kembali atau gunakan file CSV dari investing.com⚠️',
+                ]);
+            }
+
+            if (DataImport::exists()) {
+                return back()->withErrors([
+                    'file' => '🚨Data historis sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
                 ]);
             }
     
@@ -100,15 +106,62 @@ class DataImporTController extends Controller
         }
     }
 
-    public function praProses(){
-        
-    }
+    public function praProses() {
+        try {
+            $dataImport = DataImport::orderBy('date')->get();
+    
+            if ($dataImport->isEmpty()) {
+                return redirect()->back()->with('error', 'Data Import kosong. Tidak bisa melakukan pra-proses.');
+            }
+    
+            $sourceId = $dataImport->first()->source_id;
+            $formattedData = collect();
+    
+            foreach ($dataImport as $item) {
+                // Perbaiki format tanggal
+                $cleanDate = str_replace('.', '/', $item->date);
+                $formattedDate = Carbon::createFromFormat('m/d/Y', $cleanDate)->format('Y-m-d');
+    
+                // Hapus koma, ubah harga
+                $cleanPrice = floatval(str_replace(',', '', $item->price));
+    
+                $formattedData->push([
+                    'source_id' => $sourceId,
+                    'date' => $formattedDate,
+                    'price' => $cleanPrice,
+                ]);
+            }
+    
+            // 🔥 Tambahkan sorting berdasarkan date!
+            $sortedData = $formattedData->sortBy('date')->values(); // <- ini kunci utamanya!
+    
+            // Bagi 80:20 Training:Testing
+            $total = $sortedData->count();
+            $trainingCount = floor($total * 0.8);
+    
+            foreach ($sortedData as $index => $data) {
+                DataPraProses::create([
+                    'source_id' => $data['source_id'],
+                    'date' => $data['date'],
+                    'price' => $data['price'],
+                    'category' => $index < $trainingCount ? 'Training' : 'Testing',
+                ]);
+            }
+    
+            return redirect()->route('peramalan.prosesPeramalan')->with('Success', 'Anjay Berhasil Pra Proses Nih');
+    
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
+        }
+    }    
     
     public function hapus(){
-        DataImport::truncate();
-        DataSource::truncate();
-
-        return redirect()->route('data.importData')->with('Success', 'Data Import Berhasil Dihapus');
+        try{
+            DataImport::truncate();
+            return redirect()->route('peramalan.prosesPeramalan')->with('Success', 'Data Pra Proses Berhasil Dihapus');
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
+        }
     }
 
     // DataImport::create([

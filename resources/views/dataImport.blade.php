@@ -44,6 +44,21 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
+                                        @if(session('error'))
+                                            <div class="alert alert-danger" role="alert">
+                                                {{ session('error') }}
+                                            </div>
+                                        @endif
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul class="mb-0">
+                                                    @foreach ($errors->all() as $err)
+                                                        <li>{{ $err }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                        
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Impor</h4>
                                         <div>
                                             @if ($data->isEmpty())
@@ -51,9 +66,12 @@
                                                     Monggo Datanya Di Impor
                                                 </a>
                                             @else
-                                                <button id="hapusDataImport" type="button" class="btn btn-danger waves-effect waves-light me-2">
+                                                <button id="hapusDataImport" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
                                                     Hapus Semua Data 
-                                                </button>     
+                                                </button>
+                                                <form id="praProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
+                                                    @csrf <!-- Pastikan untuk menyertakan CSRF token -->
+                                                </form>   
                                                 <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
                                                     Pra-Proses Data Kripto
                                                 </button> 
@@ -68,7 +86,7 @@
                                     @if ($source)
                                         <div class="mb-4">
                                             <p class="mb-1"><strong>Nama Kripto:</strong> {{ $source->name }}</p>
-                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} - {{ $source->periode_akhir }}</p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} s/d {{ $source->periode_akhir }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $data->count() }}</p>
                                         </div>
                                     @endif
@@ -76,7 +94,7 @@
                                     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
-                                                <th style="width: 10px">No</th>
+                                                <th style="width: 10px" hidden>No</th>
                                                 <th>Tanggal</th>
                                                 <th>Price</th>
                                                 <th>Open</th>
@@ -89,7 +107,7 @@
                                         <tbody>
                                             @foreach ($data as $row)
                                                 <tr>
-                                                    <td style="text-align: center">{{ $row->id }}</td>
+                                                    <td style="text-align: center" hidden>{{ $row->id }}</td>
                                                     <td>{{ $row->date }}</td>
                                                     <td>{{ $row->price }}</td>
                                                     <td>{{ $row->open }}</td>
@@ -203,19 +221,30 @@
                 cancelButtonColor: '#6c757d',
               }).then((result) => {
                 if (result.isConfirmed) {
-                  Swal.fire({
-                    title: 'Oke!',
-                    text: 'Data akan diproses.',
-                    icon: 'success',
-                    timer: 1000,
-                    showConfirmButton: false,
-                    timerProgressBar: true
-                  });
-          
-                  setTimeout(() => {
-                    toastr.success('Data Kripto Impor Berhasil Di Pra-Proses');
-                  });
+                    Swal.fire({
+                        title: 'Siap Boskuh!',
+                        text: 'Data bakal diproses. Sabar yaa!',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    setTimeout(() => {
+                        document.getElementById("praProsesForm").submit();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Di Pra Proses!',
+                            text: 'Pra Proses Selesai.',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                        });
+                    }, 5000);
+
                 }
+
               });
             });
         </script>
@@ -237,15 +266,27 @@
                         Swal.fire({
                             title: 'Menghapus...',
                             text: 'Data sedang dihapus.',
-                            icon: 'success',
-                            timer: 5000,
+                            allowOutsideClick: false,
                             showConfirmButton: false,
-                            timerProgressBar: true
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
                         });
-        
+
                         setTimeout(() => {
-                            window.location.href = "{{ route('data.hapusImportData') }}";
-                        });
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Dihapus!',
+                                text: 'Penghapusan data selesai.',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                didClose: () => {
+                                    window.location.href = "{{ route('data.hapusImportData') }}";
+                                }
+                            });
+                        }, 5000);
+
                     }
                 });
             });

@@ -15,6 +15,16 @@ class DataAPIController extends Controller
         return view('dataAPI', compact('data')); 
     }
 
+    // public function index(){
+    //     $data = DataAPI::all();
+    //     $dataPraProses = DataPraProses::exists(); // true jika sudah ada data pra-proses
+    
+    //     return view('dataAPI', [
+    //         'data' => $data,
+    //         'sudahPraProses' => $dataPraProses,
+    //     ]);
+    // }    
+
     public function input(){
         $dataSource = DataSource::all();
         $dataAPI = DataAPI::all();    
@@ -22,52 +32,62 @@ class DataAPIController extends Controller
     }
     
     public function post(Request $request){
-        $request->validate([
-            'crypto_pair' => 'required|string',
-            'days' => 'required|string|in:1,7,14,30,90,180,365,max',
-            'sumber' => 'required|in:api',
-        ]);
-
-        $cryptoId = $request->crypto_pair;
-        $days = $request->days;
-        $sumber = $request->sumber;
-
-        $response = Http::get("https://api.coingecko.com/api/v3/coins/{$cryptoId}/ohlc", [
-            'vs_currency' => 'usd',
-            'days' => $days,
-        ]);
-
-        if (!$response->ok()) {
-            return back()->with('error', 'Gagal mengambil data dari CoinGecko.');
-        }
-
-        $ohlcData = $response->json();
-
-        if (empty($ohlcData)) {
-            return back()->with('error', 'Data dari CoinGecko kosong.');
-        }
-
-        $dataSource = DataSource::create([
-            'name' => $cryptoId,
-            'jangka_waktu' => $days,
-            'sumber' => $sumber,
-        ]);
-
-        foreach ($ohlcData as $item) {
-            $timestamp = Carbon::createFromTimestampMs($item[0])->format('d-M-Y H:i:s'); // disimpan sebagai string
-
-            DataAPI::create([
-                'source_id' => $dataSource->id,
-                'date' => $timestamp,
-                'open' => $item[1],
-                'high' => $item[2],
-                'low' => $item[3],
-                'close' => $item[4],
+        try{
+            $request->validate([
+                'crypto_pair' => 'required|string',
+                'days' => 'required|string|in:1,7,14,30,90,180,365,max',
+                'sumber' => 'required|in:API',
             ]);
-        }
-        return redirect()->route('data.dataAPI')->with('Success', 'Data berhasil diambil dan disimpan.');
-    }
+    
+            $cryptoId = $request->crypto_pair;
+            $days = $request->days;
+            $sumber = $request->sumber;
+    
+            $response = Http::get("https://api.coingecko.com/api/v3/coins/{$cryptoId}/ohlc", [
+                'vs_currency' => 'usd',
+                'days' => $days,
+            ]);
+    
+            if (!$response->ok()) {
+                return back()->with('error', 'Gagal mengambil data dari CoinGecko.');
+            }
+    
+            $ohlcData = $response->json();
+    
+            if (empty($ohlcData)) {
+                return back()->with('error', 'Data dari CoinGecko kosong.');
+            }
+    
+            $dataSource = DataSource::create([
+                'name' => $cryptoId,
+                'jangka_waktu' => $days,
+                'sumber' => $sumber,
+            ]);
 
+            if (DataAPI::exists()) {
+                return back()->withErrors([
+                    'file' => '🚨Data historis sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
+                ]);
+            }
+    
+            foreach ($ohlcData as $item) {
+                $timestamp = Carbon::createFromTimestampMs($item[0])->format('d-M-Y H:i:s'); // disimpan sebagai string
+    
+                DataAPI::create([
+                    'source_id' => $dataSource->id,
+                    'date' => $timestamp,
+                    'open' => $item[1],
+                    'high' => $item[2],
+                    'low' => $item[3],
+                    'close' => $item[4],
+                ]);
+            }
+            return redirect()->route('data.dataAPI')->with('Success', 'Data berhasil diambil dan disimpan.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memilih data: ' . $e->getMessage());
+        }
+    }
 
     public function praProses(){
         
