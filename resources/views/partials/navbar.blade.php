@@ -21,31 +21,65 @@
                     <li class="dropdown notification-list">
                         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <i class="mdi mdi-bell noti-icon"></i>
-                            <span class="badge badge-pill badge-info noti-icon-badge">3</span>
+                            <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">
+                                {{ session('notifications') ? count(session('notifications')) : 0 }}
+                            </span>                                                     
                         </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                             <h6 class="dropdown-item-text">
                                 Notifikasi
                             </h6>
-                            <div class="slimscroll notification-item-list">
-                                <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                    <div class="notify-icon bg-danger"><i class="mdi mdi-delete-forever"></i></div>
-                                    <p class="notify-details">Berhasil Menghapus Data<span class="text-muted">Silahkan memilih atau import data historis kripto</span></p>
-                                </a>
-                                <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                    <div class="notify-icon bg-success"><i class="mdi mdi-approval"></i></div>
-                                    <p class="notify-details">Peramalan Berhasil<span class="text-muted">Silahkan menuju..................</span></p>
-                                </a>
-                                <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                    <div class="notify-icon bg-info"><i class="mdi mdi-flag-variant"></i></div>
-                                    <p class="notify-details">Pra-Proses Berhasil<span class="text-muted">Silahkan menuju..................</span></p>
-                                </a>
+                            <div class="slimscroll notification-item-list" id="notification-list">
+                                @if(session('notifications'))
+                                    @foreach(session('notifications') as $notification)
+                                    <a href="javascript:void(0);" class="dropdown-item notify-item active notification-fade-in">
+                                        <div class="notify-icon bg-{{ $notification['bgColor'] }}">
+                                            <i class="mdi {{ $notification['icon'] }}"></i>
+                                        </div>
+                                        <p class="notify-details">
+                                            {{ $notification['title'] }}
+                                            <span class="text-muted">{{ $notification['text'] }}</span>
+                                        </p>
+                                    </a>                                    
+                                    @endforeach
+                                @else
+                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                        <div class="notify-icon bg-secondary">
+                                            <i class="mdi mdi-bell-off"></i>
+                                        </div>
+                                        <p class="notify-details">
+                                            Tidak ada notifikasi
+                                            <span class="text-muted">Belum ada aktivitas terbaru.</span>
+                                        </p>
+                                    </a>
+                                @endif
+                            </div>                                                      
+                            <a href="{{ route('notifikasi.clear') }}" class="dropdown-item text-center text-primary">
+                                Tandai Sudah Dibaca <i class="fi-arrow-right"></i>
+                            </a>                            
+                        </div>        
+                    </li>
+                    {{-- <li class="dropdown notification-list">
+                        <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i class="mdi mdi-bell noti-icon"></i>
+                            <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">0</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                            <h6 class="dropdown-item-text">Notifikasi</h6>
+                            <div class="slimscroll notification-item-list" id="notification-list">
+                                <!-- Notifikasi akan ditambahkan di sini -->
                             </div>
                             <a href="javascript:void(0);" class="dropdown-item text-center text-primary">
                                 Tandai Sudah Dibaca <i class="fi-arrow-right"></i>
                             </a>
-                        </div>        
-                    </li>
+                        </div>
+                    </li> --}}
+                    {{-- @if(session('notification'))
+                        <script>
+                            let notif = @json(session('notification'));
+                            addNotification(notif.icon, notif.bgColor, notif.title, notif.text);
+                        </script>
+                    @endif --}}
                     <li class="dropdown notification-list">
                         <div class="dropdown notification-list">
                             <a class="dropdown-toggle nav-link arrow-none waves-effect nav-user waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
@@ -68,15 +102,6 @@
                                 </form> --}}
                             </div>                                                                    
                         </div>
-                    </li>
-                    <li class="menu-item list-inline-item">
-                        <a class="navbar-toggle nav-link">
-                            <div class="lines">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </a>
                     </li>
                 </ul>
             </div>

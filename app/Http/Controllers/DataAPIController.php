@@ -2,28 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 use App\Models\DataAPI;
 use App\Models\DataSource;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\DataPraProses;
+use Illuminate\Support\Facades\Http;
 
 class DataAPIController extends Controller
 {
+
     public function index(){
         $data = DataAPI::all();
-        return view('dataAPI', compact('data')); 
-    }
-
-    // public function index(){
-    //     $data = DataAPI::all();
-    //     $dataPraProses = DataPraProses::exists(); // true jika sudah ada data pra-proses
+        $dataPraProses = DataPraProses::exists(); // true jika sudah ada data pra-proses
     
-    //     return view('dataAPI', [
-    //         'data' => $data,
-    //         'sudahPraProses' => $dataPraProses,
-    //     ]);
-    // }    
+        return view('dataAPI', [
+            'data' => $data,
+            'sudahPraProses' => $dataPraProses,
+        ]);
+    }    
 
     public function input(){
         $dataSource = DataSource::all();
@@ -95,7 +92,6 @@ class DataAPIController extends Controller
 
     public function hapus(){
         DataAPI::truncate();
-        DataSource::truncate();
 
         return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil dihapus.');
     }

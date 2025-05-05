@@ -152,3 +152,4 @@
         toastr.success("{{ Session::get('Success') }}")
     @endif
 </script>
+<script src="{{ asset('js/notification.js') }}"></script>

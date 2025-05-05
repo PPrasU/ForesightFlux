@@ -53,6 +53,20 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
+                                    @if(session('error'))
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $err)
+                                                    <li>{{ $err }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h3 class="mt-0 header-title">Tabel Data Dari API</h3>
                                         <div>
@@ -64,9 +78,14 @@
                                                 <button id="hapusDataAPI" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
                                                     Hapus Semua Data 
                                                 </button>
-                                                <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
-                                                    Pra-Proses Data Kripto
-                                                </button> 
+                                                <form id="praProsesForm" action="{{ route('data.praProsesAPI') }}" method="POST" style="display: none;">
+                                                    @csrf <!-- Pastikan untuk menyertakan CSRF token -->
+                                                </form>  
+                                                @if (!$sudahPraProses)
+                                                    <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
+                                                        Pra-Proses Data Kripto
+                                                    </button>
+                                                @endif
                                             @endif  
                                         </div>
                                     </div>
@@ -130,7 +149,7 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Close</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat, dalam format Tahun-Bulan-Tanggal (YYYY-MM-DD)</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat.</p>
                                             <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $source->name }} saat awal perdagangan hari itu.</p>
                                             <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
                                             <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
@@ -190,39 +209,38 @@
         {{-- pop up buat pra-proses --}}
         <script>
             document.getElementById("praProsesBtn").addEventListener("click", function () {
-              Swal.fire({
-                title: 'Beneran Mau Di Pra-Proses Nih Datanya?',
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonText: 'Iya',
-                cancelButtonText: 'Tidak',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#6c757d',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  Swal.fire({
-                    title: 'Oke!',
-                    text: 'Data akan diproses.',
-                    icon: 'success',
-                    timer: 5000,
-                    showConfirmButton: false,
-                    timerProgressBar: true
-                  });
-          
-                  setTimeout(() => {
-                    toastr.success('Data Kripto API Berhasil Di Pra-Proses');
-                  });
-                }
-              });
+                Swal.fire({
+                    title: 'Beneran Mau Di Pra-Proses Nih Datanya?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Iya',
+                    cancelButtonText: 'Tidak',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Menampilkan loading setelah konfirmasi
+                        Swal.fire({
+                            title: 'Proses Data...',
+                            text: 'Data sedang diproses.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading(); // Menampilkan loading
+                            }
+                        });
+                        document.getElementById("praProsesForm").submit();
+                    }
+                });
             });
-        </script>
+        </script>        
 
         {{-- pop up untuk hapus data --}}
         <script>
             document.getElementById("hapusDataAPI").addEventListener("click", function () {
                 Swal.fire({
                     title: 'Yakin Mau Hapus Semua Data?',
-                    text: 'Aksi ini akan menghapus semua data API yang ada! Yakin mau melanjutkan',
+                    text: 'Aksi ini akan menghapus semua data API yang ada! Yakin mau melanjutkan?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Hapus!',
@@ -240,25 +258,13 @@
                                 Swal.showLoading();
                             }
                         });
-
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Dihapus!',
-                                text: 'Penghapusan data selesai.',
-                                timer: 2000,
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                                didClose: () => {
-                                    window.location.href = "{{ route('data.hapusDataAPI') }}";
-                                }
-                            });
-                        }, 5000);
-
+        
+                        window.location.href = "{{ route('data.hapusDataAPI') }}"; 
                     }
                 });
             });
         </script>
+        
 
         <script>
             toastr.options = {
@@ -267,7 +273,6 @@
             };
         </script>
             
-          
           
     </body>
 

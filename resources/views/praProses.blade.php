@@ -38,33 +38,36 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
+                                    @if(session('error'))
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $err)
+                                                    <li>{{ $err }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-                                        @if(session('error'))
-                                            <div class="alert alert-danger" role="alert">
-                                                {{ session('error') }}
-                                            </div>
-                                        @endif
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul class="mb-0">
-                                                    @foreach ($errors->all() as $err)
-                                                        <li>{{ $err }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
 
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Pra-Proses Nih</h4>                                                                             
                                         <div>
-                                            <button id="hapusPraProses" type="button" class="btn btn-outline-danger waves-effect waves-light">
-                                                Hapus Semua Data Pra Proses
-                                            </button>
-                                            <form id="ProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
-                                                @csrf <!-- Pastikan untuk menyertakan CSRF token -->
-                                            </form>
-                                            <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
-                                                Proses Peramalan Kripto
-                                            </button>
+                                            @if ($data->count() > 0)
+                                                <button id="hapusPraProses" type="button" class="btn btn-outline-danger waves-effect waves-light">
+                                                    Hapus Semua Data Pra Proses
+                                                </button>
+
+                                                <form id="ProsesForm" action="#" method="POST" style="display: none;">
+                                                    @csrf
+                                                </form>
+                                                <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
+                                                    Proses Peramalan Kripto
+                                                </button>
+                                            @endif
                                         </div>
                                     </div>
                                     @php
@@ -165,37 +168,14 @@
                         text: 'Data bakal diproses. Sabar yaa!',
                         allowOutsideClick: false,
                         showConfirmButton: false,
+                        timer: 3000,
                         didOpen: () => {
                             Swal.showLoading();
                         }
                     });
-
                     setTimeout(() => {
-                        document.getElementById("ProsesForm").submit();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil Di Proses!',
-                            text: 'Proses Selesai. Mantap Boskuh. Monggo Dilihat Hasilnya',
-                            timer: 4000,
-                            showConfirmButton: false,
-                            timerProgressBar: true,
-                        });
-                    }, 5000);
-
-                }
-                if (result.isConfirmed) {
-                  Swal.fire({
-                    title: 'Oke!',
-                    text: 'Data akan diproses.',
-                    icon: 'success',
-                    timer: 1000,
-                    showConfirmButton: false,
-                    timerProgressBar: true
-                  });
-          
-                  setTimeout(() => {
-                    toastr.success('Data Kripto Impor Berhasil Di Pra-Proses');
-                  }, 1000); // delay 1 detik setelah Swal close
+                        toastr.error('Sabar bang belom sampe proses peramalan ini');
+                    }, 3100); // delay 1 detik setelah Swal close
                 }
               });
             });
@@ -224,20 +204,7 @@
                                 Swal.showLoading();
                             }
                         });
-
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Dihapus!',
-                                text: 'Penghapusan data selesai.',
-                                timer: 2000,
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                                didClose: () => {
-                                    window.location.href = "{{ route('peramalan.hapusProsesPeramalan') }}";
-                                }
-                            });
-                        }, 5000);
+                        window.location.href = "{{ route('peramalan.hapusProsesPeramalan') }}";
 
                     }
                 });
@@ -250,6 +217,7 @@
             "timeOut": "3000", // 3 detik
             };
         </script>
+
     </body>
 
 </html>

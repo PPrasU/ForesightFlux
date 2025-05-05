@@ -39,4 +39,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
         integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <script src="{{ asset('js/notification.js') }}"></script>
+
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        .notification-fade-in {
+            animation: fadeInUp 0.5s ease both;
+        }
+    
+        /* Supaya animasi satu per satu */
+        .notification-fade-in:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .notification-fade-in:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .notification-fade-in:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        .notification-fade-in:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+        /* Tambahin lagi kalau mau lebih dari 4 notifikasi */
+    </style>
+        
 </head>

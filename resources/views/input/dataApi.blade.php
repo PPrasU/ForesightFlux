@@ -123,6 +123,11 @@
                                                 Pilih Kripto
                                             </button>
                                         </div>
+                                        <div style="margin-top: 20px">
+                                            <a href="{{ route('data.dataAPI') }}" class="btn btn-outline-secondary btn-lg btn-block mt-3 py-2" >
+                                                Balik, ndak jadi
+                                            </a>
+                                        </div>
                                     </form>
                     
                                 </div>
@@ -136,6 +141,26 @@
         @include('partials.footer')
         @include('partials.scripts')
         <script src="{{ asset('pages/form-advanced.js') }}"></script>
+
+        <script>
+            document.getElementById("apiData").addEventListener("submit", function(event) {
+                event.preventDefault();  // Mencegah reload halaman otomatis
+                
+                // Menampilkan SweetAlert2 loading
+                Swal.fire({
+                    title: 'Ambil Data API...',
+                    text: 'Sabar ya kalo lama prosesnya 😅',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();  // Menampilkan spinner
+                    }
+                });
+
+                // Kirim form
+                this.submit();  // Melakukan submit form secara normal
+            });
+        </script>
     </body>
 
 </html>

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('change');
             $table->timestamps();
         
-            $table->foreign('source_id')->references('id')->on('data_source')->onDelete('cascade');
+            $table->foreign('source_id')->references('id')->on('data_source');
         });
         
     }

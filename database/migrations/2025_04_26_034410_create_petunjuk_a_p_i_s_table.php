@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('petunjuk_a_p_i_s', function (Blueprint $table) {
+        Schema::create('petunjuk_api', function (Blueprint $table) {
             $table->id();
+            $table->string('judul');
+            $table->string('desk_1');
+            $table->string('desk_2');
+            $table->string('desk_3')->nullable();
+            $table->string('gambar');
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('petunjuk_a_p_i_s');
+        Schema::dropIfExists('petunjuk_api');
     }
 };

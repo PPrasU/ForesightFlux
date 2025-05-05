@@ -12,7 +12,11 @@ class DataImporTController extends Controller
 {
     public function index(){
         $data = DataImport::all();
-        return view('dataImport', compact('data')); 
+        $dataPraProses = DataPraProses::exists();
+        return view('dataImport', [
+            'data' => $data,
+            'sudahPraProses' => $dataPraProses,
+        ]);
     }
 
     public function input(){
@@ -99,7 +103,16 @@ class DataImporTController extends Controller
                 ]);
             }
 
+            session()->push('notifications', [
+                'icon' => 'mdi-approval',
+                'bgColor' => 'success',
+                'title' => 'Import Data Berhasil',
+                'text' => 'Silahkan menuju halaman data import untuk dilakukan pra proses.'
+            ]);            
+
             return redirect()->route('data.importData')->with('Success', 'Import Data Berhasil');
+            
+            
     
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
@@ -108,6 +121,17 @@ class DataImporTController extends Controller
 
     public function praProses() {
         try {
+            if (DataPraProses::exists()) {
+                return redirect()->back()->with('error', 'Sudah Ada Data Yang Di Pra Proses. Pra Proses Hanya Bisa Dilakukan Satu Kali.');
+            }
+            
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Pra-Proses Berhasil',
+                'text' => 'Data sudah siap untuk dilakukan peramalan.'
+            ]);            
+
             $dataImport = DataImport::orderBy('date')->get();
     
             if ($dataImport->isEmpty()) {
@@ -157,8 +181,14 @@ class DataImporTController extends Controller
     
     public function hapus(){
         try{
+            session()->push('notifications', [
+                'icon' => 'mdi-delete-forever',
+                'bgColor' => 'danger',
+                'title' => 'Data Dihapus',
+                'text' => 'Data berhasil dihapus.'
+            ]);            
             DataImport::truncate();
-            return redirect()->route('peramalan.prosesPeramalan')->with('Success', 'Data Pra Proses Berhasil Dihapus');
+            return redirect()->route('data.importData')->with('Success', 'Data Pra Proses Berhasil Dihapus');
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
         }

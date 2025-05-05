@@ -5,7 +5,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\DataAPIController;
 use App\Http\Controllers\DataHasilController;
 use App\Http\Controllers\DataImportController;
+use App\Http\Controllers\PetunjukAPIController;
+use App\Http\Controllers\SettingParamController;
 use App\Http\Controllers\DataPraProsesController;
+use App\Http\Controllers\PetunjukImportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,7 +42,6 @@ Route::prefix('data')->name('data.')->group(function () {
 
 Route::prefix('peramalan')->name('peramalan.')->group(function () {
     Route::get('/proses', [DataPraProsesController::class, 'index'])->name('prosesPeramalan');
-    // Route::post('/proses/pra-proses', [DataPraProsesController::class, 'proses'])->name('prosesData');
     Route::get('/proses/hapus', [DataPraProsesController::class, 'hapus'])->name('hapusProsesPeramalan');
     Route::post('/proses/export', [DataPraProsesController::class, 'export'])->name('exportProsesPeramalan');
 
@@ -49,3 +51,43 @@ Route::prefix('peramalan')->name('peramalan.')->group(function () {
 });
 
 // Route::resource(name: 'batagocilok', controller: BatagorCilok::class);
+
+// ------------------------------------ ADMIN -----------------------------------
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dasbor', function () {
+        return view('admin.dasbor');
+    })->name('dasbor');
+
+    Route::get('/petunjuk-import', [PetunjukImportController::class, 'index'])->name('petunjukImport');
+    Route::get('/petunjuk-import/input', [PetunjukImportController::class, 'input'])->name('inputpetunjukImport');
+    Route::post('/petunjuk-import/post', [PetunjukImportController::class, 'post'])->name('postpetunjukImport');
+    Route::get('/petunjuk-import/edit/{id}', [PetunjukImportController::class, 'edit'])->name('editpetunjukImport');
+    Route::post('/petunjuk-import/update/{id}', [PetunjukImportController::class, 'update'])->name('updatepetunjukImport');
+    Route::get('/petunjuk-import/hapus/{id}', [PetunjukImportController::class, 'hapus'])->name('hapuspetunjukImport');
+
+    Route::get('/petunjuk-API', [PetunjukAPIController::class, 'index'])->name('petunjukAPI');
+    Route::get('/petunjuk-API/input', [PetunjukAPIController::class, 'input'])->name('inputpetunjukAPI');
+    Route::post('/petunjuk-API/post', [PetunjukAPIController::class, 'post'])->name('postpetunjukAPI');
+    Route::get('/petunjuk-API/edit/{id}', [PetunjukAPIController::class, 'edit'])->name('editpetunjukAPI');
+    Route::post('/petunjuk-API/update/{id}', [PetunjukAPIController::class, 'update'])->name('updatepetunjukAPI');
+    Route::get('/petunjuk-API/hapus/{id}', [PetunjukAPIController::class, 'hapus'])->name('hapuspetunjukAPI');
+
+    Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
+    Route::get('/setting-params/input', [SettingParamController::class, 'input'])->name('inputSettingParams');
+    Route::post('/setting-params/post', [SettingParamController::class, 'post'])->name('postSettingParams');
+    Route::get('/setting-params/edit/{id}', [SettingParamController::class, 'edit'])->name('editSettingParams');
+    Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
+    Route::get('/setting-params/hapus/{id}', [SettingParamController::class, 'hapus'])->name('hapusSettingParams');
+    
+
+    Route::get('/user-management', function () {
+        return view('admin.um');
+    })->name('userManagement');
+
+});
+
+Route::get('/clear-notifications', function() {
+    session()->forget('notifications');
+    return redirect()->back();
+})->name('notifikasi.clear');

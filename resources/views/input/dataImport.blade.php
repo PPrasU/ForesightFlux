@@ -75,7 +75,7 @@
                                     @endif
 
 
-                                    <div style="margin-top: 10px">
+                                    <div>
                                         <div class="text-center mb-4">
                                             <h4 class="mt-0 header-title">Impor Data Historis Kripto Untuk Dilakukan Peramalan Nantinya</h4>
                                         </div>
@@ -102,7 +102,7 @@
                                         </div>
 
                                         {{-- Import File CSV --}}
-                                        <div class="form-group">
+                                        <div class="form-group" style="margin-top: -10px">
                                             <label>Import File CSV</label>
                                             <input
                                               type="file"
@@ -115,10 +115,15 @@
                                         </div>
                                         <input type="hidden" name="sumber" value="Import" />
                                         {{-- Tombol --}}
-                                        <div style="margin-top: 40px">
+                                        <div style="margin-top: 35px">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
                                                 Kuy Import Filenya
                                             </button>
+                                        </div>
+                                        <div style="margin-top: 20px">
+                                            <a href="{{ route('data.importData') }}" class="btn btn-outline-secondary btn-lg btn-block mt-3 py-2" >
+                                                Balik, ndak jadi
+                                            </a>
                                         </div>
                                     </form>
                                 </div>
@@ -132,6 +137,28 @@
         @include('partials.footer')
         @include('partials.scripts')
         <script src="{{ asset('pages/form-advanced.js') }}"></script>
+
+        <script>
+            document.getElementById("importData").addEventListener("submit", function(event) {
+                event.preventDefault();  // Mencegah reload halaman otomatis
+                
+                // Menampilkan SweetAlert2 loading
+                Swal.fire({
+                    title: 'Mengimpor Data...',
+                    text: 'Sabar ya kalo lama prosesnya 😅',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();  // Menampilkan spinner
+                    }
+                });
+
+                // Kirim form
+                this.submit();  // Melakukan submit form secara normal
+                addNotification('mdi-approval', 'success', 'Import Data Berhasil', 'Silahkan menuju halaman pra proses untuk dilakukan peramalan.');
+            });
+        </script>
+
     </body>
 
 </html>

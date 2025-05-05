@@ -43,21 +43,21 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
+                                    @if(session('error'))
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $err)
+                                                    <li>{{ $err }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-                                        @if(session('error'))
-                                            <div class="alert alert-danger" role="alert">
-                                                {{ session('error') }}
-                                            </div>
-                                        @endif
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul class="mb-0">
-                                                    @foreach ($errors->all() as $err)
-                                                        <li>{{ $err }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
                                         
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Impor</h4>
                                         <div>
@@ -72,9 +72,11 @@
                                                 <form id="praProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
                                                     @csrf <!-- Pastikan untuk menyertakan CSRF token -->
                                                 </form>   
-                                                <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
-                                                    Pra-Proses Data Kripto
-                                                </button> 
+                                                @if (!$sudahPraProses)
+                                                    <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
+                                                        Pra-Proses Data Kripto
+                                                    </button>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -137,7 +139,7 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Price</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat, dalam format Tahun-Bulan-Tanggal (YYYY-MM-DD)</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat.</p>
                                             <p class="mb-1"><strong>Price: </strong>Harga penutupan (closing price) {{ $source->name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.</p>
                                             <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $source->name }} saat awal perdagangan hari itu.</p>
                                             <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
@@ -207,54 +209,48 @@
                 });
             });
         </script>
-            
+
         {{-- pop up buat pra-proses --}}
         <script>
             document.getElementById("praProsesBtn").addEventListener("click", function () {
-              Swal.fire({
-                title: 'Beneran Mau Di Pra-Proses Nih Datanya?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Iya',
-                cancelButtonText: 'Tidak',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#6c757d',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Siap Boskuh!',
-                        text: 'Data bakal diproses. Sabar yaa!',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    setTimeout(() => {
-                        document.getElementById("praProsesForm").submit();
+                Swal.fire({
+                    title: 'Beneran Mau Di Pra-Proses Nih Datanya?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Iya',
+                    cancelButtonText: 'Tidak',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Menampilkan loading setelah konfirmasi
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil Di Pra Proses!',
-                            text: 'Pra Proses Selesai.',
-                            timer: 2000,
+                            title: 'Siap Boskuh!',
+                            text: 'Data bakal diproses. Sabar yaa!',
+                            allowOutsideClick: false,
                             showConfirmButton: false,
-                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading(); // Menampilkan loading
+                            }
                         });
-                    }, 5000);
-
-                }
-
-              });
+        
+                        // Melakukan proses utama (misal submit form atau proses data)
+                        // Proses ini akan berjalan tanpa delay
+                        document.getElementById("praProsesForm").submit();
+                        addNotification('mdi-flag-variant', 'info', 'Pra-Proses Berhasil', 'Silahkan lanjutkan ke langkah berikutnya.');
+        
+                        // Setelah proses selesai di controller (redirect akan terjadi)
+                    }
+                });
             });
-        </script>
+        </script>        
 
         {{-- pop up untuk hapus data --}}
         <script>
             document.getElementById("hapusDataImport").addEventListener("click", function () {
                 Swal.fire({
                     title: 'Yakin Mau Hapus Semua Data?',
-                    text: 'Aksi ini akan menghapus semua data impor yang ada! Yakin mau melanjutkan',
+                    text: 'Aksi ini akan menghapus semua data impor yang ada! Yakin mau melanjutkan?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Hapus!',
@@ -263,30 +259,18 @@
                     cancelButtonColor: '#6c757d',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        // Menampilkan loading setelah konfirmasi
                         Swal.fire({
                             title: 'Menghapus...',
                             text: 'Data sedang dihapus.',
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             didOpen: () => {
-                                Swal.showLoading();
+                                Swal.showLoading(); // Menampilkan loading
                             }
                         });
-
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Dihapus!',
-                                text: 'Penghapusan data selesai.',
-                                timer: 2000,
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                                didClose: () => {
-                                    window.location.href = "{{ route('data.hapusImportData') }}";
-                                }
-                            });
-                        }, 5000);
-
+                        window.location.href = "{{ route('data.hapusImportData') }}";  // Redirect langsung setelah proses selesai
+                        addNotification('mdi-delete-forever', 'danger', 'Data Dihapus', 'Data berhasil dihapus.');
                     }
                 });
             });
@@ -298,6 +282,27 @@
             "timeOut": "5000", // 3 detik
             };
         </script>
+
+        {{-- buat nunggu pas mencet button pra proses --}}
+        {{-- <script>
+            document.getElementById("importData").addEventListener("submit", function(event) {
+                event.preventDefault();  // Mencegah reload halaman otomatis
+                
+                // Menampilkan SweetAlert2 loading
+                Swal.fire({
+                    title: 'Pra Proses Data...',
+                    text: 'Sabar ya kalo lama prosesnya 😅',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();  // Menampilkan spinner
+                    }
+                });
+
+                // Kirim form
+                this.submit();  // Melakukan submit form secara normal
+            });
+        </script> --}}
     </body>
 
 </html>
