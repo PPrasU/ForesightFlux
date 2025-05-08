@@ -11,6 +11,17 @@
             color: red;
             font-weight: bold;
         }
+        .date-range-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-separator {
+            margin: 0 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
     </style>      
 
     <body>
@@ -87,34 +98,32 @@
                                                 <label class="control-label font-weight-bold">Pilih Kripto</label>
                                                 <select name="crypto_pair" id="crypto_pair" class="form-control form-control-lg select2" required>
                                                     <option selected disabled>--- Pilih Kripto ---</option>
-                                                    <option value="bitcoin">Bitcoin (BTC/USD)</option>
-                                                    <option value="ethereum">Ethereum (ETH/USD)</option>
-                                                    <option value="dogecoin">Dogecoin (DOGE/USD)</option>
-                                                    <option value="ripple">Ripple (XRP/USD)</option>
-                                                    <option value="litecoin">Litecoin (LTC/USD)</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        {{-- Jangka Waktu --}}
-                                        <div style="margin-top: 20px">
-                                            <div class="form-group mb-4">
-                                                <label class="font-weight-bold">Jangka Waktu</label>
-                                                <div class="d-flex align-items-center">
-                                                    <select name="days" id="days" class="form-control form-control-lg" required>
-                                                        <option value="" disabled selected>--- Pilih Jangka Waktu ---</option>
-                                                        <option value="1">1 Hari</option>
-                                                        <option value="7">7 Hari</option>
-                                                        <option value="14">14 Hari</option>
-                                                        <option value="30">30 Hari</option>
-                                                        <option value="90">90 Hari</option>
-                                                        <option value="180">180 Hari</option>
-                                                        <option value="365">365 Hari</option>
-                                                        <option value="max">Sejak Awal</option>
-                                                    </select>
-                                                </div>
+                                                    @foreach ($cryptoPairs as $key => $pair)
+                                                        @php
+                                                            $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
+                                                        @endphp
+                                                        <option value="{{ $key }}" data-display="{{ $displayName }}">
+                                                            {{ $displayName }}
+                                                        </option>
+                                                    @endforeach
+                                                    {{-- <option value="XBTUSD">Bitcoin (BTC/USD)</option>
+                                                    <option value="ETHUSD">Ethereum (ETH/USD)</option>
+                                                    <option value="ADAUSD">Cardano (ADA/USD)</option> --}}
+                                                </select>                                                                                                                                                                                           
                                             </div>
                                         </div>
 
+                                        {{-- Jangka Waktu --}}
+                                        <div class="form-group mb-4">
+                                            <label class="font-weight-bold">Jangka Waktu</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="input-group date-range-group">
+                                                    <input type="text" name="date-start" id="date-start" class="form-control floating-label" placeholder="awal"/>
+                                                    <span class="date-separator">–</span>
+                                                    <input type="text" name="date-end" id="date-end" class="form-control floating-label" placeholder="akhir"/>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <input type="hidden" name="sumber" value="API" />
                                         {{-- Tombol --}}

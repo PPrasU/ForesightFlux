@@ -101,8 +101,8 @@
 
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
-                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->jangka_waktu }} Hari</p>
+                                            <p class="mb-1"><strong>Nama Kripto Asli:</strong> {{ $name }}</p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} - {{ $source->periode_akhir }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
                                     @endif
@@ -149,14 +149,14 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Close</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat.</p>
-                                            <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $source->name }} saat awal perdagangan hari itu.</p>
-                                            <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
-                                            <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
-                                            <p class="mb-1"><strong>Close: </strong>Harga penutupan (closing price) {{ $source->name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} dicatat.</p>
+                                            <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $name }} saat awal perdagangan hari itu.</p>
+                                            <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $name }} selama satu hari perdagangan.</p>
+                                            <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $name }} selama satu hari perdagangan.</p>
+                                            <p class="mb-1"><strong>Close: </strong>Harga penutupan (closing price) {{ $name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.</p>
                                             <br>
                                             <p class="mb-1"><strong>🎨 Warna Hijau & Merah</strong></p>
-                                            <p class="mb-1"><strong style="color: green">Hijau </strong>menandakan bahwa harga {{ $source->name }} naik dibandingkan dengan hari sebelumnya.</p>
+                                            <p class="mb-1"><strong style="color: green">Hijau </strong>menandakan bahwa harga {{ $name }} naik dibandingkan dengan hari sebelumnya.</p>
                                             <p class="mb-1"><strong style="color: red">Merah </strong>menandakan harga turun dibanding hari sebelumnya.</p>
                                         </div>
                                     @endif

@@ -11,7 +11,7 @@ class DataSource extends Model
 
     protected $table = 'data_source';
 
-    protected $fillable = ['name', 'periode_awal', 'periode_akhir', 'jangka_waktu', 'sumber'];
+    protected $fillable = ['name', 'display_name', 'periode_awal', 'periode_akhir', 'jangka_waktu', 'sumber'];
 
     public function dataImports()
     {

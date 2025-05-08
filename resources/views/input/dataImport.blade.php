@@ -86,7 +86,7 @@
                                         {{-- Jenis Kripto --}}
                                         <div class="form-group">
                                             <label>Jenis Kripto</label>
-                                            <input type="text" class="form-control" required placeholder="Masukkan jenis kriptonya" name="name"/>
+                                            <input type="text" class="form-control" placeholder="Masukkan jenis kriptonya" name="name"/>
                                         </div>
                     
                                         {{-- Jangka Waktu --}}
@@ -94,9 +94,9 @@
                                             <div class="form-group mb-4">
                                                 <label class="font-weight-bold">Jangka Waktu</label>
                                                 <div class="d-flex align-items-center">
-                                                    <input type="text" class="form-control form-control-lg mr-2" required placeholder="Periode Awal" id="date-start" name="date-start">
+                                                    <input type="text" class="form-control form-control-lg mr-2" placeholder="Periode Awal" id="date-start" name="date-start">
                                                     <span class="mx-2">-</span>
-                                                    <input type="text" class="form-control form-control-lg ml-2" required placeholder="Periode Akhir" id="date-end" name="date-end">
+                                                    <input type="text" class="form-control form-control-lg ml-2" placeholder="Periode Akhir" id="date-end" name="date-end">
                                                 </div>
                                             </div>
                                         </div>
@@ -109,7 +109,6 @@
                                               class="filestyle"
                                               data-buttonname="btn-secondary"
                                               accept=".csv"
-                                              required 
                                               name="file"
                                             />
                                         </div>
