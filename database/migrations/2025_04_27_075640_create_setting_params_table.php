@@ -13,10 +13,25 @@ return new class extends Migration
     {
         Schema::create('setting_param', function (Blueprint $table) {
             $table->id();
-            $table->string('params');
-            $table->string('value');
+            $table->decimal('alpha', 15, 4);
+            $table->decimal('beta', 15, 4);
+            $table->decimal('gamma', 15, 4);
+            $table->decimal('season_length', 15, 4);
+            $table->decimal('training_percentage', 15, 4);
+            $table->decimal('testing_percentage', 15, 4);
             $table->timestamps();
         });
+        DB::table('setting_param')->insert([
+            'alpha' => 0.2,
+            'beta' => 0.2,
+            'gamma' => 0.2,
+            'season_length' => 30,
+            'training_percentage' => 80,
+            'testing_percentage' => 20,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
     }
 
     /**

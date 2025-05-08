@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->decimal('price', 15, 2);
-            $table->decimal('level', 15, 2);
-            $table->decimal('trend', 15, 2);
-            $table->decimal('seasonal', 15, 2);
-            $table->decimal('forecast', 15, 2);
-            $table->decimal('err_abs', 15, 4);
-            $table->decimal('err_perc', 15, 2);
+            $table->decimal('level', 15, 8)->nullable();
+            $table->decimal('trend', 15, 8)->nullable();
+            $table->decimal('seasonal', 15, 8)->nullable();
+            $table->decimal('forecast', 15, 5);
+            $table->decimal('error', 15, 8)->nullable();
+            $table->decimal('abs_error', 15, 8)->nullable();
+            $table->decimal('error_square', 15, 8)->nullable();
             $table->timestamps();
-        
         });
         
     }

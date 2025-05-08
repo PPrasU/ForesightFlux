@@ -67,6 +67,14 @@
                     {{-- baris pertama, tabel --}}
                     <div class="d-flex justify-content-center">
                         <div class="col-xl-6">
+                            <div class="card" style="margin-top: 20px;">
+                                <div class="card-body px-2">
+                                    <div class="alert-danger text-center">
+                                        <h6 class="mt-0 header-title" style="font-size: 14px">🚨Kemungkinan Nama Kripto Tidak Sesuai, Karena Dari API Tidak Menyediakan Nama Asli Kripto⚠️</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="card" style="margin-top: 20px; min-height: 420px;">
                                 <div class="card-body px-5 py-4">
                                     @if(session('error'))
