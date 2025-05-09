@@ -109,11 +109,14 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 150px">Tanggal</th>
+                                                <th style="width: 100px">Tanggal</th>
                                                 <th>Open</th>
                                                 <th>High</th>
                                                 <th>Low</th>
                                                 <th>Close</th>
+                                                <th style="width: 100px">VWAP (Volume Weighted Average Price)</th>
+                                                <th>Volume</th>
+                                                <th>Count</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -125,6 +128,9 @@
                                                     <td>{{ $row->high }}</td>
                                                     <td>{{ $row->low }}</td>
                                                     <td>{{ $row->close }}</td>
+                                                    <td>{{ $row->vwap }}</td>
+                                                    <td>{{ $row->vol }}</td>
+                                                    <td>{{ $row->count }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

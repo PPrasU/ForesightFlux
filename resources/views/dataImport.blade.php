@@ -95,7 +95,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px" hidden>No</th>
-                                                <th>Tanggal</th>
+                                                <th style="width: 100px">Tanggal</th>
                                                 <th>Price</th>
                                                 <th>Open</th>
                                                 <th>High</th>

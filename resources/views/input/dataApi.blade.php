@@ -78,17 +78,15 @@
                             <div class="card" style="margin-top: 20px; min-height: 420px;">
                                 <div class="card-body px-5 py-4">
                                     @if(session('error'))
-                                        <div class="alert alert-danger" role="alert">
+                                        <div class="alert alert-danger" role="alert" style="text-align: center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
                                     @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $err)
-                                                    <li>{{ $err }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger" style="text-align: center">
+                                            @foreach ($errors->all() as $err)
+                                                {{ $err }}
+                                            @endforeach
                                         </div>
                                     @endif
 
@@ -105,7 +103,19 @@
                                             <div class="form-group mb-4">
                                                 <label class="control-label font-weight-bold">Pilih Kripto</label>
                                                 <select name="crypto_pair" id="crypto_pair" class="form-control form-control-lg select2" required>
-                                                    <option selected disabled>--- Pilih Kripto ---</option>
+                                                    <option selected disabled>--- Kripto Populer ---</option>
+                                                    <option value="XXBTZUSD">Bitcoin (BTC) to USD</option>
+                                                    <option value="ETCUSD">Ethereum Classic (ETC) to USD</option>
+                                                    <option value="XETHZUSD">Ethereum (ETH) to USD</option>
+                                                    <option value="XLTCZUSD">Litecoin (LTC) to USD</option>
+                                                    <option value="XDGUSD">Dogecoin (DOGE) (XDG) to USD</option>
+                                                    <option value="XCNUSD">Onyxcoin (XCN) to USD</option>
+                                                    <option value="MLNUSD">Enzyme (MLN) to USD</option>
+                                                    <option value="REPUSD">Augur (REP) to USD</option>
+                                                    <option value="SOLUSD">Solana (SOL) to USD</option>
+                                                    <option value="PONKEUSD">Ponke SOL (PONKE) to USD</option>
+                                                    <option value="POPCATUSD">Popcat SOL (POPCAT) to USD</option>
+                                                    <option selected disabled>--- Pilih Kripto Lain ---</option>
                                                     @foreach ($cryptoPairs as $key => $pair)
                                                         @php
                                                             $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
@@ -126,9 +136,9 @@
                                             <label class="font-weight-bold">Jangka Waktu</label>
                                             <div class="d-flex align-items-center">
                                                 <div class="input-group date-range-group">
-                                                    <input type="text" name="date-start" id="date" class="form-control floating-label" placeholder="awal"/>
+                                                    <input type="date" name="date-start" id="date-start" class="form-control floating-label" placeholder="awal" />
                                                     <span class="date-separator">–</span>
-                                                    <input type="text" name="date-end" id="date-end" class="form-control floating-label" placeholder="akhir"/>
+                                                    <input type="date" name="date-end" id="date-end" class="form-control floating-label" placeholder="akhir" />
                                                 </div>
                                             </div>
                                         </div>
@@ -176,6 +186,18 @@
 
                 // Kirim form
                 this.submit();  // Melakukan submit form secara normal
+            });
+        </script>
+
+        {{-- set tanggal nggak bisa besok dst --}}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Dapatkan tanggal hari ini dalam format YYYY-MM-DD
+                const today = new Date().toISOString().split("T")[0];
+        
+                // Set batas maksimal (max) agar tidak bisa pilih besok dan seterusnya
+                document.getElementById("date-start").setAttribute("max", today);
+                document.getElementById("date-end").setAttribute("max", today);
             });
         </script>
     </body>

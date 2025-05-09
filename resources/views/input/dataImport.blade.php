@@ -60,20 +60,17 @@
                             <div class="card" style="margin-top: 10px; min-height: 450px;">
                                 <div class="card-body px-5 py-4">
                                     @if(session('error'))
-                                        <div class="alert alert-danger" role="alert">
+                                        <div class="alert alert-danger" role="alert" style="text-align: center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
                                     @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $err)
-                                                    <li>{{ $err }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger" style="text-align: center">
+                                            @foreach ($errors->all() as $err)
+                                                {{ $err }}
+                                            @endforeach
                                         </div>
                                     @endif
-
 
                                     <div>
                                         <div class="text-center mb-4">
@@ -94,9 +91,9 @@
                                             <div class="form-group mb-4">
                                                 <label class="font-weight-bold">Jangka Waktu</label>
                                                 <div class="d-flex align-items-center">
-                                                    <input type="text" class="form-control form-control-lg mr-2" placeholder="Periode Awal" id="date-start" name="date-start">
+                                                    <input type="date" class="form-control form-control-lg mr-2" placeholder="Periode Awal" id="date-start" name="date-start">
                                                     <span class="mx-2">-</span>
-                                                    <input type="text" class="form-control form-control-lg ml-2" placeholder="Periode Akhir" id="date-end" name="date-end">
+                                                    <input type="date" class="form-control form-control-lg ml-2" placeholder="Periode Akhir" id="date-end" name="date-end">
                                                 </div>
                                             </div>
                                         </div>
@@ -157,7 +154,18 @@
                 addNotification('mdi-approval', 'success', 'Import Data Berhasil', 'Silahkan menuju halaman pra proses untuk dilakukan peramalan.');
             });
         </script>
+        
+        {{-- set tanggal nggak bisa besok dst --}}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Dapatkan tanggal hari ini dalam format YYYY-MM-DD
+                const today = new Date().toISOString().split("T")[0];
 
+                // Set batas maksimal (max) agar tidak bisa pilih besok dan seterusnya
+                document.getElementById("date-start").setAttribute("max", today);
+                document.getElementById("date-end").setAttribute("max", today);
+            });
+        </script>
     </body>
 
 </html>

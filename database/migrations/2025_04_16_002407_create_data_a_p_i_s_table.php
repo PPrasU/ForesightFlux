@@ -15,10 +15,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('source_id');
             $table->string('date');
-            $table->decimal('open', 15, 2);
-            $table->decimal('high', 15, 2);
-            $table->decimal('low', 15, 2);
-            $table->decimal('close', 15, 2);
+            $table->string('open');
+            $table->string('high');
+            $table->string('low');
+            $table->string('close');
+            $table->string('vwap');
+            $table->string('vol');
+            $table->string('count');
+            // $table->decimal('open', 15, 4);
+            // $table->decimal('high', 15, 4);
+            // $table->decimal('low', 15, 4);
+            // $table->decimal('close', 15, 4);
             $table->timestamps();
         
             $table->foreign('source_id')->references('id')->on('data_source');

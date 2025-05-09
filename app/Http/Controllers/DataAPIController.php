@@ -29,6 +29,16 @@ class DataAPIController extends Controller
             
             //mapping nama manual MANUAL LOOOOO
             $cryptoNames = [
+                // Beberapa koin besar:
+                'XXBTZUSD' => 'Bitcoin (BTC) to USD',
+                'ETCUSD' => 'Ethereum Classic (ETC) to USD',
+                'XETHZUSD' => 'Ethereum (ETH) to USD',
+                'XLTCZUSD' => 'Litecoin (LTC) to USD',
+                'XDGUSD' => 'Dogecoin (DOGE) (XDG) to USD',
+                'XCNUSD' => 'Onyxcoin (XCN) to USD',
+                'MLNUSD' => 'Enzyme (MLN) to USD',
+                'REPUSD' => 'Augur (REP) to USD',
+
                 '1INCHUSD' => '1inch (1INCH) to USD',
                 'AAVEUSD' => 'Aave (AAVE) to USD',
                 'ACAUSD' => 'Acala (ACA) to USD',
@@ -413,24 +423,14 @@ class DataAPIController extends Controller
     
                 // Simbol generik yang perlu klarifikasi — sebelumnya salah atau placeholder:
                 'WUSD' => 'WUSD (WUSD) to USD', // bisa berarti Wrapped USD, perlu sumber resmi
-    
                 'XBTPYUSD' => 'XBT Provider (XBTPY) to USD', // exchange-traded product, bukan token blockchain
-                'XCNUSD' => 'Onyxcoin (XCN) to USD',
-                'XDGUSD' => 'Dogecoin (DOGE) (XDG) to USD', // simbol seharusnya DOGE, bukan XDG
-    
-                // Beberapa koin besar:
-                'ETCUSD' => 'Ethereum Classic (ETC) to USD',
-                'XETHZUSD' => 'Ethereum (ETH) to USD',
-                'XLTCZUSD' => 'Litecoin (LTC) to USD',
-                'MLNUSD' => 'Enzyme (MLN) to USD',
-                'REPUSD' => 'Augur (REP) to USD',
     
                 // Entitas tidak umum:
                 'XRPRLUSD' => 'Ripple (XRPRL) to USD', // kemungkinan salah tulis dari XRP — jika ya, seharusnya:
                 'XRPUSD' => 'Ripple (XRP) to USD',
                 'XRTUSD' => 'Robonomics Network (XRT) to USD',
                 'XTZUSD' => 'Tezon (XTZ) to USD',
-                'XXBTZUSD' => 'Bitcoin (BTC) to USD',
+                
                 'XLMUSD' => 'Stellar Lumens (XLM) to USD',
                 'XMRUSD' => 'Monero (XMR) to USD',
                 'XRPUSD' => 'XRP to USD',
@@ -491,6 +491,12 @@ class DataAPIController extends Controller
             if (DataAPI::exists()) {
                 return back()->withErrors([
                     'file' => '🚨Data API sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
+                ]);
+            }
+
+            if (empty($request->crypto_pair)) {
+                return back()->withErrors([
+                    'crypto_pair' => '🚨Kolom Pilih Kripto wajib diisi.⚠️',
                 ]);
             }
 
@@ -971,9 +977,15 @@ class DataAPIController extends Controller
             $pairKey = array_key_first($data['result']);
 
             foreach ($data['result'][$pairKey] as $item) {
-                $parsedDate = Carbon::createFromTimestamp($item[0])->startOfDay(); // UTC by default
-                $start = Carbon::parse($request['date-start'])->timezone('UTC')->startOfDay();
-                $end = Carbon::parse($request['date-end'])->timezone('UTC')->endOfDay(); // endOfDay biar inklusif
+                // ini UTC
+                // $parsedDate = Carbon::createFromTimestamp($item[0])->startOfDay(); // UTC defaultnya
+                // $start = Carbon::parse($request['date-start'])->timezone('UTC')->startOfDay();
+                // $end = Carbon::parse($request['date-end'])->timezone('UTC')->endOfDay(); // endOfDay biar inklusif
+
+                //pake WIB ato jakarta
+                $parsedDate = Carbon::createFromTimestampUTC($item[0])->setTimezone('Asia/Jakarta')->startOfDay();
+                $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
+                $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
 
                 if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
                     DataAPI::create([
@@ -983,6 +995,9 @@ class DataAPIController extends Controller
                         'high' => $item[2],
                         'low' => $item[3],
                         'close' => $item[4],
+                        'vwap' => $item[5],
+                        'vol' => $item[6],
+                        'count' => $item[7],
                     ]);
                 }
             }
@@ -1002,9 +1017,11 @@ class DataAPIController extends Controller
             session()->push('notifications', [
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
-                'title' => 'Data API Berhasil Dipilih',
-                'text' => 'Data sudah siap untuk dilakukan pra-proses.'
+                'title' => 'Pra-Proses Berhasil',
+                'text' => 'Data sudah siap untuk dilakukan peramalan.'
             ]);
+
+
 
         }catch(\Throwable $e){
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());

@@ -18,6 +18,9 @@ class DataAPI extends Model
         'high',
         'low',
         'close',
+        'vwap',
+        'vol',
+        'count',
     ];
 
     public function source()
