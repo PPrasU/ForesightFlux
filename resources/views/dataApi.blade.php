@@ -79,7 +79,7 @@
                                                     Hapus Semua Data 
                                                 </button>
                                                 <form id="praProsesForm" action="{{ route('data.praProsesAPI') }}" method="POST" style="display: none;">
-                                                    @csrf <!-- Pastikan untuk menyertakan CSRF token -->
+                                                    @csrf
                                                 </form>  
                                                 @if (!$sudahPraProses)
                                                     <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
@@ -121,8 +121,6 @@
                                             @foreach ($data as $row)
                                                 <tr>
                                                     <td style="text-align: center">{{ $row->date }}</td>
-                                                    {{-- <td>{{ $row->market_cap }}</td>
-                                                    <td>{{ $row->vol }}</td> --}}
                                                     <td>{{ $row->open }}</td>
                                                     <td>{{ $row->high }}</td>
                                                     <td>{{ $row->low }}</td>

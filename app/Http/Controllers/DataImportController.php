@@ -32,6 +32,13 @@ class DataImporTController extends Controller
                 'sumber' => 'required|in:Import',
                 'file' => 'required|file|mimes:csv,txt',
             ]);
+
+            // session()->push('notifications', [
+            //     'icon' => 'mdi-flag-variant',
+            //     'bgColor' => 'info',
+            //     'title' => 'Import Data Berhasil',
+            //     'text' => 'Data sudah siap untuk dilakukan pra-proses.'
+            // ]); 
     
             $file = $request->file('file');
     
@@ -184,7 +191,7 @@ class DataImporTController extends Controller
             session()->push('notifications', [
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',
-                'title' => 'Data Dihapus',
+                'title' => 'Data Import Dihapus',
                 'text' => 'Data berhasil dihapus.'
             ]);            
             DataImport::truncate();
