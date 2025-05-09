@@ -126,7 +126,7 @@
                                             <label class="font-weight-bold">Jangka Waktu</label>
                                             <div class="d-flex align-items-center">
                                                 <div class="input-group date-range-group">
-                                                    <input type="text" name="date-start" id="date-start" class="form-control floating-label" placeholder="awal"/>
+                                                    <input type="text" name="date-start" id="date" class="form-control floating-label" placeholder="awal"/>
                                                     <span class="date-separator">–</span>
                                                     <input type="text" name="date-end" id="date-end" class="form-control floating-label" placeholder="akhir"/>
                                                 </div>

@@ -44,17 +44,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     @if(session('error'))
-                                        <div class="alert alert-danger" role="alert">
+                                        <div class="alert alert-danger" role="alert" style="text-align: center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
                                     @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $err)
-                                                    <li>{{ $err }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger" style="text-align: center">
+                                            @foreach ($errors->all() as $err)
+                                                {{ $err }}
+                                            @endforeach
                                         </div>
                                     @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -67,7 +65,7 @@
                                                 </a>
                                             @else
                                                 <button id="hapusDataImport" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
-                                                    Hapus Semua Data 
+                                                    Hapus Semua Data Import
                                                 </button>
                                                 <form id="praProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
                                                     @csrf <!-- Pastikan untuk menyertakan CSRF token -->
@@ -110,7 +108,7 @@
                                             @foreach ($data as $row)
                                                 <tr>
                                                     <td style="text-align: center" hidden>{{ $row->id }}</td>
-                                                    <td>{{ $row->date }}</td>
+                                                    <td style="text-align: center">{{ $row->date }}</td>
                                                     <td>{{ $row->price }}</td>
                                                     <td>{{ $row->open }}</td>
                                                     <td>{{ $row->high }}</td>

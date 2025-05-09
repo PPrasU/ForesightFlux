@@ -3,7 +3,6 @@
         <div class="container-fluid">
             <div class="logo">                
                 <a href="{{ route('dashboard') }}" class="logo">
-                    {{-- <img src="images/Logo.png" alt="Logo" class="logo-small" style="height: 50px; width: 150px;"> --}}
                     <img src="" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 150px;">
                     <img src="" alt="" class="logo-large" style="height: 50px; width: 150px;">
                 </a>
@@ -55,31 +54,10 @@
                                 @endif
                             </div>                                                      
                             <a href="{{ route('notifikasi.clear') }}" class="dropdown-item text-center text-primary">
-                                Tandai Sudah Dibaca <i class="fi-arrow-right"></i>
+                                Hapus Semua Notifikasi <i class="fi-arrow-right"></i>
                             </a>                            
                         </div>        
                     </li>
-                    {{-- <li class="dropdown notification-list">
-                        <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            <i class="mdi mdi-bell noti-icon"></i>
-                            <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">0</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                            <h6 class="dropdown-item-text">Notifikasi</h6>
-                            <div class="slimscroll notification-item-list" id="notification-list">
-                                <!-- Notifikasi akan ditambahkan di sini -->
-                            </div>
-                            <a href="javascript:void(0);" class="dropdown-item text-center text-primary">
-                                Tandai Sudah Dibaca <i class="fi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </li> --}}
-                    {{-- @if(session('notification'))
-                        <script>
-                            let notif = @json(session('notification'));
-                            addNotification(notif.icon, notif.bgColor, notif.title, notif.text);
-                        </script>
-                    @endif --}}
                     <li class="dropdown notification-list">
                         <div class="dropdown notification-list">
                             <a class="dropdown-toggle nav-link arrow-none waves-effect nav-user waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
@@ -102,6 +80,16 @@
                                 </form> --}}
                             </div>                                                                    
                         </div>
+                    </li>
+
+                    <li class="menu-item list-inline-item">
+                        <a class="navbar-toggle nav-link">
+                          <div class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -143,9 +131,25 @@
                     <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
                         <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-finance"></i>Petunjuk Penggunaan</a>
                     </li>
-                    <li class="has-submenu col-sm-5" style="text-align: right">
-                        <a id="datetime" class="breadcrumb-item active" style="color: #9e9e9e"></a>
-                    </li>
+                    <style>
+                        #datetime {
+                            margin-left: auto; /* Membuat elemen berada di kanan */
+                            color: #9e9e9e;
+                            font-size: 14px; /* Sesuaikan ukuran font jika perlu */
+                            display: flex; /* Gunakan flexbox untuk kontrol lebih baik */
+                            align-items: center; /* Vertikal tengah jika diperlukan */
+                        }
+                        .navigation-menu {
+                            display: flex;
+                            align-items: center; /* Untuk vertikal tengah */
+                            width: 100%; /* Pastikan menu memiliki lebar penuh */
+                        }
+
+                    </style>
+                    
+                    <li class="has-submenu" style="margin-left:auto;">
+                        <a id="datetime" class="breadcrumb-item active" style="color: #9e9e9e;"></a>
+                    </li>                    
                 </ul>
             </div>
         </div>

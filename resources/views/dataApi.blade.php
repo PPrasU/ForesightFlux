@@ -54,17 +54,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     @if(session('error'))
-                                        <div class="alert alert-danger" role="alert">
+                                        <div class="alert alert-danger" role="alert" style="text-align: center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
                                     @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $err)
-                                                    <li>{{ $err }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger" style="text-align: center">
+                                            @foreach ($errors->all() as $err)
+                                                {{ $err }}
+                                            @endforeach
                                         </div>
                                     @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -76,7 +74,7 @@
                                                 </a>
                                             @else
                                                 <button id="hapusDataAPI" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
-                                                    Hapus Semua Data 
+                                                    Hapus Semua Data API
                                                 </button>
                                                 <form id="praProsesForm" action="{{ route('data.praProsesAPI') }}" method="POST" style="display: none;">
                                                     @csrf
@@ -89,27 +87,28 @@
                                             @endif  
                                         </div>
                                     </div>
-
+                                    
                                     @php
                                         use Carbon\Carbon;
                                         $source = $data->first()->source ?? null;
                                         $name = $source->display_name ?? $source->name ?? '-';
-                                        $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
-                                        $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
+                                        $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
+                                        $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
                                         $total = $data->count();
                                     @endphp
 
                                     @if ($source)
                                         <div class="mb-4">
                                             <p class="mb-1"><strong>Nama Kripto Asli:</strong> {{ $name }}</p>
-                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} - {{ $source->periode_akhir }}</p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} - {{ $end }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
                                     @endif
-                                
+
                                     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
+                                                <th style="width: 10px" hidden>No</th>
                                                 <th style="width: 150px">Tanggal</th>
                                                 <th>Open</th>
                                                 <th>High</th>
@@ -120,6 +119,7 @@
                                         <tbody>
                                             @foreach ($data as $row)
                                                 <tr>
+                                                    <td style="text-align: center" hidden>{{ $row->id }}</td>
                                                     <td style="text-align: center">{{ $row->date }}</td>
                                                     <td>{{ $row->open }}</td>
                                                     <td>{{ $row->high }}</td>
@@ -147,7 +147,7 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Close</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} dicatat.</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} dicatat dengan format MM-DD-YYYY.</p>
                                             <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $name }} saat awal perdagangan hari itu.</p>
                                             <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $name }} selama satu hari perdagangan.</p>
                                             <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $name }} selama satu hari perdagangan.</p>
@@ -186,7 +186,7 @@
                 let prevClose = null;
         
                 rows.forEach((row, index) => {
-                    const closeCell = row.cells[4]; // Kolom ke-6 (index ke-5) adalah 'Close'
+                    const closeCell = row.cells[5]; // Kolom ke-6 (index ke-5) adalah 'Close'
                     const closeValue = parseInt(closeCell.textContent.replace(/\./g, ''));
         
                     if (prevClose !== null) {

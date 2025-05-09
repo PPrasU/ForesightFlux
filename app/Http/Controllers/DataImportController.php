@@ -20,9 +20,21 @@ class DataImporTController extends Controller
     }
 
     public function input(){
-        $dataSource = DataSource::all();
-        $dataImport = DataImport::all();
-        return view('input/dataImport', compact('dataSource', 'dataImport'));
+        try{
+            $dataSource = DataSource::all();
+            $dataImport = DataImport::all();
+
+            if (DataImport::exists()) {
+                return back()->withErrors([
+                    'file' => '🚨Data Import sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
+                ]);
+            }
+
+            return view('input/dataImport', compact('dataSource', 'dataImport'));
+        }catch(\Throwable $e){
+            return view('input/dataImport', compact('dataSource', 'dataImport'))
+            ->with('error', 'Terjadi kesalahan saat mengambil data kripto: ' . $e->getMessage());
+        }
     }
 
     public function post(Request $request){
@@ -121,7 +133,7 @@ class DataImporTController extends Controller
             
             
     
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
         }
     }
@@ -196,19 +208,8 @@ class DataImporTController extends Controller
             ]);            
             DataImport::truncate();
             return redirect()->route('data.importData')->with('Success', 'Data Pra Proses Berhasil Dihapus');
-        }catch (\Exception $e) {
+        }catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
         }
     }
-
-    // DataImport::create([
-    //     'source_id' => $source->id,
-    //     'date' => $date,
-    //     'price' => floatval(str_replace(',', '', $row[1])),
-    //     'open' => floatval(str_replace(',', '', $row[2])),
-    //     'high' => floatval(str_replace(',', '', $row[3])),
-    //     'low' => floatval(str_replace(',', '', $row[4])),
-    //     'vol' => $row[5], // Biarkan dalam bentuk string
-    //     'change' => (str_contains($row[6], '-') ? '' : '+') . $row[6],
-    // ]);
 }

@@ -27,6 +27,7 @@ class DataAPIController extends Controller
             $dataSource = DataSource::all();
             $dataAPI = DataAPI::all();
             
+            //mapping nama manual MANUAL LOOOOO
             $cryptoNames = [
                 '1INCHUSD' => '1inch (1INCH) to USD',
                 'AAVEUSD' => 'Aave (AAVE) to USD',
@@ -76,6 +77,7 @@ class DataAPIController extends Controller
                 'BABYUSD' => 'Baby (BABY) to USD',
                 'BADGERUSD' => 'Badger DAO (BADGER) to USD',
                 'BALUSD' => 'Balancer (BAL) to USD',
+                'BANANAS31USD' => 'Banana (BANANAS31) to USD',
                 'BANDUSD' => 'Band Protocol (BAND) to USD',
                 'BATUSD' => 'Basic Attention Token (BAT) to USD',
                 'BCHUSD' => 'Bitcoin Cash (BCH) to USD',
@@ -99,6 +101,7 @@ class DataAPIController extends Controller
                 'BSXUSD' => 'Basilisk (BSX) to USD',
                 'BTTUSD' => 'BitTorrent (BTT) to USD',
                 'C98USD' => 'Coin98 (C98) to USD',
+                'CAKEUSD' => 'PancakeSwap (CAKE) to USD',
                 'CELOUSD' => 'Celo (CELO) to USD',
                 'CELRUSD' => 'Celer Network (CELR) to USD',
                 'CFGUSD' => 'Centrifuge (CFG) to USD',
@@ -454,23 +457,28 @@ class DataAPIController extends Controller
                 'ZORAUSD' => ' (ZORA) to USD',
             ];
 
+            if (DataAPI::exists()) {
+                return back()->withErrors([
+                    'file' => '🚨Data API sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
+                ]);
+            }
+
+            //ambil data dari kraken API
             $response = Http::get('https://api.kraken.com/0/public/AssetPairs');
             $result = $response->json();
+            $cryptoPairs = collect();
 
-            $cryptoPairs = collect($result['result'])->filter(function ($pair, $key) {
-                return str_ends_with($key, 'USD') || str_ends_with($key, 'IDR');
-            });
-            
+            //cek apakah data berhasil didapatkan
             if (!isset($result['result'])) {
                 return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'))
                     ->with('error', 'Gagal mengambil data kripto dari Kraken');
             }
 
-            return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'), [  // pastikan nama view ini benar
-                'dataSource' => $dataSource,
-                'dataAPI' => $dataAPI,
-                'cryptoPairs' => $cryptoNames // ini yang mencegah error
-            ]);
+            $cryptoPairs = collect($result['result'])->filter(function ($pair, $key) {
+                return str_ends_with($key, 'USD') || str_ends_with($key, 'IDR');
+            });
+
+            return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'));
         } catch (\Throwable $e) {
             return view('input.dataAPI', compact('dataSource', 'dataAPI'))
                 ->with('error', 'Terjadi kesalahan saat mengambil data kripto: ' . $e->getMessage());
@@ -943,7 +951,7 @@ class DataAPIController extends Controller
             ]);
 
             // Parameter Kraken API
-            $startTime = Carbon::parse($request['date-start'])->timestamp;
+            $startTime = Carbon::parse($request['date-start'])->subDay()->timestamp;
             $endTime = Carbon::parse($request['date-end'])->timestamp;
             $pair = $request->crypto_pair;
             $interval = 1440; // daily
@@ -963,13 +971,14 @@ class DataAPIController extends Controller
             $pairKey = array_key_first($data['result']);
 
             foreach ($data['result'][$pairKey] as $item) {
-                $timestamp = $item[0];
-                $date = Carbon::createFromTimestamp($timestamp)->format('d-m-Y'); // simpan dalam format standar
+                $parsedDate = Carbon::createFromTimestamp($item[0])->startOfDay(); // UTC by default
+                $start = Carbon::parse($request['date-start'])->timezone('UTC')->startOfDay();
+                $end = Carbon::parse($request['date-end'])->timezone('UTC')->endOfDay(); // endOfDay biar inklusif
 
-                if (Carbon::parse($date)->between($request['date-start'], $request['date-end'])) {
+                if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
                     DataAPI::create([
                         'source_id' => $dataSource->id,
-                        'date' => $date,
+                        'date' => $parsedDate->format('m-d-Y'),
                         'open' => $item[1],
                         'high' => $item[2],
                         'low' => $item[3],
@@ -986,6 +995,10 @@ class DataAPIController extends Controller
 
     public function praProses(){
         try{
+            if (DataPraProses::exists()) {
+                return redirect()->back()->with('error', 'Sudah Ada Data Yang Di Pra Proses. Pra Proses Hanya Bisa Dilakukan Satu Kali.');
+            }
+            
             session()->push('notifications', [
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
@@ -993,7 +1006,7 @@ class DataAPIController extends Controller
                 'text' => 'Data sudah siap untuk dilakukan pra-proses.'
             ]);
 
-        }catch(\Exception $e){
+        }catch(\Throwable $e){
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
     }
