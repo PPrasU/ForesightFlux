@@ -22,15 +22,10 @@ return new class extends Migration
             $table->string('vwap');
             $table->string('vol');
             $table->string('count');
-            // $table->decimal('open', 15, 4);
-            // $table->decimal('high', 15, 4);
-            // $table->decimal('low', 15, 4);
-            // $table->decimal('close', 15, 4);
             $table->timestamps();
         
             $table->foreign('source_id')->references('id')->on('data_source');
-        });    
-        
+        });
     }
 
     /**

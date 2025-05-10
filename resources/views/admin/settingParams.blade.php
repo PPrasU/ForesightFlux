@@ -85,51 +85,114 @@
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h3 class="mt-0 header-title">Tabel Setting Params</h3>
-                                    <div>
-                                      <a href="{{ route('admin.inputSettingParams') }}" class="btn btn-outline-primary waves-effect waves-light"> 
-                                        Input Data
-                                      </a>
-                                    </div>
-                                </div>
-                            
-                                <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                    <thead>
-                                      <tr>
-                                        <th scope="col" style="width: 10px">No</th>
-                                        <th scope="col">Prams</th>
-                                        <th scope="col">Value</th>
-                                        <th scope="col" style="width: 150px">Aksi</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      @foreach ($data as $row)
-                                          <tr>
-                                              <td style="text-align: center">{{ $row->id }}</td>
-                                              <td>{{ $row->params }}</td>
-                                              <td>{{ $row->value }}</td>
-                                              <td style="text-align: center">
-                                                <a href="/admin/setting-params/edit/{{ $row->id }}"
-                                                    class="btn btn-warning warning"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    title="Edit Data">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="#"
-                                                  class="btn btn-danger delete"
-                                                  data-id="{{ $row->id }}"
-                                                  data-bs-toggle="tooltip"
-                                                  data-bs-placement="top"
-                                                  title="Hapus Data">
-                                                  <i class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
-                                          </tr>
+                              @if(session('error'))
+                                  <div class="alert alert-danger" role="alert" style="text-align: center">
+                                      {{ session('error') }}
+                                  </div>
+                              @endif
+                              @if ($errors->any())
+                                  <div class="alert alert-danger" style="text-align: center">
+                                      @foreach ($errors->all() as $err)
+                                          {{ $err }}
                                       @endforeach
-                                    </tbody>
-                                </table>
+                                  </div>
+                              @endif
+                              <div class="d-flex justify-content-between align-items-center mb-4">
+                                  <h3 class="mt-0 header-title">Tabel Setting Params</h3>
+                              </div>
+                            
+                              <table class="table mb-0">
+                                  <thead class="thead-default">
+                                    <tr>
+                                      <th scope="col" style="text-align: center">Parameter Alpha</th>
+                                      <th scope="col" style="text-align: center">Parameter Beta</th>
+                                      <th scope="col" style="text-align: center">Parameter Gamma</th>
+                                      <th scope="col" style="text-align: center">Season Length</th>
+                                      <th scope="col" style="text-align: center">Persentase Data Training</th>
+                                      <th scope="col" style="text-align: center">Persentase Data Testing</th>
+                                      <th scope="col" style="width: 15px; text-align: center">Aksi</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <td style="text-align: center">{{ $row->alpha }}</td>
+                                            <td style="text-align: center">{{ $row->beta }}</td>
+                                            <td style="text-align: center">{{ $row->gamma }}</td>
+                                            <td style="text-align: center">{{ $row->season_length }}</td>
+                                            <td style="text-align: center">{{ $row->training_percentage }}%</td>
+                                            <td style="text-align: center">{{ $row->testing_percentage }}%</td>
+                                            <td style="text-align: center">
+                                              <a href="#" 
+                                                class="btn btn-warning" 
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editSettingModal"
+                                                data-id="{{ $row->id }}"
+                                                data-alpha="{{ $row->alpha }}"
+                                                data-beta="{{ $row->beta }}"
+                                                data-gamma="{{ $row->gamma }}"
+                                                data-season_length="{{ $row->season_length }}"
+                                                data-training="{{ $row->training_percentage }}"
+                                                data-testing="{{ $row->testing_percentage }}"
+                                                title="Edit Data">
+                                                <i class="fas fa-edit"></i>
+                                              </a>
+                                          </td>
+                                        </tr>
+                                    @endforeach
+                                  </tbody>
+                              </table>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="editSettingModal" tabindex="-1" aria-labelledby="editSettingModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <form method="POST" id="editSettingForm" action="">
+                                      @csrf
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="editSettingModalLabel">Edit Setting Param</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <input type="hidden" name="id" id="setting-id">
+                                          
+                                          <div class="mb-3">
+                                            <label for="alpha" class="form-label">Alpha</label>
+                                            <input type="text" class="form-control" name="alpha" id="alpha">
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for="beta" class="form-label">Beta</label>
+                                            <input type="text" class="form-control" name="beta" id="beta">
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for="gamma" class="form-label">Gamma</label>
+                                            <input type="text" class="form-control" name="gamma" id="gamma">
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for="season_length" class="form-label">Season Length</label>
+                                            <select class="form-control" name="season_length" id="season_length">
+                                              <option value="7">7 (mingguan)</option>
+                                              <option value="30">30 (bulanan)</option>
+                                              <option value="90">90 (kuartalan)</option>
+                                            </select>
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for="training_percentage" class="form-label">Training %</label>
+                                            <input type="number" class="form-control" name="training_percentage" id="training_percentage" min="0" max="100" readonly>
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for="testing_percentage" class="form-label">Testing %</label>
+                                            <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
+                                          </div>                                          
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                        </div>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
 
                             </div>
                         </div>
@@ -159,42 +222,86 @@
             });
         });
     </script>
+    
+    {{-- buat modal --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {{-- hapus data --}}
     <script>
-      document.querySelectorAll('.delete').forEach(function(button) {
-          button.addEventListener('click', function(e) {
-              e.preventDefault();
-              var id = this.getAttribute('data-id');
+      document.addEventListener('DOMContentLoaded', function () {
+          const modal = document.getElementById('editSettingModal');
+          modal.addEventListener('show.bs.modal', function (event) {
+              const button = event.relatedTarget;
+              
+              document.querySelector('#setting-id').value = button.getAttribute('data-id');
+              document.querySelector('#alpha').value = button.getAttribute('data-alpha');
+              document.querySelector('#beta').value = button.getAttribute('data-beta');
+              document.querySelector('#gamma').value = button.getAttribute('data-gamma');
+              document.querySelector('#season_length').value = button.getAttribute('data-season_length');
+              document.querySelector('#training_percentage').value = button.getAttribute('data-training');
+              document.querySelector('#testing_percentage').value = button.getAttribute('data-testing');
+          });
+      });
+    </script>
 
-              Swal.fire({
-                  title: 'Yakin Mau Hapus Data Ini?',
-                  text: 'Aksi ini tidak bisa dibatalkan!',
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonText: 'Hapus!',
-                  cancelButtonText: 'Batal',
-                  confirmButtonColor: '#d33',
-                  cancelButtonColor: '#6c757d',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Menghapus...',
-                            text: 'Data sedang dihapus.',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-                        window.location.href = "{{ route('admin.hapusSettingParams', ['id' => '__ID__']) }}".replace('__ID__', id);
-                    }
+    {{-- isi form action modal --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const editButtons = document.querySelectorAll('a[data-bs-target="#editSettingModal"]');
+          const form = document.getElementById('editSettingForm');
+      
+          editButtons.forEach(btn => {
+              btn.addEventListener('click', function () {
+                  const id = this.dataset.id;
+                  form.action = `/admin/setting-params/update/${id}`; // sesuaikan dengan route update kamu
+      
+                  document.getElementById('alpha').value = this.dataset.alpha;
+                  document.getElementById('beta').value = this.dataset.beta;
+                  document.getElementById('gamma').value = this.dataset.gamma;
+                  document.getElementById('season_length').value = this.dataset.season_length;
+                  document.getElementById('training_percentage').value = this.dataset.training;
+                  document.getElementById('testing_percentage').value = this.dataset.testing;
               });
           });
+      });
+    </script>
+    
+    {{-- agar testing terisi otomatis --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const trainingInput = document.getElementById('training_percentage');
+        const testingInput = document.getElementById('testing_percentage');
+    
+        // Set testing % otomatis saat nilai training diubah
+        trainingInput.addEventListener('input', function () {
+          const trainingVal = parseFloat(this.value);
+          if (!isNaN(trainingVal) && trainingVal >= 0 && trainingVal <= 100) {
+            testingInput.value = 100 - trainingVal;
+          } else {
+            testingInput.value = '';
+          }
         });
-      </script>
+    
+        // Saat tombol edit diklik, data juga tetap diatur
+        const editButtons = document.querySelectorAll('a[data-bs-target="#editSettingModal"]');
+        const form = document.getElementById('editSettingForm');
+    
+        editButtons.forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.dataset.id;
+            form.action = `/admin/setting-params/update/${id}`;
+    
+            document.getElementById('alpha').value = this.dataset.alpha;
+            document.getElementById('beta').value = this.dataset.beta;
+            document.getElementById('gamma').value = this.dataset.gamma;
+            document.getElementById('season_length').value = this.dataset.season_length;
+    
+            const training = this.dataset.training;
+            document.getElementById('training_percentage').value = training;
+            document.getElementById('testing_percentage').value = 100 - training;
+          });
+        });
+      });
+    </script>
     
   </body>
 </html>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\DataImport;
 use App\Models\DataSource;
-use App\Models\DataPraProses;
+use App\Models\SettingParam;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\DataPraProses;
 
 class DataImporTController extends Controller
 {
@@ -45,12 +46,12 @@ class DataImporTController extends Controller
                 'file' => 'required|file|mimes:csv,txt',
             ]);
 
-            // session()->push('notifications', [
-            //     'icon' => 'mdi-flag-variant',
-            //     'bgColor' => 'info',
-            //     'title' => 'Import Data Berhasil',
-            //     'text' => 'Data sudah siap untuk dilakukan pra-proses.'
-            // ]); 
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Import Data Berhasil',
+                'text' => 'Data sudah siap untuk dilakukan pra-proses.'
+            ]); 
     
             $file = $request->file('file');
     
@@ -175,12 +176,22 @@ class DataImporTController extends Controller
                 ]);
             }
     
-            // 🔥 Tambahkan sorting berdasarkan date!
-            $sortedData = $formattedData->sortBy('date')->values(); // <- ini kunci utamanya!
+            // sorting berdasarkan date!
+            $sortedData = $formattedData->sortBy('date')->values(); 
     
-            // Bagi 80:20 Training:Testing
+            //setting param training dan testing
+            $setting = SettingParam::first(); // Ambil data pertama dari tabel setting_param
+            if (!$setting) {
+                return redirect()->back()->with('error', 'Parameter setting belum tersedia. Harap isi terlebih dahulu.');
+            }
+
+            // Ambil nilai training dan testing dari DB
+            $trainingPercentage = floatval($setting->training_percentage);
+            $testingPercentage = floatval($setting->testing_percentage);
+
             $total = $sortedData->count();
-            $trainingCount = floor($total * 0.8);
+            $trainingCount = floor($total * ($trainingPercentage / 100));
+
     
             foreach ($sortedData as $index => $data) {
                 DataPraProses::create([
@@ -196,7 +207,7 @@ class DataImporTController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
-    }    
+    }
     
     public function hapus(){
         try{

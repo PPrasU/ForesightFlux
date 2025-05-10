@@ -956,77 +956,151 @@ class DataAPIController extends Controller
                 'sumber' => $request->sumber,
             ]);
 
-            // Parameter Kraken API
-            $startTime = Carbon::parse($request['date-start'])->subDay()->timestamp;
-            $endTime = Carbon::parse($request['date-end'])->timestamp;
+            $startTime = Carbon::parse($request['date-start'], 'Asia/Jakarta')->subDay()->timestamp;
+            $endTime = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay()->timestamp;
             $pair = $request->crypto_pair;
             $interval = 1440; // daily
 
-            $response = Http::get("https://api.kraken.com/0/public/OHLC", [
-                'pair' => $pair,
-                'interval' => $interval,
-                'since' => $startTime,
-            ]);
+            $pairKey = null;
+            $hasMoreData = true;
 
-            $data = $response->json();
+            while ($hasMoreData) {
+                $response = Http::get("https://api.kraken.com/0/public/OHLC", [
+                    'pair' => $pair,
+                    'interval' => $interval,
+                    'since' => $startTime,
+                ]);
 
-            if (!isset($data['result'])) {
-                return redirect()->back()->with('error', 'Gagal mengambil data dari Kraken.');
-            }
+                $data = $response->json();
 
-            $pairKey = array_key_first($data['result']);
+                // Validasi respon
+                if (!isset($data['result'])) {
+                    return redirect()->back()->with('error', 'Gagal mengambil data dari Kraken.');
+                }
 
-            foreach ($data['result'][$pairKey] as $item) {
-                // ini UTC
-                // $parsedDate = Carbon::createFromTimestamp($item[0])->startOfDay(); // UTC defaultnya
-                // $start = Carbon::parse($request['date-start'])->timezone('UTC')->startOfDay();
-                // $end = Carbon::parse($request['date-end'])->timezone('UTC')->endOfDay(); // endOfDay biar inklusif
+                // Ambil nama key pair (contoh: XXBTZUSD)
+                $pairKey = $pairKey ?? array_key_first($data['result']);
 
-                //pake WIB ato jakarta
-                $parsedDate = Carbon::createFromTimestampUTC($item[0])->setTimezone('Asia/Jakarta')->startOfDay();
-                $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
-                $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
+                $ohlcData = $data['result'][$pairKey] ?? [];
 
-                if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
-                    DataAPI::create([
-                        'source_id' => $dataSource->id,
-                        'date' => $parsedDate->format('m-d-Y'),
-                        'open' => $item[1],
-                        'high' => $item[2],
-                        'low' => $item[3],
-                        'close' => $item[4],
-                        'vwap' => $item[5],
-                        'vol' => $item[6],
-                        'count' => $item[7],
-                    ]);
+                // Berhenti jika tidak ada data lagi
+                if (empty($ohlcData)) {
+                    break;
+                }
+
+                foreach ($ohlcData as $item) {
+                    // Timestamp dari Kraken = UTC
+                    $parsedDate = Carbon::createFromTimestampUTC($item[0])->setTimezone('Asia/Jakarta')->startOfDay();
+                    $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
+                    $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
+
+                    if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
+                        DataAPI::updateOrCreate( // pakai updateOrCreate biar aman dari duplikasi
+                            [
+                                'source_id' => $dataSource->id,
+                                'date' => $parsedDate->format('m-d-Y'),
+                            ],
+                            [
+                                'open' => $item[1],
+                                'high' => $item[2],
+                                'low' => $item[3],
+                                'close' => $item[4],
+                                'vwap' => $item[5],
+                                'vol' => $item[6],
+                                'count' => $item[7],
+                            ]
+                        );
+                    }
+                }
+
+                // Ambil timestamp terakhir dari batch
+                $lastTimestamp = end($ohlcData)[0] ?? null;
+
+                if ($lastTimestamp && $lastTimestamp < $endTime) {
+                    $startTime = $lastTimestamp; // update "since" ke timestamp terakhir
+                    sleep(1); // rate limit: 1 request per detik
+                } else {
+                    $hasMoreData = false; // selesai jika sudah melewati batas waktu yang diminta
                 }
             }
 
             return redirect()->route('data.dataAPI')->with('Success', 'Data berhasil diambil dan disimpan.');
+
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function praProses(){
-        try{
+    public function praProses() {
+        try {
             if (DataPraProses::exists()) {
                 return redirect()->back()->with('error', 'Sudah Ada Data Yang Di Pra Proses. Pra Proses Hanya Bisa Dilakukan Satu Kali.');
             }
-            
+    
             session()->push('notifications', [
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
                 'title' => 'Pra-Proses Berhasil',
                 'text' => 'Data sudah siap untuk dilakukan peramalan.'
             ]);
+    
+            $dataApi = DataApi::orderBy('date')->get();
+    
+            if ($dataApi->isEmpty()) {
+                return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+            }
+    
+            $sourceId = $dataApi->first()->source_id;
+            $formattedData = collect();
+    
+            foreach ($dataApi as $item) {
+                try {
+                    // Format tanggal dari MM-DD-YYYY ke Y-m-d
+                    $formattedDate = Carbon::createFromFormat('m-d-Y', $item->date)->format('Y-m-d');
+    
+                    // Bersihkan nilai 'close' dan ubah ke float
+                    $cleanPrice = floatval(str_replace(',', '', $item->close));
+    
+                    $formattedData->push([
+                        'source_id' => $sourceId,
+                        'date' => $formattedDate,
+                        'price' => $cleanPrice,
+                    ]);
+                } catch (\Exception $e) {
+                    // Lewatkan baris yang gagal di-parse
+                    continue;
+                }
+            }
+    
+            $sortedData = $formattedData->sortBy('date')->values();
+            //setting param training dan testing
+            $setting = SettingParam::first(); // Ambil data pertama dari tabel setting_param
+            if (!$setting) {
+                return redirect()->back()->with('error', 'Parameter setting belum tersedia. Harap isi terlebih dahulu.');
+            }
 
+            // Ambil nilai training dan testing dari DB
+            $trainingPercentage = floatval($setting->training_percentage);
+            $testingPercentage = floatval($setting->testing_percentage);
 
-
-        }catch(\Throwable $e){
+            $total = $sortedData->count();
+            $trainingCount = floor($total * ($trainingPercentage / 100));
+    
+            foreach ($sortedData as $index => $data) {
+                DataPraProses::create([
+                    'source_id' => $data['source_id'],
+                    'date' => $data['date'],
+                    'price' => $data['price'],
+                    'category' => $index < $trainingCount ? 'Training' : 'Testing',
+                ]);
+            }
+    
+            return redirect()->route('peramalan.prosesPeramalan')->with('Success', 'Berhasil melakukan pra-proses.');
+    
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
-    }
+    }      
 
     public function hapus(){
         try{

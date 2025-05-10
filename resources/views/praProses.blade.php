@@ -39,53 +39,65 @@
                             <div class="card">
                                 <div class="card-body">
                                     @if(session('error'))
-                                        <div class="alert alert-danger" role="alert">
+                                        <div class="alert alert-danger" role="alert" style="text-align: center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
                                     @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $err)
-                                                    <li>{{ $err }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger" style="text-align: center">
+                                            @foreach ($errors->all() as $err)
+                                                {{ $err }}
+                                            @endforeach
                                         </div>
                                     @endif
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Pra-Proses Nih</h4>                                                                             
                                         <div>
                                             @if ($data->count() > 0)
                                                 <button id="hapusPraProses" type="button" class="btn btn-outline-danger waves-effect waves-light">
                                                     Hapus Semua Data Pra Proses
                                                 </button>
-
-                                                <form id="ProsesForm" action="#" method="POST" style="display: none;">
+                                                
+                                                <form id="hapusPraProsesForm" method="POST" style="display: none;">
                                                     @csrf
+                                                    @method('DELETE')
                                                 </form>
+
                                                 <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
                                                     Proses Peramalan Kripto
                                                 </button>
                                             @endif
                                         </div>
                                     </div>
+                                   
                                     @php
+                                        use Carbon\Carbon;
                                         $source = $data->first()->source ?? null;
+                                        $name = $source->display_name ?? $source->name ?? '-';
+                                        $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
+                                        $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                        $total = $data->count();
                                     @endphp
+
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $source->name }}</p>
-
-                                            @if ($source->sumber === 'Import')
-                                                <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} s/d {{ $source->periode_akhir }}</p>
-                                            @elseif ($source->sumber === 'API')
-                                                <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->jangka_waktu }} Hari</p>
-                                            @endif
-                                            
-                                            <p class="mb-1"><strong>Total Data:</strong> {{ $data->count() }}</p>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}<strong style="margin-left: 15px">Total Data:</strong> {{ $total }}
+                                                <strong style="margin-left: 15px">Sumber:</strong>
+                                                @if($source->sumber === 'API')
+                                                    API 🖥️
+                                                @elseif($source->sumber === 'Import')
+                                                    Import 🗂️
+                                                @endif
+                                            </p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
+                                            <p class="mb-1">
+                                            </p>
+                                            <p class="mb-1"><strong>Persentase training dan testing:</strong> {{ $param->training_percentage }}:{{ $param->testing_percentage }}</p>
                                         </div>
                                     @endif
+                                    
+                                    
+
                                     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
@@ -103,8 +115,18 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        
                                     </table>
+                                    @if ($source)
+                                        <div class="mb-4">
+                                            <br>
+                                            <h5 class="mb-1"><strong>⚠️ Keterangan : </strong> 📝</h5>
+                                            <br>
+                                            <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} yang sudah dilakukan pra proses menjadi format YYYY-MM-DD.</p>
+                                            <p class="mb-1"><strong>Harga Terakhir: </strong>Harga dari {{ $name }} yang diambil dari sumber {{ $source->sumber }} data. Nanti kolom ini akan menjadi harga asli yang akan dibandingkan dengan harga peramalan nantinya.</p>
+                                            <p class="mb-1"><strong>Kategori: </strong>Membedakan mana data untuk training dan data untuk testing. (Untuk kemudahan sistem dalam bekerja nantinya)</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -204,8 +226,10 @@
                                 Swal.showLoading();
                             }
                         });
-                        window.location.href = "{{ route('peramalan.hapusProsesPeramalan') }}";
 
+                        const form = document.getElementById("hapusPraProsesForm");
+                        form.action = "{{ route('peramalan.hapusPraProsesPeramalan') }}";
+                        form.submit();
                     }
                 });
             });

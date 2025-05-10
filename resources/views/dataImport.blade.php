@@ -67,27 +67,38 @@
                                                 <button id="hapusDataImport" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
                                                     Hapus Semua Data Import
                                                 </button>
-                                                <form id="praProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
-                                                    @csrf <!-- Pastikan untuk menyertakan CSRF token -->
-                                                </form>   
+
+                                                <form id="hapusDataImportForm" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                  
                                                 @if (!$sudahPraProses)
                                                     <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
                                                         Pra-Proses Data Kripto
                                                     </button>
+                                                    <form id="praProsesForm" action="{{ route('data.praProsesImportData') }}" method="POST" style="display: none;">
+                                                        @csrf <!-- Pastikan untuk menyertakan CSRF token -->
+                                                    </form> 
                                                 @endif
                                             @endif
                                         </div>
                                     </div>
 
                                     @php
+                                        use Carbon\Carbon;
                                         $source = $data->first()->source ?? null;
+                                        $name = $source->display_name ?? $source->name ?? '-';
+                                        $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
+                                        $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                        $total = $data->count();
                                     @endphp
-                                    
+
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $source->name }}</p>
-                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $source->periode_awal }} s/d {{ $source->periode_akhir }}</p>
-                                            <p class="mb-1"><strong>Total Data:</strong> {{ $data->count() }}</p>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
+                                            <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
                                     @endif
                                     
@@ -137,17 +148,17 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Price</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat dengan format MM/DD/YYYY.</p>
-                                            <p class="mb-1"><strong>Price: </strong>Harga penutupan (closing price) {{ $source->name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $source->name }} dicatat dengan format MM/DD/YYYY.👈🏼✅</p>
+                                            <p class="mb-1"><strong>Price: </strong>Harga penutupan (closing price) {{ $source->name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.👈🏼✅</p>
                                             <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $source->name }} saat awal perdagangan hari itu.</p>
                                             <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
                                             <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $source->name }} selama satu hari perdagangan.</p>
                                             <p class="mb-1"><strong>Vol.: </strong>Volume perdagangan, yaitu jumlah {{ $source->name }} yang diperdagangkan selama hari itu. Satuan seperti K berarti ribuan (misalnya, {{ $vol }} = {{ number_format($vol_number) }} {{ $source->name }} pada hari itu).</p>
-                                            <p class="mb-1"><strong>Change %: </strong>Persentase perubahan harga dari hari sebelumnya ke hari setelahnya. Menggambarkan apakah harga naik atau turun dibanding hari sebelumnya.</p>
+                                            <p class="mb-1"><strong>Change %: </strong>Persentase perubahan harga {{ $source->name }} dari hari sebelumnya ke hari setelahnya. Menggambarkan apakah harga naik atau turun.</p>
                                             <br>
                                             <p class="mb-1"><strong>🎨 Warna Hijau & Merah</strong></p>
                                             <p class="mb-1"><strong style="color: green">Hijau </strong>menandakan bahwa harga {{ $source->name }} naik dibandingkan dengan hari sebelumnya.</p>
-                                            <p class="mb-1"><strong style="color: red">Merah </strong>menandakan harga turun dibanding hari sebelumnya.</p>
+                                            <p class="mb-1"><strong style="color: red">Merah </strong>menandakan harga {{ $source->name }} turun dibanding hari sebelumnya.</p>
                                         </div>
                                     @endif
 
@@ -267,7 +278,9 @@
                                 Swal.showLoading(); // Menampilkan loading
                             }
                         });
-                        window.location.href = "{{ route('data.hapusImportData') }}";  // Redirect langsung setelah proses selesai
+                        const form = document.getElementById("hapusDataImportForm");
+                        form.action = "{{ route('data.hapusImportData') }}";
+                        form.submit();
                         addNotification('mdi-delete-forever', 'danger', 'Data Dihapus', 'Data berhasil dihapus.');
                     }
                 });

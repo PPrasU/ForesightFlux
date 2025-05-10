@@ -31,19 +31,18 @@ Route::prefix('data')->name('data.')->group(function () {
     Route::get('/API/input', [DataAPIController::class, 'input'])->name('inputDataAPI');
     Route::post('/API/post', [DataAPIController::class, 'post'])->name('postDataAPI');
     Route::post('/API/pra-proses', [DataAPIController::class, 'praProses'])->name('praProsesAPI');
-    Route::get('/API/hapus', [DataAPIController::class, 'hapus'])->name('hapusDataAPI');
+    Route::delete('/API/hapus', [DataAPIController::class, 'hapus'])->name('hapusDataAPI');
     
     Route::get('/import', [DataImportController::class, 'index'])->name('importData');
     Route::get('/import/input', [DataImportController::class, 'input'])->name('inputImportData');
     Route::post('/import/post', [DataImportController::class, 'post'])->name('postImportData');
     Route::post('/import/pra-proses', [DataImportController::class, 'praProses'])->name('praProsesImportData');
-    Route::get('/import/hapus', [DataImportController::class, 'hapus'])->name('hapusImportData');
+    Route::delete('/import/hapus', [DataImportController::class, 'hapus'])->name('hapusImportData');
 });
 
 Route::prefix('peramalan')->name('peramalan.')->group(function () {
     Route::get('/proses', [DataPraProsesController::class, 'index'])->name('prosesPeramalan');
-    Route::get('/proses/hapus', [DataPraProsesController::class, 'hapus'])->name('hapusProsesPeramalan');
-    Route::post('/proses/export', [DataPraProsesController::class, 'export'])->name('exportProsesPeramalan');
+    Route::delete('/proses/hapus', [DataPraProsesController::class, 'hapus'])->name('hapusPraProsesPeramalan');
 
     Route::get('/hasil', [DataHasilController::class, 'index'])->name('hasil');
     Route::get('/hasil/hapus', [DataHasilController::class, 'hapus'])->name('hapusHasil');
@@ -74,11 +73,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/petunjuk-API/hapus/{id}', [PetunjukAPIController::class, 'hapus'])->name('hapuspetunjukAPI');
 
     Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
-    Route::get('/setting-params/input', [SettingParamController::class, 'input'])->name('inputSettingParams');
-    Route::post('/setting-params/post', [SettingParamController::class, 'post'])->name('postSettingParams');
-    Route::get('/setting-params/edit/{id}', [SettingParamController::class, 'edit'])->name('editSettingParams');
     Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
-    Route::get('/setting-params/hapus/{id}', [SettingParamController::class, 'hapus'])->name('hapusSettingParams');
     
 
     Route::get('/user-management', function () {

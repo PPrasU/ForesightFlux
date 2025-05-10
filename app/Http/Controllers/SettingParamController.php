@@ -12,31 +12,30 @@ class SettingParamController extends Controller
         return view('admin.settingParams', compact('data'));
     }
 
-    public function input(){
-        return view('admin.input.settingParams');
-    }
-
-    public function post(Request $request){
-        $data = SettingParam::create($request->all());
-
-        return redirect()->route('admin.settingParams')->with('Success', 'Weeee Petunjuk Param Baru Udah Ditambah');
-    }
-
-    public function edit($id){
-        $data = SettingParam::find($id);
-        return view('admin.edit.settingParams', compact('data'));
-    }
-
     public function update(Request $request, $id){
-        $data = SettingParam::find($id);
-
-        $data->update($request->all());
-        return redirect()->route('admin.settingParams')->with('Success', 'Anjay Data Udah Di Edit. Emangnya Edit Apalagi Dah');
-    }
-
-    public function hapus($id){
-        $data = SettingParam::find($id);
-        $data->delete();
-        return redirect()->route('admin.settingParams')->with('Success', 'Udah Di Hapus Boskuh Datanya');
+        try {
+            $request->validate([
+                'alpha' => 'required|numeric',
+                'beta' => 'required|numeric',
+                'gamma' => 'required|numeric',
+                'season_length' => 'required|numeric',
+                'training_percentage' => 'required|numeric|min:0|max:100',
+                'testing_percentage' => 'required|numeric|min:0|max:100',
+            ]);
+        
+            // Validasi total harus 100
+            $total = $request->training_percentage + $request->testing_percentage;
+            if ($total !== 100) {
+                return redirect()->back()->withInput()->with('error', 'Jumlah training dan testing harus 100%.');
+            }
+        
+            $setting = SettingParam::findOrFail($id);
+            $setting->update($request->all());
+        
+            return redirect()->route('admin.settingParams')->with('Success', 'Berhasil memperbarui parameter.');
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+        
     }
 }

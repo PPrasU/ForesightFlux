@@ -76,13 +76,18 @@
                                                 <button id="hapusDataAPI" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
                                                     Hapus Semua Data API
                                                 </button>
-                                                <form id="praProsesForm" action="{{ route('data.praProsesAPI') }}" method="POST" style="display: none;">
+                                                <form id="hapusDataAPIForm" method="POST" style="display: none;">
                                                     @csrf
-                                                </form>  
+                                                    @method('DELETE')
+                                                </form>
+                                                 
                                                 @if (!$sudahPraProses)
                                                     <button id="praProsesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
                                                         Pra-Proses Data Kripto
                                                     </button>
+                                                    <form id="praProsesForm" action="{{ route('data.praProsesAPI') }}" method="POST" style="display: none;">
+                                                        @csrf
+                                                    </form> 
                                                 @endif
                                             @endif  
                                         </div>
@@ -99,8 +104,8 @@
 
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto Asli:</strong> {{ $name }}</p>
-                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} - {{ $end }}</p>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
+                                            <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
                                     @endif
@@ -115,7 +120,7 @@
                                                 <th>Low</th>
                                                 <th>Close</th>
                                                 <th style="width: 100px">VWAP (Volume Weighted Average Price)</th>
-                                                <th>Volume</th>
+                                                <th style="width: 100px">Volume</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -153,15 +158,18 @@
                                             <h5 class="mb-1"><strong>⚠️ Note: </strong>Hanya fokus saja pada kolom <strong>Date dan Close</strong>, karena proses peramalan hanya menggunakan 2 kolom itu 📝</h5>
                                             <br><br>
                                             <p class="mb-1"><strong>📊 Penjelasan Kolom:</strong></p>
-                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} dicatat dengan format MM-DD-YYYY.</p>
+                                            <p class="mb-1"><strong>Date: </strong>Tanggal data harga {{ $name }} dicatat dengan format MM-DD-YYYY.👈🏼✅</p>
                                             <p class="mb-1"><strong>Open: </strong>Harga pembukaan {{ $name }} saat awal perdagangan hari itu.</p>
                                             <p class="mb-1"><strong>High: </strong>Harga tertinggi yang dicapai {{ $name }} selama satu hari perdagangan.</p>
                                             <p class="mb-1"><strong>Low: </strong>Harga terendah yang dicapai {{ $name }} selama satu hari perdagangan.</p>
-                                            <p class="mb-1"><strong>Close: </strong>Harga penutupan (closing price) {{ $name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.</p>
+                                            <p class="mb-1"><strong>Close: </strong>Harga penutupan (closing price) {{ $name }} pada akhir hari tersebut yang merupakan harga acuan yang biasanya dipakai untuk analisis harian.👈🏼✅</p>
+                                            <p class="mb-1"><strong>VWAP (Volume Weighted Average Price): </strong>Harga rata-rata perdagangan {{ $name }} dalam periode waktu itu, diberi bobot berdasarkan volume.</p>
+                                            <p class="mb-1"><strong>Volume: </strong>Total volume aset dasar {{ $name }} yang diperdagangkan dalam periode tersebut.</p>
+                                            <p class="mb-1"><strong>Count: </strong>Jumlah total transaksi/trade {{ $name }} yang terjadi selama periode tersebut.</p>
                                             <br>
                                             <p class="mb-1"><strong>🎨 Warna Hijau & Merah</strong></p>
                                             <p class="mb-1"><strong style="color: green">Hijau </strong>menandakan bahwa harga {{ $name }} naik dibandingkan dengan hari sebelumnya.</p>
-                                            <p class="mb-1"><strong style="color: red">Merah </strong>menandakan harga turun dibanding hari sebelumnya.</p>
+                                            <p class="mb-1"><strong style="color: red">Merah </strong>menandakan harga {{ $name }} turun dibanding hari sebelumnya.</p>
                                         </div>
                                     @endif
 
@@ -262,8 +270,9 @@
                                 Swal.showLoading();
                             }
                         });
-        
-                        window.location.href = "{{ route('data.hapusDataAPI') }}"; 
+                        const form = document.getElementById("hapusDataAPIForm");
+                        form.action = "{{ route('data.hapusDataAPI') }}";
+                        form.submit();
                     }
                 });
             });
