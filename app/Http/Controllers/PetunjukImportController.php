@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PetunjukAPI;
 use Illuminate\Http\Request;
 use App\Models\PetunjukImport;
 
 class PetunjukImportController extends Controller
 {
     public function index(){
-        $data = PetunjukImport::all();
-        return view('admin.petunjukImport', compact('data'));
+        $petunjukImport = PetunjukImport::all();
+        return view('admin.petunjukImport', compact('petunjukImport'));
     }
 
     public function input(){
@@ -88,5 +89,11 @@ class PetunjukImportController extends Controller
         } else {
             return redirect()->route('admin.petunjukImport')->with('Error', 'Data Tidak Ditemukan!');
         }
+    }
+
+    public function petunjukPenggunaan(){
+        $petunjukImport = PetunjukImport::all();
+        $petunjukAPI = PetunjukAPI::all();
+        return view('petunjukPenggunaan', compact('petunjukImport', 'petunjukAPI'));
     }
 }

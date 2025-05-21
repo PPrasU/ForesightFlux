@@ -1,38 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-        <title>ForesightFluxCP | Hasil Peramalan</title>
-        <meta content="Admin Dashboard" name="description" />
-        <meta content="Themesbrand" name="author" />
-        <link rel="shortcut icon" href="images/Logo_icon.png">
-
-        <!--Morris Chart CSS -->
-        <link rel="stylesheet" href="plugins/morris/morris.css">
-        <!-- DataTables -->
-        <link href="{{ asset('plugins/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-        <link href="{{ asset('plugins/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-        <!--Chartist Chart CSS -->
-        <link rel="stylesheet" href="{{ asset('plugins/chartist/css/chartist.min.css') }}">
-        <!-- C3 charts css -->
-        <link href="{{ asset('plugins/c3/c3.min.css') }}" rel="stylesheet" type="text/css" />
-
-        {{-- Form Advance --}}
-        <link href="{{ asset('plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('plugins/bootstrap-md-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
-        <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
-        <link href="{{ asset('plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet" />
-        <!-- Dropzone css -->
-        <link href="{{ asset('plugins/dropzone/dist/dropzone.css') }}" rel="stylesheet" type="text/css">
-
-        {{-- ======= --}}
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/icons.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
-    </head>
+    @include('partials.header')
+    <title>ForesightFluxCP | Hasil Peramalan</title>
 
     <body>
         @include('partials.navbar')
@@ -74,6 +43,88 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                @if(session('error'))
+                                    <div class="alert alert-danger" role="alert" style="text-align: center">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger" style="text-align: center">
+                                        @foreach ($errors->all() as $err)
+                                            {{ $err }}
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="mt-0 header-title">Tabel Hasil Peramalan Data Training</h3>
+                                    @if ($training->count() > 0)
+                                        <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
+                                            Hapus Semua Hasil Peramalan
+                                        </button>
+                                        <form id="hapusSemuaDataForm" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @endif
+                                </div>
+                                
+                                @php
+                                    use Carbon\Carbon;
+                                    $source = $training->first()->source ?? null;
+                                    $name = $source->display_name ?? $source->name ?? '-';
+                                    $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
+                                    $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                    $total = $training->count();
+                                @endphp
+
+                                @if ($source)
+                                    <div class="mb-4">
+                                        <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
+                                        <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
+                                        <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
+                                    </div>
+                                @endif
+
+                                <table id="datatable1" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px" hidden>No</th>
+                                            <th style="width: 100px">Tanggal</th>
+                                            <th>Aktual</th>
+                                            <th>Level Smoothing</th>
+                                            <th>Trend Smoothing</th>
+                                            <th>Seasonal Smoothing</th>
+                                            <th style="width: 100px">Hasil Peramalan</th>
+                                            <th style="width: 150px">Error</th>
+                                            <th style="width: 100px">Absolute Error</th>
+                                            <th style="width: 100px">Error Square</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($training as $row)
+                                            <tr>
+                                                <td style="text-align: center" hidden>{{ $row->id }}</td>
+                                                <td style="text-align: center">{{ $row->date }}</td>
+                                                <td>{{ $row->price }}</td>
+                                                <td>{{ $row->level }}</td>
+                                                <td>{{ $row->trend }}</td>
+                                                <td>{{ $row->seasonal }}</td>
+                                                <td>{{ $row->forecast }}</td>
+                                                <td>{{ $row->error }}</td>
+                                                <td>{{ $row->abs_error }}</td>
+                                                <td>{{ $row->error_square }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                     {{-- baris kedua, grafik + tabel  --}}
                     {{-- HASIL PERAMALAN --}}
@@ -251,6 +302,49 @@
 
         @include('partials.footer')
         @include('partials.scripts')
+
+        {{-- DATATABLE JS --}}
+        <!-- Required datatable js -->
+        <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
+        {{-- Datatable Pages --}}
+        <script src="{{ asset('pages/datatables.init.js') }}"></script>
+
+        {{-- pop up untuk hapus data --}}
+        <script>
+            $(document).ready(function() {
+                $('#datatable1').DataTable();
+                $('#datatable2').DataTable();
+            });
+
+            document.getElementById("hapusSemuaData").addEventListener("click", function () {
+                Swal.fire({
+                    title: 'Yakin Mau Hapus Semua Data?',
+                    text: 'Aksi ini akan menghapus semua data API yang ada! Yakin mau melanjutkan?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Hapus!',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Menghapus...',
+                            text: 'Data sedang dihapus.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        const form = document.getElementById("hapusSemuaDataForm");
+                        form.action = "{{ route('peramalan.hapusHasil') }}";
+                        form.submit();
+                    }
+                });
+            });
+        </script>
     </body>
 
 </html>

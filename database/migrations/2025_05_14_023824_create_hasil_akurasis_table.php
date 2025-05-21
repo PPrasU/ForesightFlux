@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_source', function (Blueprint $table) {
+        Schema::create('hasil_akurasi', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50)->nullable();
-            $table->string('display_name')->nullable();
-            $table->date('periode_awal')->nullable();
-            $table->date('periode_akhir')->nullable();
-            $table->enum('sumber', ['Import', 'API']);
+            $table->decimal('mape', 15, 8)->nullable();
+            $table->decimal('rmse', 15, 8)->nullable();
+            $table->decimal('avg_actual', 15, 8)->nullable();
+            $table->decimal('relative_rmse', 15, 8)->nullable();
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_source');
+        Schema::dropIfExists('hasil_akurasi');
     }
 };

@@ -118,7 +118,7 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                      @foreach ($data as $row)
+                                      @foreach ($petunjukImport as $row)
                                       <tr>
                                           <td style="text-align: center">{{ $row->id }}</td>
                                           <td class="text-wrap" style="max-width: 200px;">{{ $row->judul }}</td>

@@ -80,126 +80,347 @@
 
             <div class="page-content-wrapper">
               <div class="container-fluid">
-                  {{-- Isine tabel --}}
+                {{-- Isine tabel --}}
+                <div class="row">
+                  <div class="col-xl-12">
+                      <div class="card">
+                          <div class="card-body">
+                            @if(session('error'))
+                                <div class="alert alert-danger" role="alert" style="text-align: center">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                            @if ($errors->any())
+                                <div class="alert alert-danger" style="text-align: center">
+                                    @foreach ($errors->all() as $err)
+                                        {{ $err }}
+                                    @endforeach
+                                </div>
+                            @endif
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="mt-0 header-title">Tabel Setting Params</h3>
+                            </div>
+                          
+                            <table class="table mb-0">
+                                <thead class="thead-default">
+                                  <tr>
+                                    <th scope="col" style="text-align: center">Parameter Alpha</th>
+                                    <th scope="col" style="text-align: center">Parameter Beta</th>
+                                    <th scope="col" style="text-align: center">Parameter Gamma</th>
+                                    <th scope="col" style="text-align: center">Season Length</th>
+                                    <th scope="col" style="text-align: center">Persentase Data Training</th>
+                                    <th scope="col" style="text-align: center">Persentase Data Testing</th>
+                                    <th scope="col" style="width: 15px; text-align: center">Aksi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  @foreach ($dataParam as $row)
+                                      <tr>
+                                          <td style="text-align: center">{{ $row->alpha }}</td>
+                                          <td style="text-align: center">{{ $row->beta }}</td>
+                                          <td style="text-align: center">{{ $row->gamma }}</td>
+                                          <td style="text-align: center">{{ $row->season_length }}</td>
+                                          <td style="text-align: center">{{ $row->training_percentage }}%</td>
+                                          <td style="text-align: center">{{ $row->testing_percentage }}%</td>
+                                          <td style="text-align: center">
+                                            <a href="#" 
+                                              class="btn btn-warning" 
+                                              data-bs-toggle="modal"
+                                              data-bs-target="#editSettingModal"
+                                              data-id="{{ $row->id }}"
+                                              data-alpha="{{ $row->alpha }}"
+                                              data-beta="{{ $row->beta }}"
+                                              data-gamma="{{ $row->gamma }}"
+                                              data-season_length="{{ $row->season_length }}"
+                                              data-training="{{ $row->training_percentage }}"
+                                              data-testing="{{ $row->testing_percentage }}"
+                                              title="Edit Data">
+                                              <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                      </tr>
+                                  @endforeach
+                                </tbody>
+                            </table>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="editSettingModal" tabindex="-1" aria-labelledby="editSettingModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <form method="POST" id="editSettingForm" action="">
+                                    @csrf
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="editSettingModalLabel">Edit Setting Param</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <input type="hidden" name="id" id="setting-id">
+                                        
+                                        <div class="mb-3">
+                                          <label for="alpha" class="form-label">Alpha</label>
+                                          <input type="text" class="form-control" name="alpha" id="alpha">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="beta" class="form-label">Beta</label>
+                                          <input type="text" class="form-control" name="beta" id="beta">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="gamma" class="form-label">Gamma</label>
+                                          <input type="text" class="form-control" name="gamma" id="gamma">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="season_length" class="form-label">Season Length</label>
+                                          <select class="form-control" name="season_length" id="season_length">
+                                            <option value="7">7 (mingguan)</option>
+                                            <option value="30">30 (bulanan)</option>
+                                            <option value="90">90 (kuartalan)</option>
+                                          </select>
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="training_percentage" class="form-label">Training %</label>
+                                          <input type="number" class="form-control" name="training_percentage" id="training_percentage" min="0" max="100">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="testing_percentage" class="form-label">Testing %</label>
+                                          <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
+                                        </div>                                          
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                      </div>
+                                    </div>
+                                </form>
+                              </div>
+                            </div>
+
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                @if ($training->count() > 0)
                   <div class="row">
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-body">
-                              @if(session('error'))
-                                  <div class="alert alert-danger" role="alert" style="text-align: center">
-                                      {{ session('error') }}
-                                  </div>
-                              @endif
-                              @if ($errors->any())
-                                  <div class="alert alert-danger" style="text-align: center">
-                                      @foreach ($errors->all() as $err)
-                                          {{ $err }}
-                                      @endforeach
-                                  </div>
-                              @endif
-                              <div class="d-flex justify-content-between align-items-center mb-4">
-                                  <h3 class="mt-0 header-title">Tabel Setting Params</h3>
-                              </div>
-                            
-                              <table class="table mb-0">
-                                  <thead class="thead-default">
-                                    <tr>
-                                      <th scope="col" style="text-align: center">Parameter Alpha</th>
-                                      <th scope="col" style="text-align: center">Parameter Beta</th>
-                                      <th scope="col" style="text-align: center">Parameter Gamma</th>
-                                      <th scope="col" style="text-align: center">Season Length</th>
-                                      <th scope="col" style="text-align: center">Persentase Data Training</th>
-                                      <th scope="col" style="text-align: center">Persentase Data Testing</th>
-                                      <th scope="col" style="width: 15px; text-align: center">Aksi</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    @foreach ($data as $row)
-                                        <tr>
-                                            <td style="text-align: center">{{ $row->alpha }}</td>
-                                            <td style="text-align: center">{{ $row->beta }}</td>
-                                            <td style="text-align: center">{{ $row->gamma }}</td>
-                                            <td style="text-align: center">{{ $row->season_length }}</td>
-                                            <td style="text-align: center">{{ $row->training_percentage }}%</td>
-                                            <td style="text-align: center">{{ $row->testing_percentage }}%</td>
-                                            <td style="text-align: center">
-                                              <a href="#" 
-                                                class="btn btn-warning" 
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editSettingModal"
-                                                data-id="{{ $row->id }}"
-                                                data-alpha="{{ $row->alpha }}"
-                                                data-beta="{{ $row->beta }}"
-                                                data-gamma="{{ $row->gamma }}"
-                                                data-season_length="{{ $row->season_length }}"
-                                                data-training="{{ $row->training_percentage }}"
-                                                data-testing="{{ $row->testing_percentage }}"
-                                                title="Edit Data">
-                                                <i class="fas fa-edit"></i>
-                                              </a>
-                                          </td>
-                                        </tr>
-                                    @endforeach
-                                  </tbody>
-                              </table>
-
-                              <!-- Modal -->
-                              <div class="modal fade" id="editSettingModal" tabindex="-1" aria-labelledby="editSettingModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <form method="POST" id="editSettingForm" action="">
-                                      @csrf
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h5 class="modal-title" id="editSettingModalLabel">Edit Setting Param</h5>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                          <input type="hidden" name="id" id="setting-id">
-                                          
-                                          <div class="mb-3">
-                                            <label for="alpha" class="form-label">Alpha</label>
-                                            <input type="text" class="form-control" name="alpha" id="alpha">
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for="beta" class="form-label">Beta</label>
-                                            <input type="text" class="form-control" name="beta" id="beta">
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for="gamma" class="form-label">Gamma</label>
-                                            <input type="text" class="form-control" name="gamma" id="gamma">
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for="season_length" class="form-label">Season Length</label>
-                                            <select class="form-control" name="season_length" id="season_length">
-                                              <option value="7">7 (mingguan)</option>
-                                              <option value="30">30 (bulanan)</option>
-                                              <option value="90">90 (kuartalan)</option>
-                                            </select>
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for="training_percentage" class="form-label">Training %</label>
-                                            <input type="number" class="form-control" name="training_percentage" id="training_percentage" min="0" max="100" readonly>
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for="testing_percentage" class="form-label">Testing %</label>
-                                            <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
-                                          </div>                                          
-                                        </div>
-                                        <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                        </div>
-                                      </div>
-                                  </form>
+                                @if(session('error'))
+                                    <div class="alert alert-danger" role="alert" style="text-align: center">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger" style="text-align: center">
+                                        @foreach ($errors->all() as $err)
+                                            {{ $err }}
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="mt-0 header-title">Tabel Hasil Peramalan Data Training</h3>
                                 </div>
-                              </div>
+                                
+                                @php
+                                  $source = $training->first()->source ?? null;
+                                  $name = $source->display_name ?? $source->name ?? '-';
+                                  $start = $source ? \Carbon\Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
+                                  $end = $source ? \Carbon\Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                  $total = $training->count();
+                              @endphp
 
+                                @if ($source)
+                                    <div class="mb-4">
+                                        <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
+                                        <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
+                                        <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
+                                    </div>
+                                @endif
+
+                                <table id="datatable1" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px" hidden>No</th>
+                                            <th style="width: 100px">Tanggal</th>
+                                            <th>Aktual</th>
+                                            <th>Level Smoothing</th>
+                                            <th>Trend Smoothing</th>
+                                            <th>Seasonal Smoothing</th>
+                                            <th style="width: 100px">Hasil Peramalan</th>
+                                            <th style="width: 150px">Error</th>
+                                            <th style="width: 100px">Absolute Error</th>
+                                            <th style="width: 100px">Error Square</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($training as $row)
+                                            <tr>
+                                                <td style="text-align: center" hidden>{{ $row->id }}</td>
+                                                <td style="text-align: center">{{ $row->date }}</td>
+                                                <td>{{ $row->price }}</td>
+                                                <td>{{ $row->level }}</td>
+                                                <td>{{ $row->trend }}</td>
+                                                <td>{{ $row->seasonal }}</td>
+                                                <td>{{ $row->forecast }}</td>
+                                                <td>{{ $row->error }}</td>
+                                                <td>{{ $row->abs_error }}</td>
+                                                <td>{{ $row->error_square }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
+                  </div>
+                  {{-- buat ngecek aja ini --}}
+                  <div class="row">
+                      <div class="col-xl-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <div class="d-flex justify-content-between align-items-center mb-4">
+                                      <h3 class="mt-0 header-title">Tabel Hasil Peramalan Data Testing</h3>
+                                  </div>
+                                  <table id="datatable2" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                      <thead>
+                                          <tr>
+                                              <th style="width: 10px" hidden>No</th>
+                                              <th style="width: 100px">Tanggal</th>
+                                              <th>Aktual</th>
+                                              <th>Hasil Peramalan</th>
+                                              <th style="width: 150px">Error</th>
+                                              <th style="width: 100px">Absolute Error</th>
+                                              <th style="width: 100px">Error Square</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          @foreach ($testing as $row)
+                                              <tr>
+                                                  <td style="text-align: center" hidden>{{ $row->id }}</td>
+                                                  <td style="text-align: center">{{ $row->date }}</td>
+                                                  <td>{{ $row->actual }}</td>
+                                                  <td>{{ $row->forecast }}</td>
+                                                  <td>{{ $row->error }}</td>
+                                                  <td>{{ $row->abs_error }}</td>
+                                                  <td>{{ $row->error_square }}</td>
+                                              </tr>
+                                          @endforeach
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-xl-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <div class="d-flex justify-content-between align-items-center mb-4">
+                                      <h3 class="mt-0 header-title">Tabel Hasil Perhitungan Akurasi</h3>
+                                  </div>
+                                  <table id="datatable3" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                      <thead>
+                                          <tr>
+                                              <th style="width: 100px">MAPE</th>
+                                              <th style="width: 150px">RMSE</th>
+                                              <th style="width: 100px">Rata-Rata Aktual</th>
+                                              <th style="width: 100px">Relative RMSE</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          @foreach ($akurasi as $row)
+                                              <tr>
+                                                  <td>{{ $row->mape }}</td>
+                                                  <td>{{ $row->rmse }}</td>
+                                                  <td>{{ $row->avg_actual }}</td>
+                                                  <td>{{ $row->relative_rmse }}</td>
+                                              </tr>
+                                          @endforeach
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                @endif
+                
+                {{-- @if ($praProses->count() > 0) --}}
+                  <div class="row">
+                      <div class="col-xl-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <div class="d-flex justify-content-between align-items-center mb-4">
+                                      <h3 class="mt-0 header-title">Kombinasi Parameter Terbaik</h3>
+                                  </div>
+                                  <form id="optimizeForm" method="POST" action="{{ route('admin.optimize') }}">
+                                    @csrf
+                                    <button id="optimizeBtn" class="btn btn-primary mb-3" type="submit">
+                                        🔍 Jalankan Grid Search
+                                    </button>
+                                </form>
+                                  @if(isset($grid_results) && isset($best_results))
+                                      <h4 class="mt-4">🔍 Hasil Grid Search</h4>
+                                      <div class="table-responsive">
+                                          <table id="datatable4" class="table table-bordered table-hover">
+                                              <thead class="table-dark text-center">
+                                                  <tr>
+                                                      <th>Training</th>
+                                                      <th>Testing</th>
+                                                      <th>Alpha</th>
+                                                      <th>Beta</th>
+                                                      <th>Gamma</th>
+                                                      <th>MAPE</th>
+                                                      <th>RMSE</th>
+                                                      <th>rRMSE</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                  @foreach($grid_results as $res)
+                                                      @php
+                                                          $best = $best_results[$res['training']] ?? null;
+                                                          $isBest = $best &&
+                                                              $res['alpha'] == $best['alpha'] &&
+                                                              $res['beta'] == $best['beta'] &&
+                                                              $res['gamma'] == $best['gamma'];
+                                                      @endphp
+                                                      <tr class="{{ $isBest ? 'table-success fw-bold' : '' }}">
+                                                          <td class="text-center">{{ $res['training'] }}</td>
+                                                          <td class="text-center">{{ $res['testing'] }}</td>
+                                                          <td class="text-center">{{ $res['alpha'] }}</td>
+                                                          <td class="text-center">{{ $res['beta'] }}</td>
+                                                          <td class="text-center">{{ $res['gamma'] }}</td>
+                                                          <td>{{ number_format($res['mape'], 4) }}</td>
+                                                          <td>{{ number_format($res['rmse'], 4) }}</td>
+                                                          <td>{{ number_format($res['rrmse'], 4) }}</td>
+                                                      </tr>
+                                                  @endforeach
+                                              </tbody>
+                                              {{-- <tbody>
+                                                  @foreach($grid_results as $res)
+                                                      <tr class="{{ ($res['alpha'] == $best_result['alpha'] && $res['beta'] == $best_result['beta'] && $res['gamma'] == $best_result['gamma']) ? 'table-success fw-bold' : '' }}">
+                                                          <td class="text-center">{{ $res['alpha'] }}</td>
+                                                          <td class="text-center">{{ $res['beta'] }}</td>
+                                                          <td class="text-center">{{ $res['gamma'] }}</td>
+                                                          <td>{{ number_format($res['mape'], 4) }}</td>
+                                                          <td>{{ number_format($res['rmse'], 4) }}</td>
+                                                          <td>{{ number_format($res['rrmse'], 4) }}</td>
+                                                      </tr>
+                                                  @endforeach
+                                              </tbody> --}}
+                                          </table>
+                                          <div class="alert alert-info">
+                                              Setiap baris <span class="fw-bold text-success">berwarna hijau</span> menandakan kombinasi α, β, γ terbaik berdasarkan MAPE untuk masing-masing <strong>persentase training</strong>.
+                                          </div>
+                                      </div>
+                                  @endif
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                {{-- @endif --}}
+
               </div>
-          </div>
+            </div>
           </div>
         </div>
 
@@ -227,6 +448,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+      $(document).ready(function() {
+          $('#datatable1').DataTable();
+          $('#datatable2').DataTable();
+          $('#datatable3').DataTable();
+          $('#datatable4').DataTable();
+      });
       document.addEventListener('DOMContentLoaded', function () {
           const modal = document.getElementById('editSettingModal');
           modal.addEventListener('show.bs.modal', function (event) {
@@ -302,6 +529,35 @@
         });
       });
     </script>
+
+    {{-- buat animasi loading --}}
+    <!-- Tambahkan ini di bagian akhir halaman -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("optimizeForm");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();  // Cegah submit default
+
+                // Tampilkan SweetAlert2 loading
+                Swal.fire({
+                    title: 'Sedang melakukan Grid Search...',
+                    text: 'Proses ini memerlukan waktu beberapa saat. Harap bersabar ⏳',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        // Submit form setelah alert tampil
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
     
   </body>
 </html>

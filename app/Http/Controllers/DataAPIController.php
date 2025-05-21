@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\DataAPI;
 use App\Models\DataSource;
+use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class DataAPIController extends Controller
 {
@@ -20,8 +23,9 @@ class DataAPIController extends Controller
             'data' => $data,
             'sudahPraProses' => $dataPraProses,
         ]);
-    }    
+    }
 
+    //Input dibawah ini sudah pake cache
     public function input(){
         try {
             $dataSource = DataSource::all();
@@ -463,25 +467,38 @@ class DataAPIController extends Controller
                 ]);
             }
 
-            //ambil data dari kraken API
-            $response = Http::get('https://api.kraken.com/0/public/AssetPairs');
-            $result = $response->json();
-            $cryptoPairs = collect();
+            // Jika sudah ada cache, pakai cache
+            if (Cache::has('cryptoPairs')) {
+                $cryptoPairs = Cache::get('cryptoPairs');
+            } else {
+                // Optional: delay untuk debugging, JANGAN PRODUKSI
+                // sleep(1);
 
-            //cek apakah data berhasil didapatkan
-            if (!isset($result['result'])) {
-                return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'))
-                    ->with('error', 'Gagal mengambil data kripto dari Kraken');
+                // 3: jumlah maksimal percobaan (percobaan awal + 2 retry)
+                // 500: delay antar percobaan dalam milidetik (500ms)
+                // timeout(10): batasi maksimal 10 detik tunggu respons
+                $response = Http::retry(3, 500)->timeout(10)->get('https://api.kraken.com/0/public/AssetPairs');
+                $result = $response->json();
+
+                if (!isset($result['result'])) {
+                    throw new \Exception('Data kripto dari API Kraken tidak tersedia.');
+                }
+
+                $cryptoPairs = collect($result['result'])->filter(function ($pair, $key) {
+                    return str_ends_with($key, 'USD') || str_ends_with($key, 'IDR');
+                });
+
+                // Simpan cache selama 1 jam
+                Cache::put('cryptoPairs', $cryptoPairs, now()->addHour());
             }
-
-            $cryptoPairs = collect($result['result'])->filter(function ($pair, $key) {
-                return str_ends_with($key, 'USD') || str_ends_with($key, 'IDR');
-            });
 
             return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'));
         } catch (\Throwable $e) {
-            return view('input.dataAPI', compact('dataSource', 'dataAPI'))
-                ->with('error', 'Terjadi kesalahan saat mengambil data kripto: ' . $e->getMessage());
+            // fallback jika API dan cache gagal
+            $cryptoPairs = Cache::get('cryptoPairs', collect()); // Kosong jika tak ada cache
+
+            return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'))
+                ->with('error', '❌ Gagal ambil data dari API: ' . $e->getMessage());
         }
     }
 
@@ -516,6 +533,16 @@ class DataAPIController extends Controller
             ]);
 
             $displayNames = [
+                // Beberapa koin besar:
+                'XXBTZUSD' => 'Bitcoin (BTC) to USD',
+                'ETCUSD' => 'Ethereum Classic (ETC) to USD',
+                'XETHZUSD' => 'Ethereum (ETH) to USD',
+                'XLTCZUSD' => 'Litecoin (LTC) to USD',
+                'XDGUSD' => 'Dogecoin (DOGE) (XDG) to USD',
+                'XCNUSD' => 'Onyxcoin (XCN) to USD',
+                'MLNUSD' => 'Enzyme (MLN) to USD',
+                'REPUSD' => 'Augur (REP) to USD',
+
                 '1INCHUSD' => '1inch (1INCH) to USD',
                 'AAVEUSD' => 'Aave (AAVE) to USD',
                 'ACAUSD' => 'Acala (ACA) to USD',
@@ -564,6 +591,7 @@ class DataAPIController extends Controller
                 'BABYUSD' => 'Baby (BABY) to USD',
                 'BADGERUSD' => 'Badger DAO (BADGER) to USD',
                 'BALUSD' => 'Balancer (BAL) to USD',
+                'BANANAS31USD' => 'Banana (BANANAS31) to USD',
                 'BANDUSD' => 'Band Protocol (BAND) to USD',
                 'BATUSD' => 'Basic Attention Token (BAT) to USD',
                 'BCHUSD' => 'Bitcoin Cash (BCH) to USD',
@@ -587,6 +615,7 @@ class DataAPIController extends Controller
                 'BSXUSD' => 'Basilisk (BSX) to USD',
                 'BTTUSD' => 'BitTorrent (BTT) to USD',
                 'C98USD' => 'Coin98 (C98) to USD',
+                'CAKEUSD' => 'PancakeSwap (CAKE) to USD',
                 'CELOUSD' => 'Celo (CELO) to USD',
                 'CELRUSD' => 'Celer Network (CELR) to USD',
                 'CFGUSD' => 'Centrifuge (CFG) to USD',
@@ -898,24 +927,14 @@ class DataAPIController extends Controller
     
                 // Simbol generik yang perlu klarifikasi — sebelumnya salah atau placeholder:
                 'WUSD' => 'WUSD (WUSD) to USD', // bisa berarti Wrapped USD, perlu sumber resmi
-    
                 'XBTPYUSD' => 'XBT Provider (XBTPY) to USD', // exchange-traded product, bukan token blockchain
-                'XCNUSD' => 'Onyxcoin (XCN) to USD',
-                'XDGUSD' => 'Dogecoin (DOGE) (XDG) to USD', // simbol seharusnya DOGE, bukan XDG
-    
-                // Beberapa koin besar:
-                'ETCUSD' => 'Ethereum Classic (ETC) to USD',
-                'XETHZUSD' => 'Ethereum (ETH) to USD',
-                'XLTCZUSD' => 'Litecoin (LTC) to USD',
-                'MLNUSD' => 'Enzyme (MLN) to USD',
-                'REPUSD' => 'Augur (REP) to USD',
     
                 // Entitas tidak umum:
                 'XRPRLUSD' => 'Ripple (XRPRL) to USD', // kemungkinan salah tulis dari XRP — jika ya, seharusnya:
                 'XRPUSD' => 'Ripple (XRP) to USD',
                 'XRTUSD' => 'Robonomics Network (XRT) to USD',
                 'XTZUSD' => 'Tezon (XTZ) to USD',
-                'XXBTZUSD' => 'Bitcoin (BTC) to USD',
+                
                 'XLMUSD' => 'Stellar Lumens (XLM) to USD',
                 'XMRUSD' => 'Monero (XMR) to USD',
                 'XRPUSD' => 'XRP to USD',
@@ -956,75 +975,65 @@ class DataAPIController extends Controller
                 'sumber' => $request->sumber,
             ]);
 
-            $startTime = Carbon::parse($request['date-start'], 'Asia/Jakarta')->subDay()->timestamp;
-            $endTime = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay()->timestamp;
+            $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
+            $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
+
+            // Validasi maksimal 720 hari
+            $daysDiff = $start->diffInDays($end);
+            if ($daysDiff > 720) {
+                return redirect()->back()->with('error', 'Rentang tanggal terlalu panjang. Maksimal 720 hari yang dapat diambil dari API Kraken.');
+            }
+
+            $startTime = $start->subDay()->timestamp; // sesuai kebutuhan Kraken
+            $endTime = $end->timestamp;
             $pair = $request->crypto_pair;
-            $interval = 1440; // daily
+            $interval = 1440; // 1 hari (daily)
 
-            $pairKey = null;
-            $hasMoreData = true;
+            $response = Http::get("https://api.kraken.com/0/public/OHLC", [
+                'pair' => $pair,
+                'interval' => $interval,
+                'since' => $startTime,
+            ]);
 
-            while ($hasMoreData) {
-                $response = Http::get("https://api.kraken.com/0/public/OHLC", [
-                    'pair' => $pair,
-                    'interval' => $interval,
-                    'since' => $startTime,
-                ]);
+            $data = $response->json();
 
-                $data = $response->json();
+            // Validasi response
+            if (!isset($data['result'])) {
+                return redirect()->back()->with('error', 'Gagal mengambil data dari Kraken.');
+            }
 
-                // Validasi respon
-                if (!isset($data['result'])) {
-                    return redirect()->back()->with('error', 'Gagal mengambil data dari Kraken.');
-                }
+            $pairKey = array_key_first($data['result']);
+            $ohlcData = $data['result'][$pairKey] ?? [];
 
-                // Ambil nama key pair (contoh: XXBTZUSD)
-                $pairKey = $pairKey ?? array_key_first($data['result']);
+            if (empty($ohlcData)) {
+                return redirect()->back()->with('error', 'Tidak ada data ditemukan dari Kraken.');
+            }
 
-                $ohlcData = $data['result'][$pairKey] ?? [];
+            // Simpan data (maksimal 720 data)
+            foreach ($ohlcData as $item) {
+                $parsedDate = Carbon::createFromTimestampUTC($item[0])->setTimezone('Asia/Jakarta')->startOfDay();
 
-                // Berhenti jika tidak ada data lagi
-                if (empty($ohlcData)) {
-                    break;
-                }
-
-                foreach ($ohlcData as $item) {
-                    // Timestamp dari Kraken = UTC
-                    $parsedDate = Carbon::createFromTimestampUTC($item[0])->setTimezone('Asia/Jakarta')->startOfDay();
-                    $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
-                    $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
-
-                    if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
-                        DataAPI::updateOrCreate( // pakai updateOrCreate biar aman dari duplikasi
-                            [
-                                'source_id' => $dataSource->id,
-                                'date' => $parsedDate->format('m-d-Y'),
-                            ],
-                            [
-                                'open' => $item[1],
-                                'high' => $item[2],
-                                'low' => $item[3],
-                                'close' => $item[4],
-                                'vwap' => $item[5],
-                                'vol' => $item[6],
-                                'count' => $item[7],
-                            ]
-                        );
-                    }
-                }
-
-                // Ambil timestamp terakhir dari batch
-                $lastTimestamp = end($ohlcData)[0] ?? null;
-
-                if ($lastTimestamp && $lastTimestamp < $endTime) {
-                    $startTime = $lastTimestamp; // update "since" ke timestamp terakhir
-                    sleep(1); // rate limit: 1 request per detik
-                } else {
-                    $hasMoreData = false; // selesai jika sudah melewati batas waktu yang diminta
+                if ($parsedDate->gte($start) && $parsedDate->lte($end)) {
+                    DataAPI::updateOrCreate(
+                        [
+                            'source_id' => $dataSource->id,
+                            'date' => $parsedDate->format('m-d-Y'),
+                        ],
+                        [
+                            'open' => $item[1],
+                            'high' => $item[2],
+                            'low' => $item[3],
+                            'close' => $item[4],
+                            'vwap' => $item[5],
+                            'vol' => $item[6],
+                            'count' => $item[7],
+                        ]
+                    );
                 }
             }
 
-            return redirect()->route('data.dataAPI')->with('Success', 'Data berhasil diambil dan disimpan.');
+            return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
+
 
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -1095,12 +1104,12 @@ class DataAPIController extends Controller
                 ]);
             }
     
-            return redirect()->route('peramalan.prosesPeramalan')->with('Success', 'Berhasil melakukan pra-proses.');
+            return redirect()->route('peramalan.index')->with('Success', 'Berhasil melakukan pra-proses.');
     
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
-    }      
+    }
 
     public function hapus(){
         try{

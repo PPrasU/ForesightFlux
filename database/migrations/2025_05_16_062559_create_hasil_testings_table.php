@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_hasil', function (Blueprint $table) {
+        Schema::create('hasil_testing', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('source_id');
             $table->date('date');
-            $table->decimal('price', 15, 2)->nullable();
-            $table->decimal('level', 15, 8)->nullable();
-            $table->decimal('trend', 15, 8)->nullable();
-            $table->decimal('seasonal', 15, 8)->nullable();
-            $table->decimal('forecast', 15, 5)->nullable();
+            $table->decimal('actual', 15, 2);
+            $table->decimal('forecast', 15, 5);
             $table->decimal('error', 15, 8)->nullable();
             $table->decimal('abs_error', 15, 8)->nullable();
             $table->decimal('error_square', 15, 8)->nullable();
@@ -35,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_hasil');
+        Schema::dropIfExists('hasil_testing');
     }
 };

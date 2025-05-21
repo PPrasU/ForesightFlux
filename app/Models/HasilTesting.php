@@ -5,23 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class DataHasil extends Model
+class HasilTesting extends Model
 {
     use HasFactory;
 
-    protected $table = 'data_hasil';
+    protected $table = 'hasil_testing';
 
     protected $fillable = [
         'source_id',
         'date',
-        'price',
-        'level',
-        'trend',
-        'seasonal',
+        'actual',
         'forecast',
         'error',
         'abs_error',
-        'error_square'
+        'error_square',
     ];
 
     public function source()

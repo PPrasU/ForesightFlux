@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     @include('partials.header') 
+    <title>ForesightFluxCP | Data Pra-Proses</title>
 
     <body>
         @include('partials.navbar')
@@ -62,10 +63,14 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
-
-                                                <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
-                                                    Proses Peramalan Kripto
-                                                </button>
+                                                @if (!$sudahHasil)
+                                                    <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
+                                                        Proses Peramalan Kripto
+                                                    </button>
+                                                    <form id="prosesForm" action="{{ route('peramalan.post') }}" method="POST" style="display: none;">
+                                                        @csrf
+                                                    </form> 
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -190,14 +195,11 @@
                         text: 'Data bakal diproses. Sabar yaa!',
                         allowOutsideClick: false,
                         showConfirmButton: false,
-                        timer: 3000,
                         didOpen: () => {
                             Swal.showLoading();
                         }
                     });
-                    setTimeout(() => {
-                        toastr.error('Sabar bang belom sampe proses peramalan ini');
-                    }, 3100); // delay 1 detik setelah Swal close
+                    document.getElementById("prosesForm").submit();
                 }
               });
             });

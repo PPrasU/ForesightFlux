@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('source_id');
             $table->date('date');
             $table->decimal('price', 15, 2);
-            $table->enum('category', ['Training', 'Testing']);
+            $table->enum('category', ['Training', 'Testing']);//sudah otomatis saat pra proses
             $table->timestamps();
             
             $table->foreign('source_id')->references('id')->on('data_source')->onDelete('cascade');

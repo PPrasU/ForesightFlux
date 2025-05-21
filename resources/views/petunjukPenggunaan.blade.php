@@ -116,6 +116,36 @@
 
     <section class="why-choose section">
       <div class="container">
+        @foreach($petunjukImport as $index => $petunjuk)
+          <div class="row mb-5">
+            <div class="col-lg-6 col-12">
+              <div class="choose-left">
+                <h3>{{ $index + 1 }}. {{ $petunjuk->judul }}</h3>
+                
+                @if($petunjuk->desk_1)
+                  <p>{!! nl2br(e($petunjuk->desk_1)) !!}</p>
+                @endif
+                
+                @if($petunjuk->desk_2)
+                  <p>{!! nl2br(e($petunjuk->desk_2)) !!}</p>
+                @endif
+                
+                @if($petunjuk->desk_3)
+                  <b>{!! nl2br(e($petunjuk->desk_3)) !!}</b>
+                @endif
+
+                <br><br><br>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-12">
+              <div class="choose-right">
+                <img src="{{ asset('foto-petunjuk-penggunaan/' . $petunjuk->gambar) }}" alt="Petunjuk Gambar {{ $index + 1 }}" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+          @endforeach
+
         <div class="row">
           <div class="col-lg-12">
             <div class="section-title">

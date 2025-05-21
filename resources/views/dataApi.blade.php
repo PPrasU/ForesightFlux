@@ -119,9 +119,9 @@
                                                 <th>High</th>
                                                 <th>Low</th>
                                                 <th>Close</th>
-                                                <th style="width: 100px">VWAP (Volume Weighted Average Price)</th>
-                                                <th style="width: 100px">Volume</th>
-                                                <th>Count</th>
+                                                <th style="width: 100px">VWAP</th>
+                                                <th style="width: 150px">Volume</th>
+                                                <th style="width: 100px">Count</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -225,8 +225,8 @@
                     title: 'Beneran Mau Di Pra-Proses Nih Datanya?',
                     icon: 'info',
                     showCancelButton: true,
-                    confirmButtonText: 'Iya',
-                    cancelButtonText: 'Tidak',
+                    confirmButtonText: 'Iya Dong!',
+                    cancelButtonText: 'Ndak Dulu Deh',
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#6c757d',
                 }).then((result) => {

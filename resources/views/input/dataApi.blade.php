@@ -116,29 +116,30 @@
                                                     <option value="PONKEUSD">Ponke SOL (PONKE) to USD</option>
                                                     <option value="POPCATUSD">Popcat SOL (POPCAT) to USD</option>
                                                     <option selected disabled>--- Pilih Kripto Lain ---</option>
-                                                    @foreach ($cryptoPairs as $key => $pair)
-                                                        @php
-                                                            $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
-                                                        @endphp
-                                                        <option value="{{ $key }}" data-display="{{ $displayName }}">
-                                                            {{ $displayName }}
-                                                        </option>
-                                                    @endforeach
-                                                    {{-- <option value="XBTUSD">Bitcoin (BTC/USD)</option>
-                                                    <option value="ETHUSD">Ethereum (ETH/USD)</option>
-                                                    <option value="ADAUSD">Cardano (ADA/USD)</option> --}}
+                                                    @if ($cryptoPairs->isEmpty())
+                                                        <option disabled>Data kripto dari API gagal dimuat 😥</option>
+                                                    @else
+                                                        <option disabled>--- Pilih Kripto Lain ---</option>
+                                                        @foreach ($cryptoPairs as $key => $pair)
+                                                            @php
+                                                                $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
+                                                            @endphp
+                                                            <option value="{{ $key }}" data-display="{{ $displayName }}">
+                                                                {{ $displayName }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>                                                                                                                                                                                           
                                             </div>
                                         </div>
 
-                                        {{-- Jangka Waktu --}}
                                         <div class="form-group mb-4">
-                                            <label class="font-weight-bold">Jangka Waktu</label>
+                                            <label class="font-weight-bold">Jangka Waktu (Maks 720 hari)</label>
                                             <div class="d-flex align-items-center">
                                                 <div class="input-group date-range-group">
-                                                    <input type="date" name="date-start" id="date-start" class="form-control floating-label" placeholder="awal" />
+                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" onkeydown="return false">
                                                     <span class="date-separator">–</span>
-                                                    <input type="date" name="date-end" id="date-end" class="form-control floating-label" placeholder="akhir" />
+                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" onkeydown="return false">
                                                 </div>
                                             </div>
                                         </div>
@@ -168,6 +169,8 @@
         @include('partials.footer')
         @include('partials.scripts')
         <script src="{{ asset('pages/form-advanced.js') }}"></script>
+        <!-- Flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <script>
             document.getElementById("apiData").addEventListener("submit", function(event) {
@@ -189,16 +192,65 @@
             });
         </script>
 
-        {{-- set tanggal nggak bisa besok dst --}}
+        {{-- validasi 720 pake flatpicker --}}
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Dapatkan tanggal hari ini dalam format YYYY-MM-DD
-                const today = new Date().toISOString().split("T")[0];
-        
-                // Set batas maksimal (max) agar tidak bisa pilih besok dan seterusnya
-                document.getElementById("date-start").setAttribute("max", today);
-                document.getElementById("date-end").setAttribute("max", today);
+            const maxDays = 719;
+            let startPicker, endPicker;
+
+            function addDays(date, days) {
+                const copy = new Date(date);
+                copy.setDate(copy.getDate() + days);
+                return copy;
+            }
+
+            function subtractDays(date, days) {
+                const copy = new Date(date);
+                copy.setDate(copy.getDate() - days);
+                return copy;
+            }
+
+            const today = new Date(); // ambil tanggal hari ini
+
+            startPicker = flatpickr("#date-startt", {
+                dateFormat: "Y-m-d",
+                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
+                onChange: function(selectedDates) {
+                    if (selectedDates.length === 0) return;
+
+                    const startDate = selectedDates[0];
+                    const maxEndDate = addDays(startDate, maxDays);
+
+                    const effectiveMaxEndDate = maxEndDate > today ? today : maxEndDate;
+
+                    endPicker.set('minDate', startDate);
+                    endPicker.set('maxDate', effectiveMaxEndDate);
+
+                    const currentEnd = endPicker.selectedDates[0];
+                    if (currentEnd && (currentEnd < startDate || currentEnd > effectiveMaxEndDate)) {
+                        endPicker.clear();
+                    }
+                }
             });
+
+            endPicker = flatpickr("#date-endd", {
+                dateFormat: "Y-m-d",
+                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
+                onChange: function(selectedDates) {
+                    if (selectedDates.length === 0) return;
+
+                    const endDate = selectedDates[0];
+                    const minStartDate = subtractDays(endDate, maxDays);
+
+                    startPicker.set('maxDate', endDate > today ? today : endDate);
+                    startPicker.set('minDate', minStartDate);
+
+                    const currentStart = startPicker.selectedDates[0];
+                    if (currentStart && (currentStart > endDate || currentStart < minStartDate)) {
+                        startPicker.clear();
+                    }
+                }
+            });
+
         </script>
     </body>
 

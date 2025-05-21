@@ -121,7 +121,7 @@
                         <a href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
                         <ul class="submenu">
                             <li class="{{ Request::is('peramalan/proses*') ? 'active' : '' }}">
-                                <a href="{{ route('peramalan.prosesPeramalan') }}">Proses Peramalan</a>
+                                <a href="{{ route('peramalan.index') }}">Proses Peramalan</a>
                             </li>
                             <li class="{{ Request::is('peramalan/hasil*') ? 'active' : '' }}">
                                 <a href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>

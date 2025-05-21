@@ -5,10 +5,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\DataAPIController;
 use App\Http\Controllers\DataHasilController;
 use App\Http\Controllers\DataImportController;
-use App\Http\Controllers\PetunjukAPIController;
-use App\Http\Controllers\SettingParamController;
 use App\Http\Controllers\DataPraProsesController;
+use App\Http\Controllers\PetunjukAPIController;
 use App\Http\Controllers\PetunjukImportController;
+use App\Http\Controllers\SettingParamController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,9 +18,11 @@ Route::get('/dasbor', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/petunjuk-penggunaan', function () {
-    return view('petunjukPenggunaan');
-})->name('petunjukPenggunaan');
+// Route::get('/petunjuk-penggunaan', function () {
+//     return view('petunjukPenggunaan');
+// })->name('petunjukPenggunaan');
+
+Route::get('/petunjuk-penggunaan', [PetunjukImportController::class, 'petunjukPenggunaan'])->name('petunjukPenggunaan');
 
 Route::get('/pergerakan-kripto', function () {
     return view('pergerakan');
@@ -41,12 +43,12 @@ Route::prefix('data')->name('data.')->group(function () {
 });
 
 Route::prefix('peramalan')->name('peramalan.')->group(function () {
-    Route::get('/proses', [DataPraProsesController::class, 'index'])->name('prosesPeramalan');
+    Route::get('/proses', [DataPraProsesController::class, 'index'])->name('index');
+    Route::post('/proses-peramalan', [DataPraProsesController::class, 'post'])->name('post');
     Route::delete('/proses/hapus', [DataPraProsesController::class, 'hapus'])->name('hapusPraProsesPeramalan');
 
     Route::get('/hasil', [DataHasilController::class, 'index'])->name('hasil');
-    Route::get('/hasil/hapus', [DataHasilController::class, 'hapus'])->name('hapusHasil');
-    Route::post('/hasil/export', [DataHasilController::class, 'export'])->name('exportHasil');
+    Route::delete('/hasil/hapus', [DataHasilController::class, 'hapus'])->name('hapusHasil');
 });
 
 // Route::resource(name: 'batagocilok', controller: BatagorCilok::class);
@@ -74,6 +76,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
     Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
+    Route::post('/optimize', [SettingParamController::class, 'optimize'])->name('optimize');
     
 
     Route::get('/user-management', function () {

@@ -22,9 +22,9 @@ return new class extends Migration
             $table->timestamps();
         });
         DB::table('setting_param')->insert([
-            'alpha' => 0.2,
-            'beta' => 0.2,
-            'gamma' => 0.2,
+            'alpha' => 0.5,
+            'beta' => 0.3,
+            'gamma' => 0.3,
             'season_length' => 30,
             'training_percentage' => 80,
             'testing_percentage' => 20,
