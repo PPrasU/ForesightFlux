@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('category', ['Training', 'Testing']);//sudah otomatis saat pra proses
             $table->timestamps();
             
-            $table->foreign('source_id')->references('id')->on('data_source')->onDelete('cascade');
+            $table->foreign('source_id')->references('id')->on('data_source');
         });
         
     }

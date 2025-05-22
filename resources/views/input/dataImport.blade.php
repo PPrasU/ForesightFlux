@@ -91,9 +91,9 @@
                                             <div class="form-group mb-4">
                                                 <label class="font-weight-bold">Jangka Waktu</label>
                                                 <div class="d-flex align-items-center">
-                                                    <input type="date" class="form-control form-control-lg mr-2" placeholder="Periode Awal" id="date-start" name="date-start">
-                                                    <span class="mx-2">-</span>
-                                                    <input type="date" class="form-control form-control-lg ml-2" placeholder="Periode Akhir" id="date-end" name="date-end">
+                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" >
+                                                    <span class="mx-2">–</span>
+                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
                                                 </div>
                                             </div>
                                         </div>
@@ -133,6 +133,8 @@
         @include('partials.footer')
         @include('partials.scripts')
         <script src="{{ asset('pages/form-advanced.js') }}"></script>
+        <!-- Flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <script>
             document.getElementById("importData").addEventListener("submit", function(event) {
@@ -155,16 +157,65 @@
             });
         </script>
         
-        {{-- set tanggal nggak bisa besok dst --}}
+        {{-- validasi 720 pake flatpicker --}}
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Dapatkan tanggal hari ini dalam format YYYY-MM-DD
-                const today = new Date().toISOString().split("T")[0];
+            const maxDays = 719;
+            let startPicker, endPicker;
 
-                // Set batas maksimal (max) agar tidak bisa pilih besok dan seterusnya
-                document.getElementById("date-start").setAttribute("max", today);
-                document.getElementById("date-end").setAttribute("max", today);
+            function addDays(date, days) {
+                const copy = new Date(date);
+                copy.setDate(copy.getDate() + days);
+                return copy;
+            }
+
+            function subtractDays(date, days) {
+                const copy = new Date(date);
+                copy.setDate(copy.getDate() - days);
+                return copy;
+            }
+
+            const today = new Date(); // ambil tanggal hari ini
+
+            startPicker = flatpickr("#date-startt", {
+                dateFormat: "Y-m-d",
+                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
+                onChange: function(selectedDates) {
+                    if (selectedDates.length === 0) return;
+
+                    const startDate = selectedDates[0];
+                    const maxEndDate = addDays(startDate, maxDays);
+
+                    const effectiveMaxEndDate = maxEndDate > today ? today : maxEndDate;
+
+                    endPicker.set('minDate', startDate);
+                    endPicker.set('maxDate', effectiveMaxEndDate);
+
+                    const currentEnd = endPicker.selectedDates[0];
+                    if (currentEnd && (currentEnd < startDate || currentEnd > effectiveMaxEndDate)) {
+                        endPicker.clear();
+                    }
+                }
             });
+
+            endPicker = flatpickr("#date-endd", {
+                dateFormat: "Y-m-d",
+                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
+                onChange: function(selectedDates) {
+                    if (selectedDates.length === 0) return;
+
+                    const endDate = selectedDates[0];
+                    const minStartDate = subtractDays(endDate, maxDays);
+
+                    startPicker.set('maxDate', endDate > today ? today : endDate);
+                    startPicker.set('minDate', minStartDate);
+
+                    const currentStart = startPicker.selectedDates[0];
+                    if (currentStart && (currentStart > endDate || currentStart < minStartDate)) {
+                        startPicker.clear();
+                    }
+                }
+            });
+
         </script>
     </body>
 

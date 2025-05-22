@@ -89,8 +89,8 @@
                                         use Carbon\Carbon;
                                         $source = $data->first()->source ?? null;
                                         $name = $source->display_name ?? $source->name ?? '-';
-                                        $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
-                                        $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                        $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
+                                        $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
                                         $total = $data->count();
                                     @endphp
 
@@ -106,8 +106,8 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 100px">Tanggal</th>
-                                                <th>Price</th>
+                                                <th style="width: 100px; font-style: italic">Tanggal</th>
+                                                <th style="font-style: italic;">Price</th>
                                                 <th>Open</th>
                                                 <th>High</th>
                                                 <th>Low</th>
@@ -119,8 +119,8 @@
                                             @foreach ($data as $row)
                                                 <tr>
                                                     <td style="text-align: center" hidden>{{ $row->id }}</td>
-                                                    <td style="text-align: center">{{ $row->date }}</td>
-                                                    <td>{{ $row->price }}</td>
+                                                    <td style="text-align: center; font-style: italic">{{ $row->date }}</td>
+                                                    <td style="font-style: italic;">{{ $row->price }}</td>
                                                     <td>{{ $row->open }}</td>
                                                     <td>{{ $row->high }}</td>
                                                     <td>{{ $row->low }}</td>

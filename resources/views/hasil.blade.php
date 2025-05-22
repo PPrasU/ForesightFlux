@@ -77,8 +77,8 @@
                                     use Carbon\Carbon;
                                     $source = $training->first()->source ?? null;
                                     $name = $source->display_name ?? $source->name ?? '-';
-                                    $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
-                                    $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                    $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
+                                    $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
                                     $total = $training->count();
                                 @endphp
 

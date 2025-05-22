@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('count');
             $table->timestamps();
         
-            $table->foreign('source_id')->references('id')->on('data_source');
+            $table->foreign('source_id')->references('id')->on('data_source')->onDelete('cascade');
         });
     }
 

@@ -15,13 +15,24 @@
             display: flex;
             align-items: center;
         }
-
         .date-separator {
             margin: 0 10px;
             font-weight: bold;
             font-size: 1.2rem;
         }
-
+        .btn-check {
+            position: absolute;
+            clip: rect(0, 0, 0, 0);
+            pointer-events: none;
+            min-width: 500px;
+        }
+        input[type="radio"].btn-check {
+            display: none !important;
+        }
+        .btn-radio {
+            flex: 1;
+            text-align: center;
+        }
     </style>      
 
     <body>
@@ -90,7 +101,7 @@
                                         </div>
                                     @endif
 
-                                    <div style="margin-top: 10px">
+                                    <div>
                                         <div class="text-center mb-4">
                                             <h4 class="mt-0 header-title">Pilih Data Historis Kripto Untuk Dilakukan Peramalan Nantinya</h4>
                                         </div>
@@ -99,54 +110,99 @@
                                     <form action="{{ route('data.postDataAPI') }}" method="POST" enctype="multipart/form-data" id="apiData">
                                         @csrf
                                         {{-- Pilih Kripto --}}
-                                        <div style="margin-top: 50px">
-                                            <div class="form-group mb-4">
-                                                <label class="control-label font-weight-bold">Pilih Kripto</label>
-                                                <select name="crypto_pair" id="crypto_pair" class="form-control form-control-lg select2" required>
-                                                    <option selected disabled>--- Kripto Populer ---</option>
-                                                    <option value="XXBTZUSD">Bitcoin (BTC) to USD</option>
-                                                    <option value="ETCUSD">Ethereum Classic (ETC) to USD</option>
-                                                    <option value="XETHZUSD">Ethereum (ETH) to USD</option>
-                                                    <option value="XLTCZUSD">Litecoin (LTC) to USD</option>
-                                                    <option value="XDGUSD">Dogecoin (DOGE) (XDG) to USD</option>
-                                                    <option value="XCNUSD">Onyxcoin (XCN) to USD</option>
-                                                    <option value="MLNUSD">Enzyme (MLN) to USD</option>
-                                                    <option value="REPUSD">Augur (REP) to USD</option>
-                                                    <option value="SOLUSD">Solana (SOL) to USD</option>
-                                                    <option value="PONKEUSD">Ponke SOL (PONKE) to USD</option>
-                                                    <option value="POPCATUSD">Popcat SOL (POPCAT) to USD</option>
-                                                    <option selected disabled>--- Pilih Kripto Lain ---</option>
-                                                    @if ($cryptoPairs->isEmpty())
-                                                        <option disabled>Data kripto dari API gagal dimuat 😥</option>
-                                                    @else
-                                                        <option disabled>--- Pilih Kripto Lain ---</option>
-                                                        @foreach ($cryptoPairs as $key => $pair)
-                                                            @php
-                                                                $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
-                                                            @endphp
-                                                            <option value="{{ $key }}" data-display="{{ $displayName }}">
-                                                                {{ $displayName }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>                                                                                                                                                                                           
-                                            </div>
+                                        <div class="form-group">
+                                            <label class="control-label font-weight-bold">Pilih Kripto</label>
+                                            <select name="crypto_pair" id="crypto_pair" class="form-control form-control-lg select2" required>
+                                                <option selected disabled>--- Kripto Populer ---</option>
+                                                <option value="XXBTZUSD">Bitcoin (BTC) to USD</option>
+                                                <option value="ETCUSD">Ethereum Classic (ETC) to USD</option>
+                                                <option value="XETHZUSD">Ethereum (ETH) to USD</option>
+                                                <option value="XLTCZUSD">Litecoin (LTC) to USD</option>
+                                                <option value="XDGUSD">Dogecoin (DOGE) (XDG) to USD</option>
+                                                <option value="XCNUSD">Onyxcoin (XCN) to USD</option>
+                                                <option value="MLNUSD">Enzyme (MLN) to USD</option>
+                                                <option value="REPUSD">Augur (REP) to USD</option>
+                                                <option value="SOLUSD">Solana (SOL) to USD</option>
+                                                <option value="PONKEUSD">Ponke SOL (PONKE) to USD</option>
+                                                <option value="POPCATUSD">Popcat SOL (POPCAT) to USD</option>
+                                                <option selected disabled>--- Pilih Kripto Lain ---</option>
+                                                @if ($cryptoPairs->isEmpty())
+                                                    <option disabled>Data kripto dari API gagal dimuat 😥</option>
+                                                @else
+                                                    <option disabled>--- Pilih Kripto Lain ---</option>
+                                                    @foreach ($cryptoPairs as $key => $pair)
+                                                        @php
+                                                            $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
+                                                        @endphp
+                                                        <option value="{{ $key }}" data-display="{{ $displayName }}">
+                                                            {{ $displayName }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>                                                                                                                                                                                           
                                         </div>
 
-                                        <div class="form-group mb-4">
-                                            <label class="font-weight-bold">Jangka Waktu (Maks 720 hari)</label>
-                                            <div class="d-flex align-items-center">
-                                                <div class="input-group date-range-group">
-                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" onkeydown="return false">
-                                                    <span class="date-separator">–</span>
-                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" onkeydown="return false">
+                                        <div class="form-group">
+                                            <label class="control-label d-block mb-2">Jenis Data</label>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="flex-fill">
+                                                    <input type="radio" class="btn-check" name="jenis_data" id="harian" autocomplete="off" value="Harian" checked>
+                                                    <label class="btn btn-success w-100 py-2 text-center fw-bold" for="harian" id="label-harian">
+                                                        Harian
+                                                    </label>
+                                                </div>
+
+                                                <span class="mx-2">–</span>
+
+                                                <div class="flex-fill">
+                                                    <input type="radio" class="btn-check" name="jenis_data" id="mingguan" autocomplete="off" value="Mingguan">
+                                                    <label class="btn btn-outline-warning w-100 py-2 text-center fw-bold" for="mingguan" id="label-mingguan">
+                                                        Mingguan
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
 
+                                        {{-- ini untuk Harian --}}
+                                        {{-- <div class="form-group" id="form-harian">
+                                            <label class="font-weight-bold">Jangka Waktu (Default harian)</label><br>
+                                            <label style="font-size: 11px; font-style: italic;">* Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="input-group date-range-group">
+                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" >
+                                                    <span class="mx-2">–</span>
+                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
+                                                </div>
+                                            </div>
+                                        </div> --}}
+
+                                        {{-- dibawah ini untuk Mingguan --}}
+                                        {{-- <div class="form-group mb-4" id="form-mingguan" style="display: none">
+                                            <label class="font-weight-bold">Jangka Waktu</label><br>
+                                            <label style="font-size: 11px; font-style: italic;">* Data disajikan secara mingguan, dengan satu baris mencerminkan aktivitas kripto selama tujuh hari.</label>
+                                            <div class="d-flex align-items-center">
+                                                <input type="text" id="date-starttt" name="date-start" class="form-control" placeholder="Tanggal awal" >
+                                                <span class="mx-2">–</span>
+                                                <input type="text" id="date-enddd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
+                                            </div>
+                                        </div> --}}
+
+                                        <div class="form-group mb-4">
+                                            <label class="font-weight-bold">Jangka Waktu</label>
+                                            <label id="keterangan-jangka-waktu" style="font-size: 11px; font-style: italic;" class="d-block mb-2">
+                                                * Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.
+                                            </label>
+                                            <div class="d-flex align-items-center">
+                                                <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" onkeydown="return false">
+                                                <span class="mx-2">–</span>
+                                                <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" onkeydown="return false">
+                                            </div>
+                                        </div>
+
+
                                         <input type="hidden" name="sumber" value="API" />
                                         {{-- Tombol --}}
-                                        <div style="margin-top: 50px">
+                                        <div style="margin-top: 40px">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
                                                 Pilih Kripto
                                             </button>
@@ -192,66 +248,130 @@
             });
         </script>
 
-        {{-- validasi 720 pake flatpicker --}}
+        {{-- jangka waktu validasi dkk --}}
         <script>
-            const maxDays = 719;
-            let startPicker, endPicker;
+            function updateKeterangan() {
+                const label = document.getElementById('keterangan-jangka-waktu');
+                const jenis = document.querySelector('input[name="jenis_data"]:checked')?.value;
 
-            function addDays(date, days) {
-                const copy = new Date(date);
-                copy.setDate(copy.getDate() + days);
-                return copy;
+                if (jenis === 'Harian') {
+                    label.textContent = '* Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.';
+                } else if (jenis === 'Mingguan') {
+                    label.textContent = '* Data disajikan secara mingguan, dengan satu baris mencerminkan aktivitas kripto selama tujuh hari.';
+                }
             }
 
-            function subtractDays(date, days) {
-                const copy = new Date(date);
-                copy.setDate(copy.getDate() - days);
-                return copy;
-            }
+            document.addEventListener('DOMContentLoaded', function () {
+                const today = new Date();
+                const maxDays = 719;
+                let startPicker, endPicker;
 
-            const today = new Date(); // ambil tanggal hari ini
-
-            startPicker = flatpickr("#date-startt", {
-                dateFormat: "Y-m-d",
-                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
-                onChange: function(selectedDates) {
-                    if (selectedDates.length === 0) return;
-
-                    const startDate = selectedDates[0];
-                    const maxEndDate = addDays(startDate, maxDays);
-
-                    const effectiveMaxEndDate = maxEndDate > today ? today : maxEndDate;
-
-                    endPicker.set('minDate', startDate);
-                    endPicker.set('maxDate', effectiveMaxEndDate);
-
-                    const currentEnd = endPicker.selectedDates[0];
-                    if (currentEnd && (currentEnd < startDate || currentEnd > effectiveMaxEndDate)) {
-                        endPicker.clear();
-                    }
+                function addDays(date, days) {
+                    const result = new Date(date);
+                    result.setDate(result.getDate() + days);
+                    return result;
                 }
-            });
 
-            endPicker = flatpickr("#date-endd", {
-                dateFormat: "Y-m-d",
-                maxDate: today, // ❗️batasi maksimal hanya sampai hari ini
-                onChange: function(selectedDates) {
-                    if (selectedDates.length === 0) return;
-
-                    const endDate = selectedDates[0];
-                    const minStartDate = subtractDays(endDate, maxDays);
-
-                    startPicker.set('maxDate', endDate > today ? today : endDate);
-                    startPicker.set('minDate', minStartDate);
-
-                    const currentStart = startPicker.selectedDates[0];
-                    if (currentStart && (currentStart > endDate || currentStart < minStartDate)) {
-                        startPicker.clear();
-                    }
+                function subtractDays(date, days) {
+                    const result = new Date(date);
+                    result.setDate(result.getDate() - days);
+                    return result;
                 }
+
+                function isHarian() {
+                    return document.querySelector('input[name="jenis_data"]:checked')?.value === "Harian";
+                }
+
+                function initDatePickers() {
+                    if (startPicker) startPicker.destroy();
+                    if (endPicker) endPicker.destroy();
+
+                    const startConfig = {
+                        dateFormat: "Y-m-d",
+                        maxDate: today,
+                        minDate: isHarian() ? subtractDays(today, maxDays) : null,
+                        onChange: function (selectedDates) {
+                            if (selectedDates.length === 0) return;
+                            const start = selectedDates[0];
+                            let maxEnd = isHarian() ? addDays(start, maxDays) : today;
+                            if (maxEnd > today) maxEnd = today;
+
+                            endPicker.set("minDate", start);
+                            endPicker.set("maxDate", maxEnd);
+
+                            const currentEnd = endPicker.selectedDates[0];
+                            if (currentEnd && (currentEnd < start || currentEnd > maxEnd)) {
+                                endPicker.clear();
+                            }
+                        }
+                    };
+
+                    const endConfig = {
+                        dateFormat: "Y-m-d",
+                        maxDate: today,
+                        minDate: isHarian() ? subtractDays(today, maxDays) : null,
+                        onChange: function (selectedDates) {
+                            if (selectedDates.length === 0) return;
+                            const end = selectedDates[0];
+                            let minStart = isHarian() ? subtractDays(end, maxDays) : null;
+
+                            startPicker.set("minDate", minStart);
+                            startPicker.set("maxDate", end > today ? today : end);
+
+                            const currentStart = startPicker.selectedDates[0];
+                            if (currentStart && (currentStart > end || (minStart && currentStart < minStart))) {
+                                startPicker.clear();
+                            }
+                        }
+                    };
+
+                    startPicker = flatpickr("#date-startt", startConfig);
+                    endPicker = flatpickr("#date-endd", endConfig);
+                }
+
+                // Inisialisasi awal
+                initDatePickers();
+
+                // Ganti logika saat user ubah Jenis Data
+                document.querySelectorAll('input[name="jenis_data"]').forEach(radio => {
+                    radio.addEventListener("change", () => {
+                        document.getElementById("date-startt").value = '';
+                        document.getElementById("date-endd").value = '';
+                        initDatePickers();
+                        updateKeterangan();
+                    });
+                });
+                updateKeterangan();
             });
 
         </script>
+
+        {{-- button pilih jenis data --}}
+        <script>
+            const radios = document.querySelectorAll('input[name="jenis_data"]');
+
+            function updateStyles() {
+                radios.forEach(radio => {
+                    const label = document.querySelector(`label[for="${radio.id}"]`);
+                    if (radio.checked) {
+                        label.classList.remove('btn-outline-warning');
+                        label.classList.add('btn-success');
+                    } else {
+                        label.classList.remove('btn-success');
+                        label.classList.add('btn-outline-warning');
+                    }
+                });
+            }
+
+            // Jalankan saat radio berubah
+            radios.forEach(radio => {
+                radio.addEventListener('change', updateStyles);
+            });
+
+            // Jalankan sekali saat awal
+            updateStyles();
+        </script>
+
     </body>
 
 </html>

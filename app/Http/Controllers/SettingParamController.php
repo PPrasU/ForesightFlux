@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataHasil;
+use App\Models\HasilTraining;
 use App\Models\HasilAkurasi;
 use App\Models\HasilTesting;
 use App\Models\SettingParam;
@@ -13,7 +13,7 @@ class SettingParamController extends Controller
 {
     public function index(){
         $dataParam = SettingParam::all();
-        $training = DataHasil::all();
+        $training = HasilTraining::all();
         $testing = HasilTesting::all();
         $akurasi = HasilAkurasi::all();
         $praProses = DataPraProses::all();
@@ -100,7 +100,7 @@ class SettingParamController extends Controller
 
         return view('admin.settingParams', [
             'dataParam' => SettingParam::all(),
-            'training' => DataHasil::all(),
+            'training' => HasilTraining::all(),
             'testing' => HasilTesting::all(),
             'akurasi' => HasilAkurasi::all(),
             'grid_results' => $results,
@@ -150,7 +150,7 @@ class SettingParamController extends Controller
     //     }
 
     //     return view('hasil', [
-    //         'training' => DataHasil::all(),
+    //         'training' => HasilTraining::all(),
     //         'testing' => HasilTesting::all(),
     //         'akurasi' => HasilAkurasi::all(),
     //         'grid_results' => $results,

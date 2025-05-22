@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\DataHasil;
 use App\Models\DataSource;
 use App\Models\HasilAkurasi;
@@ -9,6 +10,7 @@ use App\Models\HasilTesting;
 use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
+use App\Models\HasilTraining;
 use Illuminate\Support\Facades\DB;
 
 class DataPraProsesController extends Controller
@@ -16,10 +18,10 @@ class DataPraProsesController extends Controller
     public function index(){
         $data = DataPraProses::all();
         $param = SettingParam::first();
-        $dataHasil = DataHasil::exists();
+        $hasilTraining = HasilTraining::exists();
         return view('praProses', [
             'data' => $data,
-            'sudahHasil' => $dataHasil,
+            'sudahHasil' => $hasilTraining,
             'param' => $param
         ]);
     }
@@ -211,7 +213,7 @@ class DataPraProsesController extends Controller
                 $squared_errors[$i] = pow($errors[$i], 2);
 
                 // Simpan ke tabel data_hasil
-                DataHasil::create([
+                HasilTraining::create([
                     'source_id' => $sourceId,
                     'date' => $data[$i]->date,
                     'price' => $price,
@@ -284,6 +286,29 @@ class DataPraProsesController extends Controller
                 'relative_rmse' => $rrmse,
             ]);
 
+            // Forecast 30 hari ke depan
+            $jumlahHariKeDepan = 30;
+            $startDate = Carbon::parse($dataTesting->last()->date ?? $data->last()->date);
+
+            for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+                $futureDate = $startDate->copy()->addDays($h);
+                
+                // Ambil seasonal index (berulang tiap seasonLength)
+                $seasonIndex = ($lastIndexTrain + $h - $seasonLength) % $seasonLength + $seasonLength;
+                $seasonFactor = $seasonal[$seasonIndex] ?? 1;
+
+                // Forecast = (level + h × trend) × seasonal
+                $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+
+                DataHasil::create([
+                    'source_id' => $sourceId,
+                    'date_forecast' => $futureDate->format('Y-m-d'),
+                    'forecast' => $futureForecast,
+                    'level' => $lastLevel,
+                    'trend' => $lastTrend,
+                    'seasonal' => $seasonFactor,
+                ]);
+            }
 
             DB::commit();
             return redirect()->route('peramalan.hasil')->with('Success', 'Proses Peramalan Berhasil!');

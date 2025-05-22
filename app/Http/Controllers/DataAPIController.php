@@ -8,6 +8,7 @@ use App\Models\DataSource;
 use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -530,6 +531,7 @@ class DataAPIController extends Controller
                 'date-start' => 'required|date',
                 'date-end' => 'required|date|after_or_equal:date-start',
                 'sumber' => 'required',
+                'jenis_data' => 'required|in:Harian,Mingguan',
             ]);
 
             $displayNames = [
@@ -973,21 +975,16 @@ class DataAPIController extends Controller
                 'periode_awal' => $request['date-start'],
                 'periode_akhir' => $request['date-end'],
                 'sumber' => $request->sumber,
+                'jenis_data' => $request->jenis_data,
             ]);
 
             $start = Carbon::parse($request['date-start'], 'Asia/Jakarta')->startOfDay();
             $end = Carbon::parse($request['date-end'], 'Asia/Jakarta')->endOfDay();
 
-            // Validasi maksimal 720 hari
-            $daysDiff = $start->diffInDays($end);
-            if ($daysDiff > 720) {
-                return redirect()->back()->with('error', 'Rentang tanggal terlalu panjang. Maksimal 720 hari yang dapat diambil dari API Kraken.');
-            }
-
             $startTime = $start->subDay()->timestamp; // sesuai kebutuhan Kraken
             $endTime = $end->timestamp;
             $pair = $request->crypto_pair;
-            $interval = 1440; // 1 hari (daily)
+            $interval = $request->jenis_data === 'Mingguan' ? 10080 : 1440; // 1440 harian, 10080 mingguan
 
             $response = Http::get("https://api.kraken.com/0/public/OHLC", [
                 'pair' => $pair,
@@ -1031,10 +1028,7 @@ class DataAPIController extends Controller
                     );
                 }
             }
-
             return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
-
-
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -1114,6 +1108,7 @@ class DataAPIController extends Controller
     public function hapus(){
         try{
             DataAPI::truncate();
+            DB::table('data_source')->truncate();
             session()->push('notifications', [
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',

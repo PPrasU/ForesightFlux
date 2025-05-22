@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HasilAkurasi;
 use App\Models\HasilTesting;
-use App\Models\DataHasil;
+use App\Models\HasilTraining;
 use App\Models\DataSource;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 class DataHasilController extends Controller
 {
     public function index(){
-        $training = DataHasil::all();
+        $training = HasilTraining::all();
         $testing = HasilTesting::all();
         $akurasi = HasilAkurasi::all();
         return view('hasil', compact('training', 'testing', 'akurasi'));
@@ -27,7 +27,7 @@ class DataHasilController extends Controller
                     ->with('error', 'Akses langsung ke halaman ini tidak diperbolehkan.');
             }
 
-            if (!DataHasil::exists()) {
+            if (!HasilTraining::exists()) {
                 return back()->withErrors([
                     'file' => '🚨Data Proses Sudah Dihapus.⚠️',
                 ]);
@@ -36,7 +36,7 @@ class DataHasilController extends Controller
             // Hapus semua data hasil
             HasilAkurasi::truncate();
             HasilTesting::truncate();
-            DataHasil::truncate();
+            HasilTraining::truncate();
             // Jika ingin hapus pra-proses juga, bisa diaktifkan:
             // DataPraProses::truncate();
 

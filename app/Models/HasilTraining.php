@@ -5,24 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class DataHasil extends Model
+class HasilTraining extends Model
 {
     use HasFactory;
 
-    protected $table = 'data_hasil';
+    protected $table = 'hasil_training';
 
     protected $fillable = [
         'source_id',
-        'date_forecast',
-        'forecast',
+        'date',
+        'price',
         'level',
         'trend',
         'seasonal',
+        'forecast',
+        'error',
+        'abs_error',
+        'error_square'
     ];
 
     public function source()
     {
         return $this->belongsTo(DataSource::class, 'source_id');
     }
-
 }

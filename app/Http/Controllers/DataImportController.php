@@ -310,7 +310,8 @@ class DataImporTController extends Controller
                 'bgColor' => 'danger',
                 'title' => 'Data Import Dihapus',
                 'text' => 'Data berhasil dihapus.'
-            ]);            
+            ]);
+            DB::table('data_source')->truncate();
             DataImport::truncate();
             return redirect()->route('data.importData')->with('Success', 'Data Pra Proses Berhasil Dihapus');
         }catch (\Throwable $e) {

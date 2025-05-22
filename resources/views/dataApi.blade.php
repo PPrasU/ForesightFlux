@@ -97,14 +97,15 @@
                                         use Carbon\Carbon;
                                         $source = $data->first()->source ?? null;
                                         $name = $source->display_name ?? $source->name ?? '-';
-                                        $start = $source ? Carbon::parse($source->periode_awal)->format('m-d-Y') : '-';
-                                        $end = $source ? Carbon::parse($source->periode_akhir)->format('m-d-Y') : '-';
+                                        $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
+                                        $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
+                                        $jenis_data = $source->jenis_data;
                                         $total = $data->count();
                                     @endphp
 
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}</p>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }} | <strong>Jenis Data:</strong> {{ $jenis_data }}</p>
                                             <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
@@ -114,11 +115,11 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 100px">Tanggal</th>
+                                                <th style="width: 100px; font-style: italic;">Tanggal</th>
                                                 <th>Open</th>
                                                 <th>High</th>
                                                 <th>Low</th>
-                                                <th>Close</th>
+                                                <th style="font-style: italic;">Close</th>
                                                 <th style="width: 100px">VWAP</th>
                                                 <th style="width: 150px">Volume</th>
                                                 <th style="width: 100px">Count</th>
@@ -128,11 +129,11 @@
                                             @foreach ($data as $row)
                                                 <tr>
                                                     <td style="text-align: center" hidden>{{ $row->id }}</td>
-                                                    <td style="text-align: center">{{ $row->date }}</td>
+                                                    <td style="text-align: center; font-style: italic;">{{ $row->date }}</td>
                                                     <td>{{ $row->open }}</td>
                                                     <td>{{ $row->high }}</td>
                                                     <td>{{ $row->low }}</td>
-                                                    <td>{{ $row->close }}</td>
+                                                    <td style="font-style: italic;">{{ $row->close }}</td>
                                                     <td>{{ $row->vwap }}</td>
                                                     <td>{{ $row->vol }}</td>
                                                     <td>{{ $row->count }}</td>
