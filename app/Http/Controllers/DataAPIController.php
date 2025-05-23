@@ -1107,8 +1107,19 @@ class DataAPIController extends Controller
 
     public function hapus(){
         try{
-            DataAPI::truncate();
-            DB::table('data_source')->truncate();
+            
+            DB::beginTransaction();
+            // Hapus child table lebih dulu
+            DB::table('data_api')->delete();
+
+            // Cek apakah data_api benar-benar kosong
+            if (DB::table('data_api')->count() > 0) {
+                throw new \Exception("Gagal menghapus semua data API");
+            }
+
+            // Baru hapus parent table
+            DB::table('data_source')->delete();
+            DB::commit();
             session()->push('notifications', [
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',
@@ -1117,6 +1128,7 @@ class DataAPIController extends Controller
             ]); 
             return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil dihapus.');
         }catch(\Exception $e){
+            DB::rollBack();
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
         }
     }

@@ -107,7 +107,15 @@
                                     <th scope="col" style="text-align: center">Parameter Alpha</th>
                                     <th scope="col" style="text-align: center">Parameter Beta</th>
                                     <th scope="col" style="text-align: center">Parameter Gamma</th>
-                                    <th scope="col" style="text-align: center">Season Length</th>
+                                    <th scope="col" style="text-align: center">
+                                      @if ($jenisData === 'Harian')
+                                          Season Length (Harian)
+                                      @elseif ($jenisData === 'Mingguan')
+                                          Season Length (Mingguan)
+                                      @else
+                                          Season Length (Random)
+                                      @endif
+                                    </th>
                                     <th scope="col" style="text-align: center">Persentase Data Training</th>
                                     <th scope="col" style="text-align: center">Persentase Data Testing</th>
                                     <th scope="col" style="width: 15px; text-align: center">Aksi</th>
@@ -115,14 +123,50 @@
                                 </thead>
                                 <tbody>
                                   @foreach ($dataParam as $row)
-                                      <tr>
-                                          <td style="text-align: center">{{ $row->alpha }}</td>
-                                          <td style="text-align: center">{{ $row->beta }}</td>
-                                          <td style="text-align: center">{{ $row->gamma }}</td>
-                                          <td style="text-align: center">{{ $row->season_length }}</td>
-                                          <td style="text-align: center">{{ $row->training_percentage }}%</td>
-                                          <td style="text-align: center">{{ $row->testing_percentage }}%</td>
-                                          <td style="text-align: center">
+                                    <tr>
+                                        <td style="text-align: center">{{ $row->alpha }}</td>
+                                        <td style="text-align: center">{{ $row->beta }}</td>
+                                        <td style="text-align: center">{{ $row->gamma }}</td>
+                                        <td style="text-align: center">
+                                            @if ($jenisData === 'Harian')
+                                                @switch((int) $row->season_length_harian)
+                                                    @case(7)
+                                                        7 (Mingguan)
+                                                        @break
+                                                    @case(30)
+                                                        30 (Bulanan)
+                                                        @break
+                                                    @case(90)
+                                                        90 (Kuartal)
+                                                        @break
+                                                    @case(365)
+                                                        365 (Tahunan)
+                                                        @break
+                                                    @default
+                                                        {{ $row->season_length_harian }}
+                                                @endswitch
+                                            @elseif ($jenisData === 'Mingguan')
+                                                @switch((int) $row->season_length_mingguan)
+                                                    @case(4)
+                                                        4 (Bulanan)
+                                                        @break
+                                                    @case(12)
+                                                        12 (Kuartal)
+                                                        @break
+                                                    @case(52)
+                                                        52 (Tahunan)
+                                                        @break
+                                                    @default
+                                                        {{ $row->season_length_mingguan }}
+                                                @endswitch
+                                            @else
+                                                {{ $row->season_length_harian }}
+                                            @endif
+
+                                        </td>
+                                        <td style="text-align: center">{{ $row->training_percentage }}%</td>
+                                        <td style="text-align: center">{{ $row->testing_percentage }}%</td>
+                                        <td style="text-align: center">
                                             <a href="#" 
                                               class="btn btn-warning" 
                                               data-bs-toggle="modal"
@@ -131,14 +175,14 @@
                                               data-alpha="{{ $row->alpha }}"
                                               data-beta="{{ $row->beta }}"
                                               data-gamma="{{ $row->gamma }}"
-                                              data-season_length="{{ $row->season_length }}"
                                               data-training="{{ $row->training_percentage }}"
                                               data-testing="{{ $row->testing_percentage }}"
+                                              {{-- data-season_length="{{ $jenisData === 'Harian' ? $row->season_length_harian : $row->season_length_mingguan }}" --}}
                                               title="Edit Data">
                                               <i class="fas fa-edit"></i>
                                             </a>
                                         </td>
-                                      </tr>
+                                    </tr>
                                   @endforeach
                                 </tbody>
                             </table>
@@ -169,21 +213,34 @@
                                           <input type="text" class="form-control" name="gamma" id="gamma">
                                         </div>
                                         <div class="mb-3">
-                                          <label for="season_length" class="form-label">Season Length</label>
-                                          <select class="form-control" name="season_length" id="season_length">
-                                            <option value="7">7 (mingguan)</option>
-                                            <option value="30">30 (bulanan)</option>
-                                            <option value="90">90 (kuartalan)</option>
-                                          </select>
-                                        </div>
-                                        <div class="mb-3">
                                           <label for="training_percentage" class="form-label">Training %</label>
                                           <input type="number" class="form-control" name="training_percentage" id="training_percentage" min="0" max="100">
                                         </div>
                                         <div class="mb-3">
                                           <label for="testing_percentage" class="form-label">Testing %</label>
                                           <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
-                                        </div>                                          
+                                        </div>
+                                        @if ($jenisData === 'Harian')
+                                          <div class="mb-3">
+                                              <label for="season_length_harian" class="form-label">Season Length Harian</label>
+                                              <select class="form-control" name="season_length_harian" id="season_length_harian">
+                                                  <option value="7" {{ $row->season_length_harian == 7 ? 'selected' : '' }}>7 (mingguan)</option>
+                                                  <option value="30" {{ $row->season_length_harian == 30 ? 'selected' : '' }}>30 (bulanan)</option>
+                                                  <option value="90" {{ $row->season_length_harian == 90 ? 'selected' : '' }}>90 (kuartalan)</option>
+                                                  <option value="365" {{ $row->season_length_harian == 365 ? 'selected' : '' }}>365 (tahunan)</option>
+                                              </select>
+                                          </div>
+                                        @elseif ($jenisData === 'Mingguan')
+                                          <div class="mb-3">
+                                              <label for="season_length_mingguan" class="form-label">Season Length Mingguan</label>
+                                              <select class="form-control" name="season_length_mingguan" id="season_length_mingguan">
+                                                  <option value="4" {{ $row->season_length_mingguan == 4 ? 'selected' : '' }}>4 (bulanan)</option>
+                                                  <option value="12" {{ $row->season_length_mingguan == 12 ? 'selected' : '' }}>12 (kuartalan)</option>
+                                                  <option value="52" {{ $row->season_length_mingguan == 52 ? 'selected' : '' }}>52 (tahunan)</option>
+                                              </select>
+                                          </div>
+                                        @endif
+                                                                                  
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -343,7 +400,7 @@
                   </div>
                 @endif
                 
-                {{-- @if ($praProses->count() > 0) --}}
+                @if ($dataPraproses->count() > 0)
                   <div class="row">
                       <div class="col-xl-12">
                           <div class="card">
@@ -356,7 +413,35 @@
                                     <button id="optimizeBtn" class="btn btn-primary mb-3" type="submit">
                                         🔍 Jalankan Grid Search
                                     </button>
-                                </form>
+                                  </form>
+                                  <div class="mb-4">
+                                        <p class="mb-1"><strong>MAPE Terbaik</strong></p>
+                                        <p class="mb-1"><strong>Training Testing (90:10):</strong> 
+                                            {{ $best_results[90]['mape'] ?? 'N/A' }}% (α={{ $best_results[90]['alpha'] ?? '-' }}, β={{ $best_results[90]['beta'] ?? '-' }}, γ={{ $best_results[90]['gamma'] ?? '-' }})
+                                        </p>
+                                        <p class="mb-1"><strong>Training Testing (80:20):</strong> 
+                                            {{ $best_results[80]['mape'] ?? 'N/A' }}% (α={{ $best_results[80]['alpha'] ?? '-' }}, β={{ $best_results[80]['beta'] ?? '-' }}, γ={{ $best_results[80]['gamma'] ?? '-' }})
+                                        </p>
+                                        <p class="mb-1"><strong>Training Testing (70:30):</strong> 
+                                            {{ $best_results[70]['mape'] ?? 'N/A' }}% (α={{ $best_results[70]['alpha'] ?? '-' }}, β={{ $best_results[70]['beta'] ?? '-' }}, γ={{ $best_results[70]['gamma'] ?? '-' }})
+                                        </p>
+                                        <p class="mb-1"><strong>Training Testing (60:40):</strong> 
+                                            {{ $best_results[60]['mape'] ?? 'N/A' }}% (α={{ $best_results[60]['alpha'] ?? '-' }}, β={{ $best_results[60]['beta'] ?? '-' }}, γ={{ $best_results[60]['gamma'] ?? '-' }})
+                                        </p>
+                                        <p><strong>Jenis Data:</strong> {{ $jenisData }} (Season Length: {{ $seasonLength }})</p>
+                                        <h5>Total Data Training dan Testing Berdasarkan Persentase:</h5>
+                                        <ul>
+                                            @foreach ($totalCounts as $percent => $counts)
+                                                <li>
+                                                    <strong>{{ $percent }}% Training</strong>:
+                                                    Training = {{ $counts['training'] }}, 
+                                                    Testing = {{ $counts['testing'] }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+
+                                  </div>
+
                                   @if(isset($grid_results) && isset($best_results))
                                       <h4 class="mt-4">🔍 Hasil Grid Search</h4>
                                       <div class="table-responsive">
@@ -417,8 +502,7 @@
                           </div>
                       </div>
                   </div>
-                {{-- @endif --}}
-
+                @endif
               </div>
             </div>
           </div>
@@ -448,57 +532,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-          $('#datatable1').DataTable();
-          $('#datatable2').DataTable();
-          $('#datatable3').DataTable();
-          $('#datatable4').DataTable();
-      });
       document.addEventListener('DOMContentLoaded', function () {
-          const modal = document.getElementById('editSettingModal');
-          modal.addEventListener('show.bs.modal', function (event) {
-              const button = event.relatedTarget;
-              
-              document.querySelector('#setting-id').value = button.getAttribute('data-id');
-              document.querySelector('#alpha').value = button.getAttribute('data-alpha');
-              document.querySelector('#beta').value = button.getAttribute('data-beta');
-              document.querySelector('#gamma').value = button.getAttribute('data-gamma');
-              document.querySelector('#season_length').value = button.getAttribute('data-season_length');
-              document.querySelector('#training_percentage').value = button.getAttribute('data-training');
-              document.querySelector('#testing_percentage').value = button.getAttribute('data-testing');
-          });
-      });
-    </script>
+        // Inisialisasi DataTables
+        ['#datatable1', '#datatable2', '#datatable3', '#datatable4'].forEach(id => {
+          $(id).DataTable();
+        });
 
-    {{-- isi form action modal --}}
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          const editButtons = document.querySelectorAll('a[data-bs-target="#editSettingModal"]');
-          const form = document.getElementById('editSettingForm');
-      
-          editButtons.forEach(btn => {
-              btn.addEventListener('click', function () {
-                  const id = this.dataset.id;
-                  form.action = `/admin/setting-params/update/${id}`; // sesuaikan dengan route update kamu
-      
-                  document.getElementById('alpha').value = this.dataset.alpha;
-                  document.getElementById('beta').value = this.dataset.beta;
-                  document.getElementById('gamma').value = this.dataset.gamma;
-                  document.getElementById('season_length').value = this.dataset.season_length;
-                  document.getElementById('training_percentage').value = this.dataset.training;
-                  document.getElementById('testing_percentage').value = this.dataset.testing;
-              });
-          });
-      });
-    </script>
-    
-    {{-- agar testing terisi otomatis --}}
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
         const trainingInput = document.getElementById('training_percentage');
         const testingInput = document.getElementById('testing_percentage');
-    
-        // Set testing % otomatis saat nilai training diubah
+        const form = document.getElementById('editSettingForm');
+        const settingId = document.getElementById('setting-id');
+
+        const alphaInput = document.getElementById('alpha');
+        const betaInput = document.getElementById('beta');
+        const gammaInput = document.getElementById('gamma');
+        const seasonLengthInput = document.getElementById('season_length');
+
+        // Update nilai testing saat training diubah manual
         trainingInput.addEventListener('input', function () {
           const trainingVal = parseFloat(this.value);
           if (!isNaN(trainingVal) && trainingVal >= 0 && trainingVal <= 100) {
@@ -507,24 +557,27 @@
             testingInput.value = '';
           }
         });
-    
-        // Saat tombol edit diklik, data juga tetap diatur
+
+        // Saat tombol edit diklik
         const editButtons = document.querySelectorAll('a[data-bs-target="#editSettingModal"]');
-        const form = document.getElementById('editSettingForm');
-    
         editButtons.forEach(btn => {
           btn.addEventListener('click', function () {
             const id = this.dataset.id;
+
+            // Set action form
             form.action = `/admin/setting-params/update/${id}`;
-    
-            document.getElementById('alpha').value = this.dataset.alpha;
-            document.getElementById('beta').value = this.dataset.beta;
-            document.getElementById('gamma').value = this.dataset.gamma;
-            document.getElementById('season_length').value = this.dataset.season_length;
-    
-            const training = this.dataset.training;
-            document.getElementById('training_percentage').value = training;
-            document.getElementById('testing_percentage').value = 100 - training;
+            settingId.value = id;
+
+            // Set nilai input dari dataset tombol
+            alphaInput.value = this.dataset.alpha;
+            betaInput.value = this.dataset.beta;
+            gammaInput.value = this.dataset.gamma;
+
+            const training = parseFloat(this.dataset.training);
+            const testing = parseFloat(this.dataset.testing);
+
+            trainingInput.value = !isNaN(training) ? training : '';
+            testingInput.value = !isNaN(testing) ? testing : '';
           });
         });
       });

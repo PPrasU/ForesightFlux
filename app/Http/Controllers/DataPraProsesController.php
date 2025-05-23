@@ -19,10 +19,15 @@ class DataPraProsesController extends Controller
         $data = DataPraProses::all();
         $param = SettingParam::first();
         $hasilTraining = HasilTraining::exists();
+        $totalTraining = $data->where('category', 'Training')->count();
+        $totalTesting = $data->where('category', 'Testing')->count();
+
         return view('praProses', [
             'data' => $data,
             'sudahHasil' => $hasilTraining,
-            'param' => $param
+            'param' => $param,
+            'totalTraining' => $totalTraining,
+            'totalTesting' => $totalTesting,
         ]);
     }
 
@@ -142,22 +147,39 @@ class DataPraProsesController extends Controller
     //ini perhitungan akurasi dengan data testing dengan parameter dari tabel setting_param
     public function post(Request $request){
         try {
-            // ngambil data source
+            // Ambil data pra proses urut berdasarkan tanggal
             $dataPraProses = DataPraProses::orderBy('date')->get();
+
             if ($dataPraProses->isEmpty()) {
                 return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
             }
+
+            // Ambil source_id dari data pertama
             $sourceId = $dataPraProses->first()->source_id;
 
-            // memulai transaksi DB, semua operasi insert/update/delete ditahan sementara, belum disimpan secara permanen ke database disimpan pas commit.
+            // Ambil data source terkait
+            $dataSource = DataSource::find($sourceId);
+
+            if (!$dataSource) {
+                return redirect()->back()->with('error', 'Sumber data tidak ditemukan.');
+            }
+
             DB::beginTransaction();
 
-            // Ambil parameter TES dari tabel setting_param (karena satu baris)
+            // Ambil parameter TES dari tabel setting_param
             $param = SettingParam::first();
             $alpha = $param->alpha;
             $beta = $param->beta;
             $gamma = $param->gamma;
-            $seasonLength = (int)$param->season_length;
+
+            // Tentukan season length berdasarkan jenis data
+            if ($dataSource->jenis_data === 'Harian') {
+                $seasonLength = (int) $param->season_length_harian;
+            } elseif ($dataSource->jenis_data === 'Mingguan') {
+                $seasonLength = (int) $param->season_length_mingguan;
+            } else {
+                return redirect()->back()->with('error', 'Jenis data tidak dikenali.');
+            }
 
             // Ambil data training dari data_pra-proses
             $data = DataPraProses::where('category', 'Training')
@@ -199,7 +221,7 @@ class DataPraProsesController extends Controller
                 $index = $i;
                 $price = $data[$i]->price;
 
-                $prevLevel = $level[$i - 1] ?? $level[$i - 1] ?? $price;
+                $prevLevel = $level[$i - 1] ?? $price;
                 $prevTrend = $trend[$i - 1] ?? 0;
                 $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
 
@@ -245,7 +267,7 @@ class DataPraProsesController extends Controller
             for ($i = 0; $i < count($dataTesting); $i++) {
                 $date = $dataTesting[$i]->date;
                 $actual = $dataTesting[$i]->price;
-                $seasonIndex = ($lastIndexTrain + $i + 1 - $seasonLength) % $seasonLength + $seasonLength;
+                $seasonIndex = ($lastIndexTrain + $i + 1 - $seasonLength) % $seasonLength + $seasonLength;//ini masalah potensial
                 $seasonFactor = $seasonal[$seasonIndex] ?? 1;
 
                 // Forecast = (level + step × trend) × seasonal

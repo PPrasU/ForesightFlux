@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('periode_awal')->nullable();
             $table->date('periode_akhir')->nullable();
             $table->enum('sumber', ['Import', 'API']);
-            $table->enum('jenis_data', ['Harian', 'Mingguan'])->nullable();
+            $table->enum('jenis_data', ['Harian', 'Mingguan'])->default('Harian');
             $table->timestamps();
         });
         

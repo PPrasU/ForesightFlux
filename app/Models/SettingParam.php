@@ -9,5 +9,5 @@ class SettingParam extends Model
 {
     use HasFactory;
     protected $table = 'setting_param';
-    protected $fillable = ['alpha', 'beta', 'gamma', 'season_length', 'training_percentage', 'testing_percentage'];
+    protected $fillable = ['alpha', 'beta', 'gamma', 'season_length_harian', 'season_length_mingguan', 'training_percentage', 'testing_percentage'];
 }

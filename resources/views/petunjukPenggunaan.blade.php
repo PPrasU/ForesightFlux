@@ -152,7 +152,8 @@
               <h2>Petunjuk Penggunaan Website Peramalan Harga Kripto Untuk Impor Data</h2>
               <img src="images/section-img.png" alt="#" />
               <p>
-                Tingkat kesulitan: <a style="color: red">Rumit (Perlu login untuk bisa download) </a>
+                Tingkat kesulitan: <a style="color: red">Rumit (Perlu login untuk bisa download) </a><br>
+                Keunggulan: <a style="color: green">Data lebih lengkap </a>
               </p>
             </div>
           </div>
@@ -286,7 +287,159 @@
               <img src="images/petunjuk-impor-5.png" alt="#" />
             </div>
           </div>
+        </div>
+        {{-- 6 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>6. Menuju Halaman Import Data CSV</h3>
+              <p>
+                Setelah itu data csv didapatkan lalu menuju ke Dasbor->Pengambilan Data->Import Data
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
 
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 7 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 8 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 9 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 10 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 11 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 12 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <p>
+                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
+                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+              </p>
+              <p>
+                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
+                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-impor-5.png" alt="#" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -311,7 +464,8 @@
               <h2>Petunjuk Penggunaan Website Peramalan Harga Kripto Untuk Data API</h2>
               <img src="images/section-img.png" alt="#" />
               <p>
-                Tingkat kesulitan: <a style="color: green">Sangat Mudah</a>
+                Tingkat kesulitan: <a style="color: green">Sangat Mudah</a><br>
+                Kelemahan: <a style="color: red">Data yang didapat terbatas</a>
               </p>
             </div>
           </div>

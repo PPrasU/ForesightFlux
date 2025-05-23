@@ -99,13 +99,13 @@
                                         $name = $source->display_name ?? $source->name ?? '-';
                                         $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
                                         $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
-                                        $jenis_data = $source->jenis_data;
+                                        $jenis_data = $source->jenis_data ?? '-';
                                         $total = $data->count();
                                     @endphp
 
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }} | <strong>Jenis Data:</strong> {{ $jenis_data }}</p>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }} <strong style="margin-left: 15px">Jenis Data:</strong> {{ $jenis_data }} 🗓️</p>
                                             <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>

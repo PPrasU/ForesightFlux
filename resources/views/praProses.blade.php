@@ -81,6 +81,7 @@
                                         $name = $source->display_name ?? $source->name ?? '-';
                                         $start = $source ? Carbon::parse($source->periode_awal)->translatedFormat('d F Y') : '-';
                                         $end = $source ? Carbon::parse($source->periode_akhir)->translatedFormat('d F Y') : '-';
+                                        $jenis_data = $source->jenis_data ?? '-';
                                         $total = $data->count();
                                     @endphp
 
@@ -93,11 +94,13 @@
                                                 @elseif($source->sumber === 'Import')
                                                     Import 🗂️
                                                 @endif
+                                                <strong style="margin-left: 15px">Jenis Data:</strong> {{ $jenis_data }} 🗓️
                                             </p>
                                             <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
                                             <p class="mb-1">
                                             </p>
                                             <p class="mb-1"><strong>Persentase training dan testing:</strong> {{ $param->training_percentage }}:{{ $param->testing_percentage }}</p>
+                                            <p class="mb-1"><strong>Total Data training {{ $totalTraining }} </strong> testing {{ $totalTesting }} </p>
                                         </div>
                                     @endif
                                     
@@ -107,7 +110,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Tanggal</th>
-                                                <th>Harga Terakhir</th>
+                                                <th>Harga Terakhir (Data Aktual)</th>
                                                 <th>Kategori</th>
                                             </tr>
                                         </thead>

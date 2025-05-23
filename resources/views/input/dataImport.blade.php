@@ -159,7 +159,7 @@
         
         {{-- validasi 720 pake flatpicker --}}
         <script>
-            const maxDays = 719;
+            const maxDays = 99999;
             let startPicker, endPicker;
 
             function addDays(date, days) {

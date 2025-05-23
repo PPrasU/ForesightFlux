@@ -8,6 +8,7 @@ use App\Models\DataSource;
 use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
+use Illuminate\Support\Facades\DB;
 
 class DataImporTController extends Controller
 {
@@ -139,6 +140,7 @@ class DataImporTController extends Controller
     //     }
     // }
 
+    //pra proses data
     public function praProses() {
         try {
             if (DataPraProses::exists()) {
@@ -190,7 +192,7 @@ class DataImporTController extends Controller
             $testingPercentage = floatval($setting->testing_percentage);
 
             $total = $sortedData->count();
-            $trainingCount = floor($total * ($trainingPercentage / 100));
+            $trainingCount = (int) round($total * ($trainingPercentage / 100));
 
     
             foreach ($sortedData as $index => $data) {
@@ -207,6 +209,7 @@ class DataImporTController extends Controller
         }
     }
 
+    // simpan data csv ke database
     public function post(Request $request){
         try {
             ini_set('max_execution_time', 300);
@@ -304,18 +307,33 @@ class DataImporTController extends Controller
     }
     
     public function hapus(){
-        try{
+        try {
+            DB::beginTransaction();
+            // Hapus child table lebih dulu
+            DB::table('data_import')->delete();
+
+            // Cek apakah data_import benar-benar kosong
+            if (DB::table('data_import')->count() > 0) {
+                throw new \Exception("Gagal menghapus semua data import");
+            }
+
+            // Baru hapus parent table
+            DB::table('data_source')->delete();
+            DB::commit();
+
             session()->push('notifications', [
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',
                 'title' => 'Data Import Dihapus',
                 'text' => 'Data berhasil dihapus.'
             ]);
-            DB::table('data_source')->truncate();
-            DataImport::truncate();
-            return redirect()->route('data.importData')->with('Success', 'Data Pra Proses Berhasil Dihapus');
-        }catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
+
+            return redirect()->route('data.importData')->with('Success', 'Data berhasil dihapus.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal hapus data: ' . $e->getMessage());
         }
     }
+
+
 }

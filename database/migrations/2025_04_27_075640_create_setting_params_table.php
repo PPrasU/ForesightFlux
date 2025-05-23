@@ -16,16 +16,18 @@ return new class extends Migration
             $table->decimal('alpha', 15, 4);
             $table->decimal('beta', 15, 4);
             $table->decimal('gamma', 15, 4);
-            $table->decimal('season_length', 15, 4);
+            $table->decimal('season_length_harian', 15, 4)->nullable();
+            $table->decimal('season_length_mingguan', 15, 4)->nullable();
             $table->decimal('training_percentage', 15, 4);
             $table->decimal('testing_percentage', 15, 4);
             $table->timestamps();
         });
         DB::table('setting_param')->insert([
-            'alpha' => 0.5,
-            'beta' => 0.3,
-            'gamma' => 0.3,
-            'season_length' => 30,
+            'alpha' => 0.2,
+            'beta' => 0.1,
+            'gamma' => 0.4,
+            'season_length_harian' => 30,
+            'season_length_mingguan' => 4,
             'training_percentage' => 80,
             'testing_percentage' => 20,
             'created_at' => now(),
