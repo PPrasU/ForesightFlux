@@ -64,7 +64,7 @@
                                     <h3 class="mt-0 header-title">Tabel Hasil Peramalan Data Training</h3>
                                     @if ($training->count() > 0)
                                         <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
-                                            Hapus Semua Hasil Peramalan
+                                            Hapus Semua Data Pra Proses dan Data Hasil Peramalan
                                         </button>
                                         <form id="hapusSemuaDataForm" method="POST" style="display: none;">
                                             @csrf

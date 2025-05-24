@@ -113,7 +113,7 @@
                                         {{-- Tombol --}}
                                         <div style="margin-top: 35px">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
-                                                Kuy Import Filenya
+                                                Import Filenya
                                             </button>
                                         </div>
                                         <div style="margin-top: 20px">

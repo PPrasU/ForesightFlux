@@ -21,8 +21,8 @@ class SettingParamController extends Controller
         $praProses = DataPraProses::with('source')->first();
         $jenisData = $praProses?->source?->jenis_data ?? 'Tidak Diketahui';
 
-        $jenisData = 'Random';
-        $seasonLength = 365;
+        $jenisData = 'AAAAaaa';
+        $seasonLength = 9999999;
 
         $totalCounts = [
             60 => ['training' => 0, 'testing' => 0],
@@ -43,7 +43,6 @@ class SettingParamController extends Controller
             'totalCounts',
         ));
     }
-
 
     public function update(Request $request, $id){
         try {
@@ -72,7 +71,7 @@ class SettingParamController extends Controller
     }
 
     public function optimize(Request $request){
-        ini_set('max_execution_time', 300); 
+        ini_set('max_execution_time', 300); // 5 menit
         // Ambil data pra proses urut berdasarkan tanggal
         $allData = DataPraProses::orderBy('date')->get();
 
@@ -94,9 +93,9 @@ class SettingParamController extends Controller
 
         // Tentukan season length berdasarkan jenis data
         if ($dataSource->jenis_data === 'Harian') {
-            $seasonLength = (int) $param->season_length_harian;
+            $seasonLength = (int) $param->season_length_harian;//default 30
         } elseif ($dataSource->jenis_data === 'Mingguan') {
-            $seasonLength = (int) $param->season_length_mingguan;
+            $seasonLength = (int) $param->season_length_mingguan;//default 4
         } else {
             return redirect()->back()->with('error', 'Jenis data tidak dikenali.');
         }
@@ -178,8 +177,9 @@ class SettingParamController extends Controller
         $trend = [];
         $seasonal = [];
 
+        $seasonAvg = $data->take($seasonLength)->avg('price');
         for ($i = 0; $i < $seasonLength; $i++) {
-            $seasonal[] = $data[$i]->price / $data->take($seasonLength)->avg('price');
+            $seasonal[$i] = $data[$i]->price / $seasonAvg;
         }
 
         $level[$seasonLength - 1] = $data->take($seasonLength)->avg('price');
@@ -212,7 +212,7 @@ class SettingParamController extends Controller
 
         foreach ($dataTesting as $i => $row) {
             // Hitung seasonal index untuk testing
-            $seasonIndex = ($lastIndex - $seasonLength + ($i % $seasonLength)) + $seasonLength;
+            $seasonIndex = ($lastIndex + $i + 1) % $seasonLength;
             $seasonFactor = $seasonal[$seasonIndex] ?? 1;
 
             // Forecast nilai testing
@@ -238,55 +238,5 @@ class SettingParamController extends Controller
             'rrmse' => $rrmse,
         ];
     }
-
-    // berdasarkan kaategori di pra prosesnya
-    // public function optimize(Request $request){
-    //     $data = DataPraProses::where('category', 'Training')->orderBy('date')->get();
-    //     $dataTesting = DataPraProses::where('category', 'Testing')->orderBy('date')->get();
-    //     $seasonLength = (int) SettingParam::first()->season_length;
-
-    //     if ($data->count() < 2 * $seasonLength) {
-    //         return back()->with('error', 'Data training terlalu sedikit untuk season length tersebut.');
-    //     }
-
-    //     $bestResult = null;
-    //     $results = [];
-
-    //     for ($alpha = 0.1; $alpha <= 1.0; $alpha += 0.1) {
-    //         for ($beta = 0.1; $beta <= 1.0; $beta += 0.1) {
-    //             for ($gamma = 0.1; $gamma <= 1.0; $gamma += 0.1) {
-    //                 $result = $this->runTES($data, $dataTesting, $alpha, $beta, $gamma, $seasonLength);
-
-    //                 $results[] = [
-    //                     'alpha' => round($alpha, 2),
-    //                     'beta' => round($beta, 2),
-    //                     'gamma' => round($gamma, 2),
-    //                     'mape' => $result['mape'],
-    //                     'rmse' => $result['rmse'],
-    //                     'rrmse' => $result['rrmse'],
-    //                 ];
-
-    //                 if (!$bestResult || $result['mape'] < $bestResult['mape']) {
-    //                     $bestResult = [
-    //                         'alpha' => round($alpha, 2),
-    //                         'beta' => round($beta, 2),
-    //                         'gamma' => round($gamma, 2),
-    //                         'mape' => $result['mape'],
-    //                         'rmse' => $result['rmse'],
-    //                         'rrmse' => $result['rrmse'],
-    //                     ];
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return view('hasil', [
-    //         'training' => HasilTraining::all(),
-    //         'testing' => HasilTesting::all(),
-    //         'akurasi' => HasilAkurasi::all(),
-    //         'grid_results' => $results,
-    //         'best_result' => $bestResult,
-    //     ]);
-    // }
 
 }

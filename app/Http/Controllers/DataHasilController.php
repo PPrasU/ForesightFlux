@@ -33,6 +33,25 @@ class DataHasilController extends Controller
                 ]);
             }
 
+            if (!DataPraProses::exists()) {
+                return back()->withErrors([
+                    'file' => '🚨Data Pra Proses Sudah Dihapus.⚠️',
+                ]);
+            }
+
+            // Ambil satu data_pra_proses untuk cek source-nya
+            $dataPraProses = DataPraProses::first();
+
+            if ($dataPraProses) {
+                $source = DataSource::find($dataPraProses->source_id);
+                $sumber = $source?->sumber; // nilainya: 'Import' atau 'API'
+            } else {
+                $sumber = null;
+            }
+
+            // Hapus semua data pra proses
+            DataPraProses::truncate();
+
             // Hapus semua data hasil
             HasilAkurasi::truncate();
             HasilTesting::truncate();
@@ -48,7 +67,11 @@ class DataHasilController extends Controller
                 'text' => 'Semua hasil peramalan dan akurasi berhasil dihapus.',
             ]);
 
-            return redirect()->route('peramalan.index')->with('Success', 'Semua data hasil peramalan berhasil dihapus');
+            if ($sumber === 'Import') {
+                return redirect()->route('data.importData')->with('Success', 'Data dari Import berhasil dihapus.');
+            } else {
+                return redirect()->route('peramalan.index')->with('Success', 'Data dari API berhasil dihapus.');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
         }

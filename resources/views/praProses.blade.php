@@ -54,16 +54,8 @@
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4 class="mt-0 header-title">Tabel Data Hasil Pra-Proses Nih</h4>                                                                             
                                         <div>
-                                            @if ($data->count() > 0)
-                                                <button id="hapusPraProses" type="button" class="btn btn-outline-danger waves-effect waves-light">
-                                                    Hapus Semua Data Pra Proses
-                                                </button>
-                                                
-                                                <form id="hapusPraProsesForm" method="POST" style="display: none;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                @if (!$sudahHasil)
+                                            @if (!$sudahHasil)
+                                                @if (!$data->isEmpty())
                                                     <button id="prosesBtn" type="button" class="btn btn-outline-primary waves-effect waves-light">
                                                         Proses Peramalan Kripto
                                                     </button>

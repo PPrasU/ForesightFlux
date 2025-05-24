@@ -113,7 +113,7 @@
                                       @elseif ($jenisData === 'Mingguan')
                                           Season Length (Mingguan)
                                       @else
-                                          Season Length (Random)
+                                          Season Length
                                       @endif
                                     </th>
                                     <th scope="col" style="text-align: center">Persentase Data Training</th>
@@ -220,26 +220,6 @@
                                           <label for="testing_percentage" class="form-label">Testing %</label>
                                           <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
                                         </div>
-                                        @if ($jenisData === 'Harian')
-                                          <div class="mb-3">
-                                              <label for="season_length_harian" class="form-label">Season Length Harian</label>
-                                              <select class="form-control" name="season_length_harian" id="season_length_harian">
-                                                  <option value="7" {{ $row->season_length_harian == 7 ? 'selected' : '' }}>7 (mingguan)</option>
-                                                  <option value="30" {{ $row->season_length_harian == 30 ? 'selected' : '' }}>30 (bulanan)</option>
-                                                  <option value="90" {{ $row->season_length_harian == 90 ? 'selected' : '' }}>90 (kuartalan)</option>
-                                                  <option value="365" {{ $row->season_length_harian == 365 ? 'selected' : '' }}>365 (tahunan)</option>
-                                              </select>
-                                          </div>
-                                        @elseif ($jenisData === 'Mingguan')
-                                          <div class="mb-3">
-                                              <label for="season_length_mingguan" class="form-label">Season Length Mingguan</label>
-                                              <select class="form-control" name="season_length_mingguan" id="season_length_mingguan">
-                                                  <option value="4" {{ $row->season_length_mingguan == 4 ? 'selected' : '' }}>4 (bulanan)</option>
-                                                  <option value="12" {{ $row->season_length_mingguan == 12 ? 'selected' : '' }}>12 (kuartalan)</option>
-                                                  <option value="52" {{ $row->season_length_mingguan == 52 ? 'selected' : '' }}>52 (tahunan)</option>
-                                              </select>
-                                          </div>
-                                        @endif
                                                                                   
                                       </div>
                                       <div class="modal-footer">

@@ -255,7 +255,7 @@
                 Atur agar kolom Date urut dari tanggal terlama (awal) hingga tanggal terbaru (akhir) untuk 
                 untuk dapat dilakukan proses peramalan
               </b>
-              <br><br><br><br>
+              <br><br><br><br><br>
             </div>
           </div>
 
@@ -278,7 +278,7 @@
               <p>
                 Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
                 proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+              </p><br>
             </div>
           </div>
 
@@ -294,18 +294,18 @@
             <div class="choose-left">
               <h3>6. Menuju Halaman Import Data CSV</h3>
               <p>
-                Setelah itu data csv didapatkan lalu menuju ke Dasbor->Pengambilan Data->Import Data
+                Setelah itu data csv didapatkan lalu menuju ke <strong>Dasbor➡️Pengambilan Data➡️Import Data➡️Mulai Impor Data</strong>
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Ikuti langkah-langkahnya agar dapat menuju ke halaman import data csv dari <a href="investing.com" target="_blank">investing.com</a> 
+                jangan lupa data csv harus sudah ada agar bisa melakukan import data.
+              </p><br><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-6.png" alt="#" />
             </div>
           </div>
         </div>
@@ -313,21 +313,21 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>7. Melakukan Import Data CSV</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Setelah itu masukkan nama kripto, jangka waktu data historis, dan file csv data historis kripto yang sudah diunduh
+                sebelumnya.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Pastikan bahwa semua diisi, jika ada satu yang kosong nanti akan error. Setelah itu klik tombol Import Filenya. Mungkin 
+                proses akan lama, tergantung dari jumlah data historis yang sudah di unduh sebelumnya. 
+              </p><br><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-7.png" alt="#" />
             </div>
           </div>
         </div>
@@ -335,21 +335,20 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>8. Data CSV Akan Tampil</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Setelah menunggu proses import, data akan tampil dalam bentuk tabel yang terdiri dari kolom Date, Price, Open, High 
+                Low, Vol., Change% dan juga ada beberapa informasi yang dapat dilihat.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Penjelasan mengenai kegunaan kolom-kolom dapat dilihat dibawah tabel.
+              </p><br><br><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-8.png" alt="#" />
             </div>
           </div>
         </div>
@@ -357,21 +356,21 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>9. Melakukan Pra Proses Data Historis</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Setelah itu klik tombol Pra-Proses Data Kripto untuk mengambil kolom Date dan Price, melakukan standarisasi tanggal, 
+                penanganan data hilang, dan yang lainnya.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Pra-Proses akan dilakukan oleh sistem, jangan lupa klik tombol "Ya". Kalau tidak maka data nantinya belum bisa dilakukan peramalan. 
+                Pra-Proses ini mungkin akan memakan waktu 5 detik, harap bersabar ya!
+              </p><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-9.png" alt="#" />
             </div>
           </div>
         </div>
@@ -379,21 +378,19 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>10. Melakukan Proses Peramalan Data Historis</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Setelah itu klik tombol "Proses Peramalan Kripto" untuk melakukan proses peramalan data historis kripto.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Sama seperti Pra-Proses, jangan lupa menekan tombol "Iya Dong!" untuk melakukan prosesnya.
+              </p><br><br><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-10.png" alt="#" />
             </div>
           </div>
         </div>
@@ -401,21 +398,22 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>11. Tadaa Hasil Peramalan Dapat Dilihat</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Hasil peramalan akan tampil berupa grafik dan juga tabel. Terdapat beberapa informasi mengenai hasil peramalannya. 
+                Jadi harap dibaca dan dimengerti.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p>
+                Mengingat volatilitas pasar kripto yang sangat tinggi dan dipengaruhi oleh berbagai faktor eksternal, 
+                maka hasil peramalan ini tidak bersifat prediktif absolut. Hasil yang disajikan hanya dimaksudkan 
+                sebagai referensi tambahan (insight), bukan sebagai saran finansial.
+              </p><br><br><br>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-11.png" alt="#" />
             </div>
           </div>
         </div>
@@ -423,21 +421,20 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>5. Download Data Historis Yang Sudah Diatur</h3>
+              <h3>12. Melakukan Peramalan Dengan Data Lain</h3>
               <p>
-                Setelah itu klik download untuk mendownload data historis Bitcoin yang sudah diatur dengan 
-                mata uang USD, jangka waktu 01/01/2024 - 04/15/2025, serta kolom Date urut Ascending
+                Jika ingin melakukan peramalan dengan data historis kripto yang lain. Jangan lupa untuk menghapus data yang 
+                berada di halaman Hasil Peramalan dan Import Data CSV. Setelah itu ulangi langkah-langkahnya.
               </p>
               <p>
-                Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
-                proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
+                Jika data yang sebelumnya masih ada, maka tidak dapat dilakukan peramalan, karena akan menyebabkan error pada sistem. 
               </p>
             </div>
           </div>
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-12.png" alt="#" />
             </div>
           </div>
         </div>
@@ -474,15 +471,14 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>1. Ke Dasbor lalu Pilih Pengambilan Data lalu Pilih Data Dari API</h3>
+              <h3>1. Menuju Ke Halaman Data API</h3>
               <p>
-                Setelah berada di halaman dasbor, pilih menu Pengambilan Data lalu pilih Data Dari API
+                Mmenuju ke Dasbor➡️Pengambilan Data➡️Data API➡️Pilih Data Kripto
               </p>
               <p>
-                Pada Data API ini kalian dapat melakukan proses peramalan dengan sangat mudah. Kalian hanya 
-                perlu memilih kripto apa dan juga jangka waktunya. Setelah memilih akan menuju ke proses 
-                berikutnya.
-              </p>
+                Pada halaman data API ini kalian tinggal memilih kripto apa yang di inginkan. Tapi data API ini hanya menyediakan maksimum 
+                720 data historis kripto saja.
+              </p><br><br><br>
             </div>
           </div>
 
@@ -491,20 +487,20 @@
               <img src="images/petunjuk-api-1.png" alt="#" />
             </div>
           </div>
-
         </div>
-         {{-- 2 --}}
-         <div class="row">
+        {{-- 2 --}}
+        <div class="row">
           <div class="col-lg-6 col-12">
             <div class="choose-left">
-              <h3>2. Setelah itu Klik Tombol Pilih</h3>
+              <h3>2. Isi Data Kripto Yang Di Inginkan</h3>
               <p>
-                Setelah dipastikan memilih kripto yang ingin dilakukan proses peramalan dan jangka waktunya 
-                lalu klik tombol Pilih berwarna biru.
+                Setelah itu pilih kripto, jenis data, dan jangka waktunya. Santai saja jika memilih jenis data harian ini sudah dibatasi 
+                sebanyak 720, jadi jangan takut jika jangka waktu yang dipilih melebihi 720 data. Jangan lupa untuk klik Pilih Kripto 
+                (Disarankan memilih data harian)
               </p>
               <p>
-                Pada proses ini data yang sudah dipilih akan disimpan dan nantinya data ini akan dilakukan 
-                proses peramalan.
+                Perlu diingat bahwa mungkin saja terdapat kesalahan penamaan nama kripto, karena penamaan dilakukan secara manual soalnya 
+                penyedia API yaitu Kraken API tidak menyediakan nama asli kriptonya. Proses mungkin agak lama, jadi mohon bersabar ya!
               </p>
             </div>
           </div>
@@ -514,7 +510,113 @@
               <img src="images/petunjuk-api-2.png" alt="#" />
             </div>
           </div>
+        </div>
+        {{-- 3 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>3. API Akan Tampil</h3>
+              <p>
+                Data kripto dari API yang sudah dipilih akan tampil dalam bentuk tabel. Terdapat beberapa kolom yaitu 
+              </p>
+              <p>
+                Pada proses ini data yang sudah dipilih akan disimpan dan nantinya data ini akan dilakukan 
+                proses peramalan.
+              </p><br><br><br>
+            </div>
+          </div>
 
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-api-3.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 4 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>4. Melakukan Pra Proses Data Historis</h3>
+              <p>
+                Setelah itu klik tombol Pra-Proses Data Kripto untuk mengambil kolom Date dan Price, melakukan standarisasi tanggal, 
+                penanganan data hilang, dan yang lainnya.
+              </p>
+              <p>
+                Pra-Proses akan dilakukan oleh sistem, jangan lupa klik tombol "Ya". Kalau tidak maka data nantinya belum bisa dilakukan peramalan. 
+                Pra-Proses ini mungkin akan memakan waktu 5 detik, harap bersabar ya!
+              </p><br>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-api-4.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 5 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>5. Melakukan Proses Peramalan Data Historis</h3>
+              <p>
+                Setelah itu klik tombol "Proses Peramalan Kripto" untuk melakukan proses peramalan data historis kripto.
+              </p>
+              <p>
+                Sama seperti Pra-Proses, jangan lupa menekan tombol "Iya Dong!" untuk melakukan prosesnya.
+              </p><br><br><br>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-api-5.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 6 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>6. Tadaa Hasil Peramalan Dapat Dilihat</h3>
+              <p>
+                Hasil peramalan akan tampil berupa grafik dan juga tabel. Terdapat beberapa informasi mengenai hasil peramalannya. 
+                Jadi harap dibaca dan dimengerti.
+              </p>
+              <p>
+                Mengingat volatilitas pasar kripto yang sangat tinggi dan dipengaruhi oleh berbagai faktor eksternal, 
+                maka hasil peramalan ini tidak bersifat prediktif absolut. Hasil yang disajikan hanya dimaksudkan 
+                sebagai referensi tambahan (insight), bukan sebagai saran finansial.
+              </p><br><br><br>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-api-6.png" alt="#" />
+            </div>
+          </div>
+        </div>
+        {{-- 7 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>7. Melakukan Peramalan Dengan Data Lain</h3>
+              <p>
+                Jika ingin melakukan peramalan dengan data historis kripto yang lain. Jangan lupa untuk menghapus data yang 
+                berada di halaman Hasil Peramalan dan Data API. Setelah itu ulangi langkah-langkahnya.
+              </p>
+              <p>
+                Jika data yang sebelumnya masih ada, maka tidak dapat dilakukan peramalan, karena akan menyebabkan error pada sistem. 
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-right">
+              <img src="images/petunjuk-api-7.png" alt="#" />
+            </div>
+          </div>
         </div>
       </div>
     </section>

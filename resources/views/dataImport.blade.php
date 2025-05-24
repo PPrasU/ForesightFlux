@@ -61,7 +61,7 @@
                                         <div>
                                             @if ($data->isEmpty())
                                                 <a href="{{ route('data.inputImportData') }}" class="btn btn-primary waves-effect waves-light"> 
-                                                    Monggo Datanya Di Impor
+                                                    Mulai Impor Data
                                                 </a>
                                             @else
                                                 <button id="hapusDataImport" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
@@ -107,7 +107,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 100px; font-style: italic">Tanggal</th>
+                                                <th style="width: 100px; font-style: italic">Date</th>
                                                 <th style="font-style: italic;">Price</th>
                                                 <th>Open</th>
                                                 <th>High</th>
