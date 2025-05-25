@@ -124,9 +124,9 @@
                                 <tbody>
                                   @foreach ($dataParam as $row)
                                     <tr>
-                                        <td style="text-align: center">{{ $row->alpha }}</td>
-                                        <td style="text-align: center">{{ $row->beta }}</td>
-                                        <td style="text-align: center">{{ $row->gamma }}</td>
+                                        <td style="text-align: center">{{ +$row->alpha }}</td>
+                                        <td style="text-align: center">{{ +$row->beta }}</td>
+                                        <td style="text-align: center">{{ +$row->gamma }}</td>
                                         <td style="text-align: center">
                                             @if ($jenisData === 'Harian')
                                                 @switch((int) $row->season_length_harian)
@@ -143,7 +143,7 @@
                                                         365 (Tahunan)
                                                         @break
                                                     @default
-                                                        {{ $row->season_length_harian }}
+                                                        {{ +$row->season_length_harian }}
                                                 @endswitch
                                             @elseif ($jenisData === 'Mingguan')
                                                 @switch((int) $row->season_length_mingguan)
@@ -157,29 +157,29 @@
                                                         52 (Tahunan)
                                                         @break
                                                     @default
-                                                        {{ $row->season_length_mingguan }}
+                                                        {{ +$row->season_length_mingguan }}
                                                 @endswitch
                                             @else
-                                                {{ $row->season_length_harian }}
+                                                {{ +$row->season_length_harian }}
                                             @endif
-
                                         </td>
-                                        <td style="text-align: center">{{ $row->training_percentage }}%</td>
-                                        <td style="text-align: center">{{ $row->testing_percentage }}%</td>
+                                        <td style="text-align: center">{{ +$row->training_percentage }}%</td>
+                                        <td style="text-align: center">{{ +$row->testing_percentage }}%</td>
                                         <td style="text-align: center">
-                                            <a href="#" 
-                                              class="btn btn-warning" 
-                                              data-bs-toggle="modal"
-                                              data-bs-target="#editSettingModal"
-                                              data-id="{{ $row->id }}"
-                                              data-alpha="{{ $row->alpha }}"
-                                              data-beta="{{ $row->beta }}"
-                                              data-gamma="{{ $row->gamma }}"
-                                              data-training="{{ $row->training_percentage }}"
-                                              data-testing="{{ $row->testing_percentage }}"
-                                              {{-- data-season_length="{{ $jenisData === 'Harian' ? $row->season_length_harian : $row->season_length_mingguan }}" --}}
-                                              title="Edit Data">
-                                              <i class="fas fa-edit"></i>
+                                            <a href="#"
+                                                class="btn btn-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editSettingModal"
+                                                data-id="{{ $row->id }}"
+                                                data-alpha="{{ $row->alpha }}"
+                                                data-beta="{{ $row->beta }}"
+                                                data-gamma="{{ $row->gamma }}"
+                                                data-training="{{ $row->training_percentage }}"
+                                                data-testing="{{ $row->testing_percentage }}"
+                                                data-season_length="{{ $jenisData === 'Harian' ? $row->season_length_harian : $row->season_length_mingguan }}"
+                                                data-jenis_data="{{ $jenisData }}"
+                                                title="Edit Data">
+                                                <i class="fas fa-edit"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -220,7 +220,23 @@
                                           <label for="testing_percentage" class="form-label">Testing %</label>
                                           <input type="number" class="form-control" name="testing_percentage" id="testing_percentage" readonly>
                                         </div>
-                                                                                  
+                                        <div class="mb-3" id="seasonLengthHarianDiv">
+                                            <label class="form-label">Season Length Harian (Default)</label>
+                                            <select class="form-control" name="season_length_harian" id="season_length_harian">
+                                                <option value="7" {{ $setting->season_length_harian == 7 ? 'selected' : '' }}>7 (mingguan)</option>
+                                                <option value="30" {{ $setting->season_length_harian == 30 ? 'selected' : '' }}>30 (bulanan) default</option>
+                                                <option value="90" {{ $setting->season_length_harian == 90 ? 'selected' : '' }}>90 (kuartalan)</option>
+                                                <option value="365" {{ $setting->season_length_harian == 365 ? 'selected' : '' }}>365 (tahunan)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" id="seasonLengthMingguanDiv" style="display: none;">
+                                            <label class="form-label">Season Length Mingguan</label>
+                                            <select class="form-control" name="season_length_mingguan" id="season_length_mingguan">
+                                                <option value="4" {{ $setting->season_length_mingguan == 4 ? 'selected' : '' }}>4 (bulanan) default</option>
+                                                <option value="13" {{ $setting->season_length_mingguan == 13 ? 'selected' : '' }}>13 (kuartal)</option>
+                                                <option value="52" {{ $setting->season_length_mingguan == 52 ? 'selected' : '' }}>52 (tahunan)</option>
+                                            </select>
+                                        </div>
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -323,9 +339,9 @@
                                               <th style="width: 100px">Tanggal</th>
                                               <th>Aktual</th>
                                               <th>Hasil Peramalan</th>
-                                              <th style="width: 150px">Error</th>
+                                              {{-- <th style="width: 150px">Error</th>
                                               <th style="width: 100px">Absolute Error</th>
-                                              <th style="width: 100px">Error Square</th>
+                                              <th style="width: 100px">Error Square</th> --}}
                                           </tr>
                                       </thead>
                                       <tbody>
@@ -335,9 +351,9 @@
                                                   <td style="text-align: center">{{ $row->date }}</td>
                                                   <td>{{ $row->actual }}</td>
                                                   <td>{{ $row->forecast }}</td>
-                                                  <td>{{ $row->error }}</td>
+                                                  {{-- <td>{{ $row->error }}</td>
                                                   <td>{{ $row->abs_error }}</td>
-                                                  <td>{{ $row->error_square }}</td>
+                                                  <td>{{ $row->error_square }}</td> --}}
                                               </tr>
                                           @endforeach
                                       </tbody>
@@ -560,6 +576,24 @@
             testingInput.value = !isNaN(testing) ? testing : '';
           });
         });
+
+        const jenisData = this.dataset.jenis_data;
+        const seasonLengthHarianDiv = document.getElementById('seasonLengthHarianDiv');
+        const seasonLengthMingguanDiv = document.getElementById('seasonLengthMingguanDiv');
+        const seasonLengthHarian = document.getElementById('season_length_harian');
+        const seasonLengthMingguan = document.getElementById('season_length_mingguan');
+        const seasonLength = this.dataset.season_length;
+
+        // Tampilkan sesuai jenis data
+        if (jenisData === 'Harian') {
+            seasonLengthHarianDiv.style.display = 'block';
+            seasonLengthMingguanDiv.style.display = 'none';
+            seasonLengthHarian.value = seasonLength;
+        } else if (jenisData === 'Mingguan') {
+            seasonLengthHarianDiv.style.display = 'none';
+            seasonLengthMingguanDiv.style.display = 'block';
+            seasonLengthMingguan.value = seasonLength;
+        }
       });
     </script>
 
@@ -577,7 +611,7 @@
                 // Tampilkan SweetAlert2 loading
                 Swal.fire({
                     title: 'Sedang melakukan Grid Search...',
-                    text: 'Proses ini memerlukan waktu beberapa saat. Harap bersabar ⏳',
+                    text: 'Sabar ya, ini bukan ngelag... cuma kerja keras ajah 😆🔄',
                     allowOutsideClick: false,
                     showConfirmButton: false,
                     didOpen: () => {

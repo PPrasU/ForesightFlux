@@ -236,7 +236,7 @@
                         // Menampilkan loading setelah konfirmasi
                         Swal.fire({
                             title: 'Siap Boskuh!',
-                            text: 'Data bakal diproses. Sabar yaa!',
+                            text: 'Sistemnya mikir dulu bentar, kayak lagi ujian 😬🧠',
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             didOpen: () => {

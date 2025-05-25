@@ -114,17 +114,17 @@
                                             <label class="control-label font-weight-bold">Pilih Kripto</label>
                                             <select name="crypto_pair" id="crypto_pair" class="form-control form-control-lg select2" required>
                                                 <option selected disabled>--- Kripto Populer ---</option>
-                                                <option value="XXBTZUSD">Bitcoin (BTC) to USD</option>
-                                                <option value="ETCUSD">Ethereum Classic (ETC) to USD</option>
-                                                <option value="XETHZUSD">Ethereum (ETH) to USD</option>
-                                                <option value="XLTCZUSD">Litecoin (LTC) to USD</option>
-                                                <option value="XDGUSD">Dogecoin (DOGE) (XDG) to USD</option>
-                                                <option value="XCNUSD">Onyxcoin (XCN) to USD</option>
-                                                <option value="MLNUSD">Enzyme (MLN) to USD</option>
-                                                <option value="REPUSD">Augur (REP) to USD</option>
-                                                <option value="SOLUSD">Solana (SOL) to USD</option>
-                                                <option value="PONKEUSD">Ponke SOL (PONKE) to USD</option>
-                                                <option value="POPCATUSD">Popcat SOL (POPCAT) to USD</option>
+                                                <option value="XXBTZUSD" {{ old('crypto_pair') == 'XXBTZUSD' ? 'selected' : '' }}>Bitcoin (BTC) to USD</option>
+                                                <option value="XETHZUSD" {{ old('crypto_pair') == 'XETHZUSD' ? 'selected' : '' }}>Ethereum (ETH) to USD</option>
+                                                <option value="ETCUSD" {{ old('crypto_pair') == 'ETCUSD' ? 'selected' : '' }}>Ethereum Classic (ETC) to USD</option>
+                                                <option value="XLTCZUSD" {{ old('crypto_pair') == 'XLTCZUSD' ? 'selected' : '' }}>Litecoin (LTC) to USD</option>
+                                                <option value="XDGUSD" {{ old('crypto_pair') == 'XDGUSD' ? 'selected' : '' }}>Dogecoin (DOGE) (XDG) to USD</option>
+                                                <option value="XCNUSD" {{ old('crypto_pair') == 'XCNUSD' ? 'selected' : '' }}>Onyxcoin (XCN) to USD</option>
+                                                <option value="MLNUSD" {{ old('crypto_pair') == 'MLNUSD' ? 'selected' : '' }}>Enzyme (MLN) to USD</option>
+                                                <option value="REPUSD" {{ old('crypto_pair') == 'REPUSD' ? 'selected' : '' }}>Augur (REP) to USD</option>
+                                                <option value="SOLUSD" {{ old('crypto_pair') == 'SOLUSD' ? 'selected' : '' }}>Solana (SOL) to USD</option>
+                                                <option value="PONKEUSD" {{ old('crypto_pair') == 'PONKEUSD' ? 'selected' : '' }}>Ponke SOL (PONKE) to USD</option>
+                                                <option value="POPCATUSD" {{ old('crypto_pair') == 'POPCATUSD' ? 'selected' : '' }}>Popcat SOL (POPCAT) to USD</option>
                                                 <option selected disabled>--- Pilih Kripto Lain ---</option>
                                                 @if ($cryptoPairs->isEmpty())
                                                     <option disabled>Data kripto dari API gagal dimuat 😥</option>
@@ -134,7 +134,7 @@
                                                         @php
                                                             $displayName = $cryptoNames[$key] ?? $pair['wsname'] ?? $key;
                                                         @endphp
-                                                        <option value="{{ $key }}" data-display="{{ $displayName }}">
+                                                        <option value="{{ $key }}" {{ old('crypto_pair') == $key ? 'selected' : '' }}>
                                                             {{ $displayName }}
                                                         </option>
                                                     @endforeach
@@ -146,7 +146,7 @@
                                             <label class="control-label d-block mb-2">Jenis Data</label>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div class="flex-fill">
-                                                    <input type="radio" class="btn-check" name="jenis_data" id="harian" autocomplete="off" value="Harian" checked>
+                                                    <input type="radio" class="btn-check" name="jenis_data" id="harian" value="Harian" {{ old('jenis_data', 'Harian') == 'Harian' ? 'checked' : '' }}>
                                                     <label class="btn btn-success w-100 py-2 text-center fw-bold" for="harian" id="label-harian">
                                                         Harian
                                                     </label>
@@ -155,7 +155,7 @@
                                                 <span class="mx-2">–</span>
 
                                                 <div class="flex-fill">
-                                                    <input type="radio" class="btn-check" name="jenis_data" id="mingguan" autocomplete="off" value="Mingguan">
+                                                    <input type="radio" class="btn-check" name="jenis_data" id="mingguan" value="Mingguan" {{ old('jenis_data') == 'Mingguan' ? 'checked' : '' }}>
                                                     <label class="btn btn-outline-warning w-100 py-2 text-center fw-bold" for="mingguan" id="label-mingguan">
                                                         Mingguan
                                                     </label>
@@ -163,39 +163,15 @@
                                             </div>
                                         </div>
 
-                                        {{-- ini untuk Harian --}}
-                                        {{-- <div class="form-group" id="form-harian">
-                                            <label class="font-weight-bold">Jangka Waktu (Default harian)</label><br>
-                                            <label style="font-size: 11px; font-style: italic;">* Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.</label>
-                                            <div class="d-flex align-items-center">
-                                                <div class="input-group date-range-group">
-                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" >
-                                                    <span class="mx-2">–</span>
-                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
-                                                </div>
-                                            </div>
-                                        </div> --}}
-
-                                        {{-- dibawah ini untuk Mingguan --}}
-                                        {{-- <div class="form-group mb-4" id="form-mingguan" style="display: none">
-                                            <label class="font-weight-bold">Jangka Waktu</label><br>
-                                            <label style="font-size: 11px; font-style: italic;">* Data disajikan secara mingguan, dengan satu baris mencerminkan aktivitas kripto selama tujuh hari.</label>
-                                            <div class="d-flex align-items-center">
-                                                <input type="text" id="date-starttt" name="date-start" class="form-control" placeholder="Tanggal awal" >
-                                                <span class="mx-2">–</span>
-                                                <input type="text" id="date-enddd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
-                                            </div>
-                                        </div> --}}
-
                                         <div class="form-group mb-4">
                                             <label class="font-weight-bold">Jangka Waktu</label>
                                             <label id="keterangan-jangka-waktu" style="font-size: 11px; font-style: italic;" class="d-block mb-2">
                                                 * Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.
                                             </label>
                                             <div class="d-flex align-items-center">
-                                                <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" onkeydown="return false">
+                                                <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" value="{{ old('date-start') }}" onkeydown="return false">
                                                 <span class="mx-2">–</span>
-                                                <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" onkeydown="return false">
+                                                <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" value="{{ old('date-end') }}" onkeydown="return false">
                                             </div>
                                         </div>
 

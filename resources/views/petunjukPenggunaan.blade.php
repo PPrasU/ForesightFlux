@@ -261,7 +261,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-4.png" alt="#" />
+              <img src="images/petunjuk-impor-4.webp" alt="#" />
             </div>
           </div>
 
@@ -284,7 +284,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-5.png" alt="#" />
+              <img src="images/petunjuk-impor-5.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -305,7 +305,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-6.png" alt="#" />
+              <img src="images/petunjuk-impor-6.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -327,7 +327,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-7.png" alt="#" />
+              <img src="images/petunjuk-impor-7.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -348,7 +348,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-8.png" alt="#" />
+              <img src="images/petunjuk-impor-8.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -370,7 +370,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-9.png" alt="#" />
+              <img src="images/petunjuk-impor-9.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -390,7 +390,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-10.png" alt="#" />
+              <img src="images/petunjuk-impor-10.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -413,7 +413,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-11.png" alt="#" />
+              <img src="images/petunjuk-impor-11.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -434,7 +434,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-12.png" alt="#" />
+              <img src="images/petunjuk-impor-12.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -484,7 +484,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-1.png" alt="#" />
+              <img src="images/petunjuk-api-1.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -507,7 +507,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-2.png" alt="#" />
+              <img src="images/petunjuk-api-2.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -528,7 +528,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-3.png" alt="#" />
+              <img src="images/petunjuk-api-3.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -550,7 +550,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-4.png" alt="#" />
+              <img src="images/petunjuk-api-4.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -570,7 +570,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-5.png" alt="#" />
+              <img src="images/petunjuk-api-5.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -593,7 +593,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-6.png" alt="#" />
+              <img src="images/petunjuk-api-6.webp" alt="#" />
             </div>
           </div>
         </div>

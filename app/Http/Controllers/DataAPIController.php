@@ -512,20 +512,8 @@ class DataAPIController extends Controller
                     'file' => '🚨Data API sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
                 ]);
             }
-
-            if (empty($request->crypto_pair)) {
-                return back()->withErrors([
-                    'crypto_pair' => '🚨Kolom Pilih Kripto wajib diisi.⚠️',
-                ]);
-            }
-
-            session()->push('notifications', [
-                'icon' => 'mdi-flag-variant',
-                'bgColor' => 'info',
-                'title' => 'Data API Berhasil Dipilih',
-                'text' => 'Data sudah siap untuk dilakukan pra-proses.'
-            ]);
-
+            
+            DB::beginTransaction();
             // Validasi form input
             $request->validate([
                 'crypto_pair' => 'required',
@@ -533,7 +521,18 @@ class DataAPIController extends Controller
                 'date-end' => 'required|date|after_or_equal:date-start',
                 'sumber' => 'required',
                 'jenis_data' => 'required|in:Harian,Mingguan',
+            ], [
+                'crypto_pair.required' => '🚨Kolom Pilih Kripto wajib diisi.⚠️',
+                'date-start.required' => '📅 Tanggal awal wajib diisi.',
+                'date-start.date' => '📅 Format tanggal awal tidak valid.',
+                'date-end.required' => '📅 Tanggal akhir wajib diisi.',
+                'date-end.date' => '📅 Format tanggal akhir tidak valid.',
+                'date-end.after_or_equal' => '⚠️ Tanggal akhir harus setelah atau sama dengan tanggal awal.',
+                'sumber.required' => '🔎 Sumber data wajib diisi.',
+                'jenis_data.required' => '📊 Jenis data harus dipilih.',
+                'jenis_data.in' => '❗ Jenis data tidak valid.',
             ]);
+
 
             $displayNames = [
                 // Beberapa koin besar:
@@ -1029,9 +1028,17 @@ class DataAPIController extends Controller
                     );
                 }
             }
+            DB::commit();
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Data API Berhasil Dipilih',
+                'text' => 'Data sudah siap untuk dilakukan pra-proses.'
+            ]);
             return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -1041,13 +1048,8 @@ class DataAPIController extends Controller
             if (DataPraProses::exists()) {
                 return redirect()->back()->with('error', 'Sudah Ada Data Yang Di Pra Proses. Pra Proses Hanya Bisa Dilakukan Satu Kali.');
             }
-    
-            session()->push('notifications', [
-                'icon' => 'mdi-flag-variant',
-                'bgColor' => 'info',
-                'title' => 'Pra-Proses Berhasil',
-                'text' => 'Data sudah siap untuk dilakukan peramalan.'
-            ]);
+
+            DB::beginTransaction();
     
             $dataApi = DataApi::orderBy('date')->get();
     
@@ -1099,10 +1101,19 @@ class DataAPIController extends Controller
                     'category' => $index < $trainingCount ? 'Training' : 'Testing',
                 ]);
             }
-    
+            
+            DB::commit();
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Pra-Proses Berhasil',
+                'text' => 'Data sudah siap untuk dilakukan peramalan.'
+            ]);
+
             return redirect()->route('peramalan.index')->with('Success', 'Berhasil melakukan pra-proses.');
     
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
     }
@@ -1111,17 +1122,17 @@ class DataAPIController extends Controller
         try{
             
             DB::beginTransaction();
-            // Hapus child table lebih dulu
-            DB::table('data_api')->delete();
-
-            // Cek apakah data_api benar-benar kosong
-            if (DB::table('data_api')->count() > 0) {
-                throw new \Exception("Gagal menghapus semua data API");
-            }
-
-            // Baru hapus parent table
-            // DB::table('data_source')->delete();
+            // Ambil semua data_source dengan jenis API
+            // $sources = DataSource::where('sumber', 'API')->get();
+            
+            // Hapus semuanya (otomatis akan menghapus data_api yang berkaitan karena onDelete('cascade'))
+            // foreach ($sources as $source) {
+            //     $source->delete();
+            // }
+            
+            DB::table('data_api')->delete();//khusus sqlite
             DB::commit();
+
             session()->push('notifications', [
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',

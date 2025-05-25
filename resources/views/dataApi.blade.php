@@ -234,8 +234,8 @@
                     if (result.isConfirmed) {
                         // Menampilkan loading setelah konfirmasi
                         Swal.fire({
-                            title: 'Proses Data...',
-                            text: 'Data sedang diproses.',
+                            title: 'Pra Proses Data...',
+                            text: 'Tunggu sebentar ya, sistemnya lagi kerja keras nih 🤖💪',
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             didOpen: () => {

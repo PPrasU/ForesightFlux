@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('source_id');
             $table->date('date');
-            $table->decimal('actual', 15, 2);
-            $table->decimal('forecast', 15, 5);
-            $table->decimal('error', 15, 8)->nullable();
-            $table->decimal('abs_error', 15, 8)->nullable();
-            $table->decimal('error_square', 15, 8)->nullable();
+            $table->decimal('actual', 20, 2);
+            $table->decimal('forecast', 20, 5);
+            $table->decimal('error', 20, 8)->nullable();
+            $table->decimal('abs_error', 20, 8)->nullable();
+            $table->decimal('error_square', 20, 8)->nullable();
             $table->timestamps();
 
             $table->foreign('source_id')->references('id')->on('data_source');

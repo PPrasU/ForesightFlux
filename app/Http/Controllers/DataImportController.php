@@ -45,14 +45,9 @@ class DataImporTController extends Controller
             ini_set('max_execution_time', 300);//5 menit
             if (DataPraProses::exists()) {
                 return redirect()->back()->with('error', 'Sudah Ada Data Yang Di Pra Proses. Pra Proses Hanya Bisa Dilakukan Satu Kali.');
-            }
-            
-            session()->push('notifications', [
-                'icon' => 'mdi-flag-variant',
-                'bgColor' => 'info',
-                'title' => 'Pra-Proses Berhasil',
-                'text' => 'Data sudah siap untuk dilakukan peramalan.'
-            ]);            
+            }         
+             
+            DB::beginTransaction();
 
             $dataImport = DataImport::orderBy('date')->get();
     
@@ -103,8 +98,16 @@ class DataImporTController extends Controller
                     'category' => $index < $trainingCount ? 'Training' : 'Testing',
                 ]);
             }
+            DB::commit();
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Pra-Proses Berhasil',
+                'text' => 'Data sudah siap untuk dilakukan peramalan.'
+            ]);  
             return redirect()->route('peramalan.index')->with('Success', 'Anjay Berhasil Pra Proses Nih');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Gagal melakukan pra-proses: ' . $e->getMessage());
         }
     }
@@ -119,12 +122,16 @@ class DataImporTController extends Controller
                 'name' => 'required|string|max:50',
                 'sumber' => 'required|in:Import',
                 'file' => 'required|file|mimes:csv,txt',
+            ], [
+                'name.required' => '🚨Kolom Jenis Kripto wajib diisi.⚠️',
+                'sumber.required' => '🔎 Sumber data wajib diisi.',
+                'file.required' => '❗Jenis data harus dipilih.',
             ]);
 
             $file = $request->file('file');
 
             if (!$file->isValid()) {
-                return back()->withErrors(['file' => 'File CSV tidak valid.']);
+                return back()->withInput()->withErrors(['file' => 'File CSV tidak valid.']);
             }
 
             $path = $file->getRealPath();
@@ -140,7 +147,7 @@ class DataImporTController extends Controller
 
             $expectedHeaders = ['Date', 'Price', 'Open', 'High', 'Low', 'Vol.', 'Change %'];
             if ($header !== $expectedHeaders) {
-                return back()->withErrors([
+                return back()->withInput()->withErrors([
                     'file' => '🚨Format file CSV tidak sesuai. Tolong baca petunjuk penggunaan kembali atau gunakan file CSV dari investing.com⚠️',
                 ]);
             }
@@ -150,6 +157,8 @@ class DataImporTController extends Controller
                     'file' => '🚨Data historis sudah ada. Silakan hapus terlebih dahulu sebelum menambahkan data baru.⚠️',
                 ]);
             }
+
+            DB::beginTransaction();
 
             // Hapus header
             array_shift($rows);
@@ -192,33 +201,34 @@ class DataImporTController extends Controller
                 return back()->withErrors(['file' => '🚨Data tidak bisa diproses. File kosong atau format tidak dikenali.⚠️']);
             }
 
+            DB::commit();
             session()->push('notifications', [
                 'icon' => 'mdi-approval',
                 'bgColor' => 'success',
                 'title' => 'Import Data Berhasil',
                 'text' => 'Silahkan menuju halaman data import untuk dilakukan pra proses.'
             ]);
-
             return redirect()->route('data.importData')->with('Success', 'Import Data Berhasil');
-
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
         }
     }
     
-    public function hapus(){
+    public function hapus() {
         try {
             DB::beginTransaction();
-            // Hapus child table lebih dulu
-            DB::table('data_import')->delete();
 
-            // Cek apakah data_import benar-benar kosong
-            if (DB::table('data_import')->count() > 0) {
-                throw new \Exception("Gagal menghapus semua data import");
-            }
+            // Ambil semua data_source dengan jenis Import
+            // $sources = DataSource::where('sumber', 'Import')->get();
+            
 
-            // Baru hapus parent table
-            // DB::table('data_source')->delete();
+            // Hapus semuanya (otomatis akan menghapus data_import yang berkaitan karena onDelete('cascade'))
+            // foreach ($sources as $source) {
+            //     $source->delete();
+            // }
+
+            DB::table('data_import')->delete();//khusus sqlite
             DB::commit();
 
             session()->push('notifications', [
@@ -234,6 +244,5 @@ class DataImporTController extends Controller
             return redirect()->back()->with('error', 'Gagal hapus data: ' . $e->getMessage());
         }
     }
-
 
 }

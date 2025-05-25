@@ -9,10 +9,12 @@ use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
 use App\Models\HasilTraining;
+use Illuminate\Support\Facades\Storage;
 
 class SettingParamController extends Controller
 {
     public function index(){
+        $setting = SettingParam::first();
         $dataParam = SettingParam::all();
         $training = HasilTraining::all();
         $testing = HasilTesting::all();
@@ -33,6 +35,7 @@ class SettingParamController extends Controller
 
         return view('admin.settingParams', compact(
             'dataParam',
+            'setting',
             'training',
             'testing',
             'akurasi',
@@ -156,7 +159,27 @@ class SettingParamController extends Controller
             }
         }
 
+        // Simpan hasil ke CSV
+        $csvFileName = 'grid_search_results.csv';
+        $csvData = "alpha,beta,gamma,training,testing,mape,rmse,rrmse\n";
+
+        foreach ($results as $res) {
+            $csvData .= implode(",", [
+                number_format($res['alpha'], 2, '.', ''),
+                number_format($res['beta'], 2, '.', ''),
+                number_format($res['gamma'], 2, '.', ''),
+                $res['training'],
+                $res['testing'],
+                number_format($res['mape'], 4, '.', ''),
+                number_format($res['rmse'], 4, '.', ''),
+                number_format($res['rrmse'], 4, '.', ''),
+            ]) . "\n";
+        }
+
+        Storage::disk('local')->put($csvFileName, $csvData);
+
         return view('admin.settingParams', [
+            'setting' => SettingParam::first(),
             'dataParam' => SettingParam::all(),
             'training' => HasilTraining::all(),
             'testing' => HasilTesting::all(),

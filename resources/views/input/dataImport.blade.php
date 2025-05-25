@@ -83,7 +83,7 @@
                                         {{-- Jenis Kripto --}}
                                         <div class="form-group">
                                             <label>Jenis Kripto</label>
-                                            <input type="text" class="form-control" placeholder="Masukkan jenis kriptonya" name="name"/>
+                                            <input type="text" class="form-control" placeholder="Masukkan jenis kriptonya" value="{{ old('name') }}" name="name"/>
                                         </div>
                     
                                         {{-- Jangka Waktu --}}
@@ -91,9 +91,9 @@
                                             <div class="form-group mb-4">
                                                 <label class="font-weight-bold">Jangka Waktu</label>
                                                 <div class="d-flex align-items-center">
-                                                    <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" >
+                                                    <input type="text" id="date-startt" name="date-start" class="form-control" value="{{ old('date-start') }}" placeholder="Tanggal awal" >
                                                     <span class="mx-2">–</span>
-                                                    <input type="text" id="date-endd" name="date-end" class="form-control" placeholder="Tanggal akhir" >
+                                                    <input type="text" id="date-endd" name="date-end" class="form-control" value="{{ old('date-end') }}" placeholder="Tanggal akhir" >
                                                 </div>
                                             </div>
                                         </div>
