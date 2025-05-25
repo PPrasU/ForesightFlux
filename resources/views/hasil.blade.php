@@ -83,7 +83,7 @@
                                 <div class="card-body">
 
                                     <h4 class="mt-0 header-title mb-4">Grafik Hasil Peramalan Kriptonya</h4>
-                                    <!-- Pastikan form ini yang diberi d-none -->
+                                    <!-- hapus d-none untuk user bisa memilih hasil peramalan -->
                                     <form method="GET" id="range-form" class="mb-3 d-none">
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="flex-fill">
@@ -148,7 +148,8 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="mt-0 header-title mb-4">Grafik Hasil Perhitungan Testing</h4>
-                                    <form method="GET" class="mb-3">
+                                    {{-- hapus d-none untuk user bisa memilih hasil peramalan --}}
+                                    <form method="GET" class="mb-3 d-none">
                                         <label for="range2">Tampilkan Data Testing Terakhir:</label>
                                         <select name="range2" id="range2" onchange="this.form.submit()">
                                             <option value="10" {{ request('range2') == 10 ? 'selected' : '' }}>10</option>

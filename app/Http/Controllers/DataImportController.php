@@ -205,7 +205,7 @@ class DataImporTController extends Controller
             session()->push('notifications', [
                 'icon' => 'mdi-approval',
                 'bgColor' => 'success',
-                'title' => 'Import Data Berhasil',
+                'title' => 'Import Data Berhasil yay',
                 'text' => 'Silahkan menuju halaman data import untuk dilakukan pra proses.'
             ]);
             return redirect()->route('data.importData')->with('Success', 'Import Data Berhasil');

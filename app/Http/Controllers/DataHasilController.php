@@ -20,14 +20,14 @@ class DataHasilController extends Controller
         $testing = HasilTesting::orderBy('date', 'desc')->first();
         $akurasi = HasilAkurasi::all();
 
-        $range = $request->input('range', 30);
+        $range = $request->input('range', 3); // default 7
 
         $hasil = DataHasil::orderBy('date_forecast', 'asc')
             ->take($range)
             ->get();
 
         // Tambahan untuk grafik testing (actual vs forecast)
-        $range2 = $request->input('range2', 30); // default 30
+        $range2 = $request->input('range2', 7); // default 30
         $testingChart = HasilTesting::orderBy('date', 'desc')
             ->take($range2)
             ->get()
