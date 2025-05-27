@@ -19,10 +19,12 @@
                     </li>
                     <li class="dropdown notification-list">
                         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            <i class="mdi mdi-bell noti-icon"></i>
-                            <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">
-                                {{ session('notifications') ? count(session('notifications')) : 0 }}
-                            </span>                                                     
+                            <i id="notif-icon" class="mdi mdi-bell-outline noti-icon"></i>
+                            @if(session('notifications') && count(session('notifications')) > 0)
+                                <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">
+                                    {{ count(session('notifications')) }}
+                                </span>
+                            @endif
                         </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                             <h6 class="dropdown-item-text">
@@ -38,6 +40,9 @@
                                         <p class="notify-details">
                                             {{ $notification['title'] }}
                                             <span class="text-muted">{{ $notification['text'] }}</span>
+                                            <span class="text-muted">
+                                                {{ \Carbon\Carbon::parse($notification['time'])->diffForHumans() }}
+                                            </span>
                                         </p>
                                     </a>                                    
                                     @endforeach
@@ -56,7 +61,7 @@
                             <a href="{{ route('notifikasi.clear') }}" class="dropdown-item text-center text-primary">
                                 Hapus Semua Notifikasi <i class="fi-arrow-right"></i>
                             </a>                            
-                        </div>        
+                        </div>
                     </li>
                     <li class="dropdown notification-list">
                         <div class="dropdown notification-list">
@@ -154,4 +159,47 @@
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownToggle = document.querySelector('.notification-list .nav-link');
+        const notifIcon = document.getElementById('notif-icon');
+        const dropdownMenu = document.querySelector('.notification-list .dropdown-menu');
+
+        let dropdownOpen = false;
+
+        function closeDropdown() {
+            if (dropdownOpen) {
+                notifIcon.classList.remove('mdi-bell');
+                notifIcon.classList.add('mdi-bell-outline');
+                dropdownMenu.classList.remove('show'); // Sembunyikan menu
+                dropdownOpen = false;
+            }
+        }
+
+        dropdownToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation(); // cegah bubbling
+
+            dropdownOpen = !dropdownOpen;
+
+            if (dropdownOpen) {
+                notifIcon.classList.remove('mdi-bell-outline');
+                notifIcon.classList.add('mdi-bell');
+                dropdownMenu.classList.add('show'); // Tampilkan menu
+            } else {
+                notifIcon.classList.remove('mdi-bell');
+                notifIcon.classList.add('mdi-bell-outline');
+                dropdownMenu.classList.remove('show'); // Sembunyikan menu
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!dropdownMenu.contains(e.target) && !dropdownToggle.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+    });
+</script>
+
+
 </header>

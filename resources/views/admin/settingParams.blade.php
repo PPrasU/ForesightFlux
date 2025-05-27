@@ -294,13 +294,13 @@
                                             <th style="width: 10px" hidden>No</th>
                                             <th style="width: 100px">Tanggal</th>
                                             <th>Aktual</th>
-                                            {{-- <th>Level Smoothing</th>
+                                            <th>Level Smoothing</th>
                                             <th>Trend Smoothing</th>
                                             <th>Seasonal Smoothing</th>
                                             <th style="width: 100px">Hasil Peramalan</th>
                                             <th style="width: 150px">Error</th>
                                             <th style="width: 100px">Absolute Error</th>
-                                            <th style="width: 100px">Error Square</th> --}}
+                                            <th style="width: 100px">Error Square</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -309,13 +309,13 @@
                                                 <td style="text-align: center" hidden>{{ $row->id }}</td>
                                                 <td style="text-align: center">{{ $row->date }}</td>
                                                 <td>{{ $row->price }}</td>
-                                                {{-- <td>{{ $row->level }}</td>
+                                                <td>{{ $row->level }}</td>
                                                 <td>{{ $row->trend }}</td>
                                                 <td>{{ $row->seasonal }}</td>
                                                 <td>{{ $row->forecast }}</td>
                                                 <td>{{ $row->error }}</td>
                                                 <td>{{ $row->abs_error }}</td>
-                                                <td>{{ $row->error_square }}</td> --}}
+                                                <td>{{ $row->error_square }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -339,9 +339,9 @@
                                               <th style="width: 100px">Tanggal</th>
                                               <th>Aktual</th>
                                               <th>Hasil Peramalan</th>
-                                              {{-- <th style="width: 150px">Error</th>
+                                              <th style="width: 150px">Error</th>
                                               <th style="width: 100px">Absolute Error</th>
-                                              <th style="width: 100px">Error Square</th> --}}
+                                              <th style="width: 100px">Error Square</th>
                                           </tr>
                                       </thead>
                                       <tbody>
@@ -351,9 +351,9 @@
                                                   <td style="text-align: center">{{ $row->date }}</td>
                                                   <td>{{ $row->actual }}</td>
                                                   <td>{{ $row->forecast }}</td>
-                                                  {{-- <td>{{ $row->error }}</td>
+                                                  <td>{{ $row->error }}</td>
                                                   <td>{{ $row->abs_error }}</td>
-                                                  <td>{{ $row->error_square }}</td> --}}
+                                                  <td>{{ $row->error_square }}</td>
                                               </tr>
                                           @endforeach
                                       </tbody>
@@ -475,18 +475,6 @@
                                                       </tr>
                                                   @endforeach
                                               </tbody>
-                                              {{-- <tbody>
-                                                  @foreach($grid_results as $res)
-                                                      <tr class="{{ ($res['alpha'] == $best_result['alpha'] && $res['beta'] == $best_result['beta'] && $res['gamma'] == $best_result['gamma']) ? 'table-success fw-bold' : '' }}">
-                                                          <td class="text-center">{{ $res['alpha'] }}</td>
-                                                          <td class="text-center">{{ $res['beta'] }}</td>
-                                                          <td class="text-center">{{ $res['gamma'] }}</td>
-                                                          <td>{{ number_format($res['mape'], 4) }}</td>
-                                                          <td>{{ number_format($res['rmse'], 4) }}</td>
-                                                          <td>{{ number_format($res['rrmse'], 4) }}</td>
-                                                      </tr>
-                                                  @endforeach
-                                              </tbody> --}}
                                           </table>
                                           <div class="alert alert-info">
                                               Setiap baris <span class="fw-bold text-success">berwarna hijau</span> menandakan kombinasi α, β, γ terbaik berdasarkan MAPE untuk masing-masing <strong>persentase training</strong>.

@@ -138,11 +138,25 @@
                                             $vol = $data->first()->vol ?? null;
 
                                             // Konversi volume jika mengandung "K"
-                                            if ($vol && str_contains($vol, 'K')) {
-                                                $vol_number = floatval(str_replace('K', '', $vol)) * 1000;
+                                            if ($vol) {
+                                                $multiplier = 1;
+
+                                                if (str_contains($vol, 'K')) {
+                                                    $multiplier = 1000;
+                                                    $vol = str_replace('K', '', $vol);
+                                                } elseif (str_contains($vol, 'M')) {
+                                                    $multiplier = 1000000;
+                                                    $vol = str_replace('M', '', $vol);
+                                                } elseif (str_contains($vol, 'B')) {
+                                                    $multiplier = 1000000000;
+                                                    $vol = str_replace('B', '', $vol);
+                                                }
+
+                                                $vol_number = floatval($vol) * $multiplier;
                                             } else {
-                                                $vol_number = $vol;
+                                                $vol_number = 0;
                                             }
+
                                         @endphp
                                         <div class="mb-4">
                                             <br>

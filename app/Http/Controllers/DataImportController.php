@@ -54,6 +54,14 @@ class DataImporTController extends Controller
             if ($dataImport->isEmpty()) {
                 return redirect()->back()->with('error', 'Data Import kosong. Tidak bisa melakukan pra-proses.');
             }
+            // Validasi: cek apakah ada data dengan price = 0
+            $hasZeroPrice = $dataImport->contains(function ($item) {
+                return floatval($item->price) == 0;
+            });
+
+            if ($hasZeroPrice) {
+                return redirect()->back()->with('error', 'Data tidak bisa dilakukan proses, coba cari data lain.');
+            }
     
             $sourceId = $dataImport->first()->source_id;
             $formattedData = collect();
@@ -103,7 +111,8 @@ class DataImporTController extends Controller
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
                 'title' => 'Pra-Proses Berhasil',
-                'text' => 'Data sudah siap untuk dilakukan peramalan.'
+                'text' => 'Data sudah siap untuk dilakukan peramalan.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);  
             return redirect()->route('peramalan.index')->with('Success', 'Anjay Berhasil Pra Proses Nih');
         } catch (\Exception $e) {
@@ -206,7 +215,8 @@ class DataImporTController extends Controller
                 'icon' => 'mdi-approval',
                 'bgColor' => 'success',
                 'title' => 'Import Data Berhasil yay',
-                'text' => 'Silahkan menuju halaman data import untuk dilakukan pra proses.'
+                'text' => 'Silahkan menuju halaman data import untuk dilakukan pra proses.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);
             return redirect()->route('data.importData')->with('Success', 'Import Data Berhasil');
         } catch (\Throwable $e) {
@@ -235,7 +245,8 @@ class DataImporTController extends Controller
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',
                 'title' => 'Data Import Dihapus',
-                'text' => 'Data berhasil dihapus.'
+                'text' => 'Data berhasil dihapus.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);
 
             return redirect()->route('data.importData')->with('Success', 'Data berhasil dihapus.');

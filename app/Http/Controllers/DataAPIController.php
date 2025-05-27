@@ -1033,7 +1033,8 @@ class DataAPIController extends Controller
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
                 'title' => 'Data API Berhasil Dipilih',
-                'text' => 'Data sudah siap untuk dilakukan pra-proses.'
+                'text' => 'Data sudah siap untuk dilakukan pra-proses.', 
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);
             return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
         } catch (\Throwable $e) {
@@ -1055,6 +1056,15 @@ class DataAPIController extends Controller
     
             if ($dataApi->isEmpty()) {
                 return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+            }
+
+            // Validasi: cek apakah ada data dengan price = 0
+            $hasZeroPrice = $dataApi->contains(function ($item) {
+                return floatval($item->close) == 0;
+            });
+
+            if ($hasZeroPrice) {
+                return redirect()->back()->with('error', 'Data tidak bisa dilakukan proses, coba cari data lain.');
             }
     
             $sourceId = $dataApi->first()->source_id;
@@ -1107,7 +1117,8 @@ class DataAPIController extends Controller
                 'icon' => 'mdi-flag-variant',
                 'bgColor' => 'info',
                 'title' => 'Pra-Proses Berhasil',
-                'text' => 'Data sudah siap untuk dilakukan peramalan.'
+                'text' => 'Data sudah siap untuk dilakukan peramalan.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);
 
             return redirect()->route('peramalan.index')->with('Success', 'Berhasil melakukan pra-proses.');
@@ -1137,7 +1148,8 @@ class DataAPIController extends Controller
                 'icon' => 'mdi-delete-forever',
                 'bgColor' => 'danger',
                 'title' => 'Data API Dihapus',
-                'text' => 'Data berhasil dihapus.'
+                'text' => 'Data berhasil dihapus.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]); 
             return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil dihapus.');
         }catch(\Exception $e){

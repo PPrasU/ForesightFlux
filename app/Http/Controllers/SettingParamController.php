@@ -159,25 +159,6 @@ class SettingParamController extends Controller
             }
         }
 
-        // Simpan hasil ke CSV
-        $csvFileName = 'grid_search_results.csv';
-        $csvData = "alpha,beta,gamma,training,testing,mape,rmse,rrmse\n";
-
-        foreach ($results as $res) {
-            $csvData .= implode(",", [
-                number_format($res['alpha'], 2, '.', ''),
-                number_format($res['beta'], 2, '.', ''),
-                number_format($res['gamma'], 2, '.', ''),
-                $res['training'],
-                $res['testing'],
-                number_format($res['mape'], 4, '.', ''),
-                number_format($res['rmse'], 4, '.', ''),
-                number_format($res['rrmse'], 4, '.', ''),
-            ]) . "\n";
-        }
-
-        Storage::disk('local')->put($csvFileName, $csvData);
-
         return view('admin.settingParams', [
             'setting' => SettingParam::first(),
             'dataParam' => SettingParam::all(),
@@ -195,65 +176,88 @@ class SettingParamController extends Controller
         ]);
     }
 
-    private function runTES($data, $dataTesting, $alpha, $beta, $gamma, $seasonLength){
+    private function runTES($dataTrain, $dataTest, $alpha, $beta, $gamma, $seasonLength){
+        $n = count($dataTrain);
+
+        if ($n < 2 * $seasonLength) {
+            throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
+        }
+
         $level = [];
         $trend = [];
         $seasonal = [];
 
-        $seasonAvg = $data->take($seasonLength)->avg('price');
+        $forecast = [];
+        $errors = [];
+        $abs_errors = [];
+        $squared_errors = [];
+
+        // Inisialisasi
+        $avgSeason = $dataTrain->take($seasonLength)->avg('price');
+
         for ($i = 0; $i < $seasonLength; $i++) {
-            $seasonal[$i] = $data[$i]->price / $seasonAvg;
+            $seasonal[$i] = $dataTrain[$i]->price / $avgSeason;
         }
 
-        $level[$seasonLength - 1] = $data->take($seasonLength)->avg('price');
+        $level[$seasonLength - 1] = $avgSeason;
 
         $sum = 0;
         for ($i = 0; $i < $seasonLength; $i++) {
-            $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+            $sum += ($dataTrain[$i + $seasonLength]->price - $dataTrain[$i]->price) / $seasonal[$i];
         }
-
         $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
 
-        $n = count($data);
         for ($i = $seasonLength; $i < $n; $i++) {
-            $prevLevel = $level[$i - 1];
-            $prevTrend = $trend[$i - 1];
-            $prevSeasonal = $seasonal[$i - $seasonLength];
+            $price = $dataTrain[$i]->price;
+            $prevLevel = $level[$i - 1] ?? $price;
+            $prevTrend = $trend[$i - 1] ?? 0;
+            $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
 
-            $level[$i] = $alpha * ($data[$i]->price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+            $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
             $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
-            $seasonal[$i] = $gamma * ($data[$i]->price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+            $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
         }
 
+        // Forecast Testing
+        $forecastTesting = [];
         $errorsTesting = [];
         $absErrorsTesting = [];
         $squaredErrorsTesting = [];
 
-        $lastIndex = array_key_last($level);
-        $lastLevel = $level[$lastIndex];
-        $lastTrend = $trend[$lastIndex];
+        $lastIndexTrain = array_key_last($level);
+        $lastLevel = $level[$lastIndexTrain];
+        $lastTrend = $trend[$lastIndexTrain];
 
-        foreach ($dataTesting as $i => $row) {
-            // Hitung seasonal index untuk testing
-            $seasonIndex = ($lastIndex + $i + 1) % $seasonLength;
-            $seasonFactor = $seasonal[$seasonIndex] ?? 1;
+        $startIndex = $lastIndexTrain + 1;
 
-            // Forecast nilai testing
-            $forecast = ($lastLevel + ($i + 1) * $lastTrend) * $seasonFactor;
-            $actual = $row->price;
-            $error = $actual - $forecast;
-            $absError = $actual != 0 ? abs($error / $actual) : 0;
+        foreach ($dataTest as $i => $testData) {
+            $t = $startIndex + $i;
+            $actual = $testData->price;
+
+            $prevLevel = $level[$t - 1] ?? $lastLevel;
+            $prevTrend = $trend[$t - 1] ?? $lastTrend;
+            $prevSeasonal = $seasonal[$t - $seasonLength] ?? 1;
+
+            $forecastVal = ($prevLevel + $prevTrend) * $prevSeasonal;
+
+            $level[$t] = $alpha * ($actual / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+            $trend[$t] = $beta * ($level[$t] - $prevLevel) + (1 - $beta) * $prevTrend;
+            $seasonal[$t] = $gamma * ($actual / $level[$t]) + (1 - $gamma) * $prevSeasonal;
+
+            $error = $actual - $forecastVal;
+            $absError = abs($error / $actual);
             $errorSquare = pow($error, 2);
 
+            $forecastTesting[] = $forecastVal;
             $errorsTesting[] = $error;
             $absErrorsTesting[] = $absError;
             $squaredErrorsTesting[] = $errorSquare;
         }
 
-        $mape = count($absErrorsTesting) > 0 ? array_sum($absErrorsTesting) / count($absErrorsTesting) * 100 : 0;
-        $rmse = count($squaredErrorsTesting) > 0 ? sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting)) : 0;
-        $avgActual = $dataTesting->pluck('price')->avg() ?: 1; // hindari pembagian 0
-        $rrmse = ($rmse / $avgActual) * 100;
+        $mape = count($absErrorsTesting) ? array_sum($absErrorsTesting) / count($absErrorsTesting) * 100 : null;
+        $rmse = count($squaredErrorsTesting) ? sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting)) : null;
+        $avgActual = $dataTest->pluck('price')->avg();
+        $rrmse = $avgActual ? ($rmse / $avgActual) * 100 : null;
 
         return [
             'mape' => $mape,
@@ -261,5 +265,6 @@ class SettingParamController extends Controller
             'rrmse' => $rrmse,
         ];
     }
+
 
 }

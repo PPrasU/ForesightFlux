@@ -12,6 +12,7 @@ use App\Models\DataPraProses;
 use App\Models\HasilTraining;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DataHasilController extends Controller
 {
@@ -74,15 +75,21 @@ class DataHasilController extends Controller
             } else {
                 $sumber = null;
             }
+            
+            DB::table('data_pra-proses')->delete();
+            DB::table('hasil_akurasi')->delete();
+            DB::table('hasil_training')->delete();
+            DB::table('data_hasil')->delete();
+            DB::table('hasil_testing')->delete();
 
             // Hapus semua data pra proses
-            DataPraProses::truncate();
+            // DataPraProses::delete();
 
             // Hapus semua data hasil
-            HasilAkurasi::truncate();
-            HasilTesting::truncate();
-            HasilTraining::truncate();
-            DataHasil::truncate();
+            // HasilAkurasi::delete();
+            // HasilTesting::delete();
+            // HasilTraining::delete();
+            // DataHasil::delete();
             // Jika ingin hapus pra-proses juga, bisa diaktifkan:
             // DataPraProses::truncate();
             DB::commit();
@@ -93,6 +100,7 @@ class DataHasilController extends Controller
                 'bgColor' => 'danger',
                 'title' => 'Data Peramalan Dihapus',
                 'text' => 'Semua hasil peramalan dan akurasi berhasil dihapus.',
+                'time' => Carbon::now()->toDateTimeString(), 
             ]);
 
             if ($sumber === 'Import') {
@@ -101,7 +109,9 @@ class DataHasilController extends Controller
                 return redirect()->route('data.dataAPI')->with('Success', 'Data dari API berhasil dihapus.');
             }
         } catch (\Exception $e) {
-            DB::rollBack();
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());
         }
     }
