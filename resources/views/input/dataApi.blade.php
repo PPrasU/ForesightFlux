@@ -107,8 +107,8 @@
                                         </div>
                                     </div>
                                     
-                                    {{-- <form id="apiData"> --}}
-                                    <form action="{{ route('data.postDataAPI') }}" method="POST" enctype="multipart/form-data" id="apiData">
+                                    <form id="apiData">
+                                    {{-- <form action="{{ route('data.postDataAPI') }}" method="POST" enctype="multipart/form-data" id="apiData"> --}}
                                         @csrf
                                         {{-- Pilih Kripto --}}
                                         <div class="form-group">
@@ -180,7 +180,7 @@
                                         <input type="hidden" name="sumber" value="API" />
                                         {{-- Tombol --}}
                                         <div style="margin-top: 40px">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
+                                            <button type="submit" id="submitApiBtn" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
                                                 Pilih Kripto
                                             </button>
                                         </div>
@@ -355,7 +355,7 @@
         </script>
 
         {{-- script ajax untuk api backend --}}
-        {{-- <script>
+        <script>
             document.getElementById('apiData').addEventListener('submit', async function(e) {
                 e.preventDefault(); // cegah reload halaman
 
@@ -384,7 +384,7 @@
                     alert('Terjadi error jaringan.');
                 }
             });
-        </script> --}}
+        </script>
 
     </body>
 
