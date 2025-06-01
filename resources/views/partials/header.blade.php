@@ -5,7 +5,7 @@
     <meta content="Admin Dashboard" name="description" />
     <meta content="Themesbrand" name="author" />
     {{-- <link rel="shortcut icon" href="{{ asset('images/Logo_icon.png') }}"> --}}
-    <link rel="icon" href="{{ asset('images/favicon.ico') }}" />
+    <link rel="icon" href="{{ asset('images/Logo_icon.webp') }}" />
 
     <!--Morris Chart CSS -->
     <link rel="stylesheet" href="{{ asset('plugins/morris/morris.css') }}">

@@ -13,8 +13,8 @@
     <title>ForesightFluxCP | Homepage</title>
 
     <!-- Favicon -->
-    {{-- <link rel="icon" href="images/Logo_icon.png" /> --}}
-    <link rel="icon" href="images/favicon.ico" />
+    <link rel="icon" href="{{ asset('images/Logo.webp') }}" />
+    <link rel="icon" href="{{ asset('images/Logo_icon.webp') }}" />
 
     <!-- Google Fonts -->
     <link
@@ -23,28 +23,28 @@
     />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="source/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/bootstrap.min.css') }}" />
     <!-- Nice Select CSS -->
-    <link rel="stylesheet" href="source/css/nice-select.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/nice-select.css') }}" />
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="source/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/font-awesome.min.css') }}" />
     <!-- icofont CSS -->
-    <link rel="stylesheet" href="source/css/icofont.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/icofont.css') }}" />
     <!-- Slicknav -->
-    <link rel="stylesheet" href="source/css/slicknav.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/slicknav.min.css') }}" />
     <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="source/css/owl-carousel.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/owl-carousel.css') }}" />
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="source/css/datepicker.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/datepicker.css') }}" />
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="source/css/animate.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/animate.min.css') }}" />
     <!-- Magnific Popup CSS -->
-    <link rel="stylesheet" href="source/css/magnific-popup.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/magnific-popup.css') }}" />
 
     <!-- Medipro CSS -->
-    <link rel="stylesheet" href="source/css/normalize.css" />
-    <link rel="stylesheet" href="source/style.css" />
-    <link rel="stylesheet" href="source/css/responsive.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/normalize.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/responsive.css') }}" />
   </head>
   <body>
     <!-- Preloader -->
@@ -73,8 +73,7 @@
             <div class="row">
               <div class="col-lg-3 col-md-3 col-12">
                 <div class="logo">
-                  <a href="/"><img src="#" alt="Tempat logo" style="height: 45px; width: 180px;"/></a>
-                  {{-- <a href="/"><img src="images/Logo.png" alt="Tempat logo" style="height: 45px; width: 180px;"/></a> --}}
+                  <a href="/"><img src="{{ asset('images/Logo.webp') }}" alt="Tempat logo" style="height: 55px; width: 180px;"/></a>
                 </div>
                 <div class="mobile-nav"></div>
               </div>
@@ -83,7 +82,7 @@
                   <nav class="navigation">
                     <ul class="nav menu">
                         <li class="active">
-                            <a>Peramalan Harga Kripto Dengan Menggunakan Triple Exponential Smoothing</a>
+                            <a>Peramalan Harga Kripto Berbasis Data Historis</a>
                         </li>
                     </ul>
                   </nav>
@@ -103,10 +102,7 @@
     {{-- slider --}}
     <section class="slider">
       <div class="hero-slider">
-        <div
-          class="single-slider"
-          style="background-image: url('images/slider.jpg');"
-        >
+        <div class="single-slider" style="background-image: url('images/slider.jpg');">
           <div class="container">
             <div class="row">
               <div class="col-lg-7">
@@ -116,7 +112,7 @@
                     <span>Use!</span>
                   </h1>
                   <p>
-                    Dengan teknologi terbaru dalam analisis data kripto, kami menyediakan prediksi harga yang dapat digunakan untuk membantu Anda mengetahui pergerakan prediksi kripto kedepannya.
+                    Dengan sebuah teknologi analisis data kripto, kami menyediakan prediksi harga yang dapat digunakan untuk membantu Anda mengetahui pergerakan prediksi kripto untuk beberapa hari kedepannya.
                   </p>
                   <div class="button">
                     <a href="{{ route('petunjukPenggunaan') }}" class="btn">Cara Penggunaan Website</a>
@@ -126,33 +122,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="single-slider"
-          style="background-image: url('images/slider2.jpg')"
-        >
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-7">
-                <div class="text">
-                  <h1>
-                    Empower Your <span>Crypto Investments</span> with 
-                    <span>Forecastsing</span> From Us!
-                  </h1>
-                  <p>
-                    Dapatkan akses ke model peramalan canggih untuk meramalkan fluktuasi harga kripto dengan menggunakan data historis.
-                  </p>
-                  <div class="button">
-                    <a href="{{ route('petunjukPenggunaan') }}" class="btn">Cara Penggunaan Website</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="single-slider"
-          style="background-image: url('images/slider3.jpg')"
-        >
+        <div class="single-slider" style="background-image: url('images/slider3.jpg')">
           <div class="container">
             <div class="row">
               <div class="col-lg-7">
@@ -162,10 +132,30 @@
                     <span>Update!</span>
                   </h1>
                   <p>
-                    Tetap terhubung dengan pembaruan harga kripto secara real-time. Pantau pergerakan harga yang terus berubah.
+                    Tetap terhubung dengan pembaruan harga kripto secara real-time. Pantau pergerakan harga kripto yang terus berubah.
                   </p>
                   <div class="button">
                     <a href="{{ route('petunjukPenggunaan') }}" class="btn">Cara Penggunaan Website</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="single-slider" style="background-image: url('images/slider2.jpg')">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-7">
+                <div class="text">
+                  <h1>
+                    Empower Your <span>Crypto Investments</span> with 
+                    <span>Forecastsing</span> From Us!
+                  </h1>
+                  <p>
+                    Dapatkan akses ke model peramalan berbasis data historis untuk meramalkan harga kripto beberapa hari kedepan beserta akurasi dari model peramalannya.
+                  </p>
+                  <div class="button">
+                    <a href="{{ route('dashboard') }}" class="btn">Lakukan Peramalannya</a>
                   </div>
                 </div>
               </div>
@@ -189,7 +179,7 @@
                   <div class="single-content">
                     <h4>Get Data From API</h4>
                     <p>
-                      Tinggal memilih jenis kripto dan jangka waktu yang diinginkan untuk dilakukan peramalan mudah, tinggal pilih dan proses.
+                      Tinggal memilih jenis kripto dan jangka waktu yang diinginkan untuk dilakukan peramalan. Mudah, tinggal pilih dan proses.
                     </p>
                     <a href="{{ route('petunjukPenggunaan') }}"
                       >LEARN MORE<i class="fa fa-long-arrow-right"></i
@@ -207,7 +197,7 @@
                   <div class="single-content">
                     <h4>Upload Your Historical Data</h4>
                     <p>
-                      Dapat mengunggah sendiri data historis dengan menggunakan file csv atau xlsx jika sudah memiliki data historis atau kripto tidak ada melalui API.
+                      Dapat mengunggah sendiri data historis dengan menggunakan file csv jika sudah memiliki data historis atau jika kripto tidak ada pada API.
                     </p>
                     <a href="{{ route('petunjukPenggunaan') }}"
                       >LEARN MORE<i class="fa fa-long-arrow-right"></i
@@ -248,7 +238,7 @@
               <h2>We Are Here to Assist You in Navigating the Crypto Market</h2>
               <img src="images/section-img.png" alt="#" />
               <p>
-                Leveraging advanced forecasting techniques, we provide real-time crypto market predictions based on historical data to help you stay ahead of the curve.
+                Leveraging forecasting techniques, we provide real-time crypto market predictions based on historical data to help you stay ahead of the curve.
               </p>
             </div>
           </div>
@@ -300,8 +290,8 @@
               <h2>Pertama Kali Mengunjungi Website Ini?</h2>
               <img src="images/section-img.png" alt="#" />
               <p>
-                Silahkan Pilih Petunjuk Cara Penggunaan Jika Pertama Kali Mengunjungi Website Ini, 
-                Jika Tidak Langsung Saja Ke Dasbor
+                Silahkan pilih petunjuk cara penggunaan jika pertama kali mengunjungi website ini, 
+                jika tidak langsung saja ke dasbor
               </p>
             </div>
           </div>
@@ -325,12 +315,9 @@
                   <i class="icofont icofont-ui-close"></i>Cara Gunain Menu Data Dari API
                 </li>
                 <li class="cross">
-                  <i class="icofont icofont-ui-close"></i>Proses Peramalannya Itu Gimana
-                </li>
-                <li class="cross">
                   <i class="icofont icofont-ui-check"></i>Nah Kalo Udah Paham Baru Ke Dasbor
                 </li>
-                <br><br>
+                <br><br><br><br>
               </ul>
               <div class="table-bottom">
                 <a class="btn" href="{{ route('petunjukPenggunaan') }}">Inpo dong gunaiinnya gimana</a>
@@ -393,44 +380,50 @@
     </footer>
 
     <!-- jquery Min JS -->
-    <script src="source/js/jquery.min.js"></script>
+    <script src="{{ asset('source/js/jquery.min.js') }}"></script>
     <!-- jquery Migrate JS -->
-    <script src="source/js/jquery-migrate-3.0.0.js"></script>
+    <script src="{{ asset('source/js/jquery-migrate-3.0.0.js') }}"></script>
     <!-- jquery Ui JS -->
     <script src="source/js/jquery-ui.min.js"></script>
     <!-- Easing JS -->
-    <script src="source/js/easing.js"></script>
+    <script src="{{ asset('source/js/easing.js') }}"></script>
     <!-- Color JS -->
-    <script src="source/js/colors.js"></script>
+    <script src="{{ asset('source/js/colors.js') }}"></script>
     <!-- Popper JS -->
-    <script src="source/js/popper.min.js"></script>
+    <script src="{{ asset('source/js/popper.min.js') }}"></script>
     <!-- Bootstrap Datepicker JS -->
-    <script src="source/js/bootstrap-datepicker.js"></script>
+    <script src="{{ asset('source/js/bootstrap-datepicker.js') }}"></script>
     <!-- Jquery Nav JS -->
-    <script src="source/js/jquery.nav.js"></script>
+    <script src="{{ asset('source/js/jquery.nav.js') }}"></script>
     <!-- Slicknav JS -->
-    <script src="source/js/slicknav.min.js"></script>
+    <script src="{{ asset('source/js/slicknav.min.js') }}"></script>
     <!-- ScrollUp JS -->
-    <script src="source/js/jquery.scrollUp.min.js"></script>
+    <script src="{{ asset('source/js/jquery.scrollUp.min.js') }}"></script>
     <!-- Niceselect JS -->
-    <script src="source/js/niceselect.js"></script>
+    <script src="{{ asset('source/js/niceselect.js') }}"></script>
     <!-- Tilt Jquery JS -->
-    <script src="source/js/tilt.jquery.min.js"></script>
+    <script src="{{ asset('source/js/tilt.jquery.min.js') }}"></script>
     <!-- Owl Carousel JS -->
-    <script src="source/js/owl-carousel.js"></script>
+    <script src="{{ asset('source/js/owl-carousel.js') }}"></script>
     <!-- counterup JS -->
-    <script src="source/js/jquery.counterup.min.js"></script>
+    <script src="{{ asset('source/js/jquery.counterup.min.js') }}"></script>
     <!-- Steller JS -->
-    <script src="source/js/steller.js"></script>
+    <script src="{{ asset('source/js/steller.js') }}"></script>
     <!-- Wow JS -->
-    <script src="source/js/wow.min.js"></script>
+    <script src="{{ asset('source/js/wow.min.js') }}"></script>
     <!-- Magnific Popup JS -->
-    <script src="source/js/jquery.magnific-popup.min.js"></script>
+    <script src="{{ asset('source/js/jquery.magnific-popup.min.js') }}"></script>
     <!-- Counter Up CDN JS -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="source/js/bootstrap.min.js"></script>
+    <script src="{{ asset('source/js/bootstrap.min.js') }}"></script>
     <!-- Main JS -->
-    <script src="source/js/main.js"></script>
+    <script src="{{ asset('source/js/main.js') }}"></script>
+    <script>
+      function scrollToTop(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    </script>
   </body>
 </html>

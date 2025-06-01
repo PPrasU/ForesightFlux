@@ -23,8 +23,8 @@ class SettingParamController extends Controller
         $praProses = DataPraProses::with('source')->first();
         $jenisData = $praProses?->source?->jenis_data ?? 'Tidak Diketahui';
 
-        $jenisData = 'AAAAaaa';
-        $seasonLength = 9999999;
+        $jenisData = '-';
+        $seasonLength = 0;
 
         $totalCounts = [
             60 => ['training' => 0, 'testing' => 0],
@@ -73,19 +73,211 @@ class SettingParamController extends Controller
         
     }
 
+    // INI YANG hasil 2%, forecastFutureFromAllData tetap sama, 
+    // mengupdate level, trend, seasonal dari saat testing sehingga hasil akurasi bisa sangat kecil sekali
+    // public function optimize(Request $request){
+    //     ini_set('max_execution_time', 300); // 5 menit
+    //     // Ambil data pra proses urut berdasarkan tanggal
+    //     $allData = DataPraProses::orderBy('date')->get();
+
+    //     if ($allData->isEmpty()) {
+    //         return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+    //     }
+
+    //     // Ambil source_id dari data pertama
+    //     $sourceId = $allData->first()->source_id;
+
+    //     // Ambil data source terkait
+    //     $dataSource = DataSource::find($sourceId);
+
+    //     if (!$dataSource) {
+    //         return redirect()->back()->with('error', 'Sumber data tidak ditemukan.');
+    //     }
+
+    //     $param = SettingParam::first();
+
+    //     // Tentukan season length berdasarkan jenis data
+    //     if ($dataSource->jenis_data === 'Harian') {
+    //         $seasonLength = (int) $param->season_length_harian;//default 30
+    //     } elseif ($dataSource->jenis_data === 'Mingguan') {
+    //         $seasonLength = (int) $param->season_length_mingguan;//default 4
+    //     } else {
+    //         return redirect()->back()->with('error', 'Jenis data tidak dikenali.');
+    //     }
+
+    //     $praProses = DataPraProses::with('source')->first();
+    //     $jenisData = $praProses?->source?->jenis_data ?? 'Tidak Diketahui';
+
+    //     $trainingPercents = [60, 70, 80, 90];
+    //     $results = [];
+    //     $bestResults = [];
+
+    //     // Inisialisasi bestResults per training percent
+    //     foreach ($trainingPercents as $tp) {
+    //         $bestResults[$tp] = null;
+    //     }
+
+    //     for ($alpha = 0.1; $alpha <= 1.0; $alpha += 0.1) {
+    //         for ($beta = 0.1; $beta <= 1.0; $beta += 0.1) {
+    //             for ($gamma = 0.1; $gamma <= 1.0; $gamma += 0.1) {
+    //                 foreach ($trainingPercents as $trainingPercent) {
+    //                     $totalData = count($allData);
+    //                     $trainingCount = (int) round($totalData * ($trainingPercent / 100));
+    //                     $testingCount = $totalData - $trainingCount;
+
+    //                     // Simpan total count per persentase
+    //                     $totalCounts[$trainingPercent] = [
+    //                         'training' => $trainingCount,
+    //                         'testing' => $testingCount
+    //                     ];
+
+    //                     $dataTraining = $allData->slice(0, $trainingCount)->values();
+    //                     $dataTesting = $allData->slice($trainingCount)->values();
+
+    //                     if ($dataTraining->count() < 2 * $seasonLength) {
+    //                         continue;
+    //                     }
+
+    //                     $result = $this->runTES($dataTraining, $dataTesting, $alpha, $beta, $gamma, $seasonLength);
+
+    //                     $currentResult = [
+    //                         'alpha' => round($alpha, 2),
+    //                         'beta' => round($beta, 2),
+    //                         'gamma' => round($gamma, 2),
+    //                         'training' => $trainingPercent,
+    //                         'testing' => 100 - $trainingPercent,
+    //                         'mape' => $result['mape'],
+    //                         'rmse' => $result['rmse'],
+    //                         'rrmse' => $result['rrmse'],
+    //                     ];
+
+    //                     $results[] = $currentResult;
+
+    //                     if (!$bestResults[$trainingPercent] || $result['mape'] < $bestResults[$trainingPercent]['mape']) {
+    //                         $bestResults[$trainingPercent] = $currentResult;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return view('admin.settingParams', [
+    //         'setting' => SettingParam::first(),
+    //         'dataParam' => SettingParam::all(),
+    //         'training' => HasilTraining::all(),
+    //         'testing' => HasilTesting::all(),
+    //         'akurasi' => HasilAkurasi::all(),
+    //         'dataPraproses' => DataPraProses::all(),
+    //         'praProses' => $praProses,
+    //         'jenisData' => $jenisData,
+    //         'seasonLength' => $seasonLength,
+    //         'grid_results' => $results,
+    //         'best_results' => $bestResults,
+    //         'seasonLength' => $seasonLength,
+    //         'totalCounts' => $totalCounts,
+    //     ]);
+    // }
+
+    // private function runTES($dataTrain, $dataTest, $alpha, $beta, $gamma, $seasonLength){
+    //     $n = count($dataTrain);
+
+    //     if ($n < 2 * $seasonLength) {
+    //         throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
+    //     }
+
+    //     $level = [];
+    //     $trend = [];
+    //     $seasonal = [];
+
+    //     $forecast = [];
+    //     $errors = [];
+    //     $abs_errors = [];
+    //     $squared_errors = [];
+
+    //     // Inisialisasi
+    //     $avgSeason = $dataTrain->take($seasonLength)->avg('price');
+
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonal[$i] = $dataTrain[$i]->price / $avgSeason;
+    //     }
+
+    //     $level[$seasonLength - 1] = $avgSeason;
+
+    //     $sum = 0;
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $sum += ($dataTrain[$i + $seasonLength]->price - $dataTrain[$i]->price) / $seasonal[$i];
+    //     }
+    //     $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //     for ($i = $seasonLength; $i < $n; $i++) {
+    //         $price = $dataTrain[$i]->price;
+    //         $prevLevel = $level[$i - 1] ?? $price;
+    //         $prevTrend = $trend[$i - 1] ?? 0;
+    //         $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //         $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //         $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //         $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+    //     }
+
+    //     // Forecast Testing
+    //     $forecastTesting = [];
+    //     $errorsTesting = [];
+    //     $absErrorsTesting = [];
+    //     $squaredErrorsTesting = [];
+
+    //     $lastIndexTrain = array_key_last($level);
+    //     $lastLevel = $level[$lastIndexTrain];
+    //     $lastTrend = $trend[$lastIndexTrain];
+
+    //     $startIndex = $lastIndexTrain + 1;
+
+    //     foreach ($dataTest as $i => $testData) {
+    //         $t = $startIndex + $i;
+    //         $actual = $testData->price;
+
+    //         $prevLevel = $level[$t - 1] ?? $lastLevel;
+    //         $prevTrend = $trend[$t - 1] ?? $lastTrend;
+    //         $prevSeasonal = $seasonal[$t - $seasonLength] ?? 1;
+
+    //         $forecastVal = ($prevLevel + $prevTrend) * $prevSeasonal;
+
+    //         $level[$t] = $alpha * ($actual / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //         $trend[$t] = $beta * ($level[$t] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //         $seasonal[$t] = $gamma * ($actual / $level[$t]) + (1 - $gamma) * $prevSeasonal;
+
+    //         $error = $actual - $forecastVal;
+    //         $absError = abs($error / $actual);
+    //         $errorSquare = pow($error, 2);
+
+    //         $forecastTesting[] = $forecastVal;
+    //         $errorsTesting[] = $error;
+    //         $absErrorsTesting[] = $absError;
+    //         $squaredErrorsTesting[] = $errorSquare;
+    //     }
+
+    //     $mape = count($absErrorsTesting) ? array_sum($absErrorsTesting) / count($absErrorsTesting) * 100 : null;
+    //     $rmse = count($squaredErrorsTesting) ? sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting)) : null;
+    //     $avgActual = $dataTest->pluck('price')->avg();
+    //     $rrmse = $avgActual ? ($rmse / $avgActual) * 100 : null;
+
+    //     return [
+    //         'mape' => $mape,
+    //         'rmse' => $rmse,
+    //         'rrmse' => $rrmse,
+    //     ];
+    // }
+
     public function optimize(Request $request){
         ini_set('max_execution_time', 300); // 5 menit
-        // Ambil data pra proses urut berdasarkan tanggal
+
         $allData = DataPraProses::orderBy('date')->get();
 
         if ($allData->isEmpty()) {
             return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
         }
 
-        // Ambil source_id dari data pertama
         $sourceId = $allData->first()->source_id;
-
-        // Ambil data source terkait
         $dataSource = DataSource::find($sourceId);
 
         if (!$dataSource) {
@@ -93,13 +285,13 @@ class SettingParamController extends Controller
         }
 
         $param = SettingParam::first();
+        $seasonLength = match ($dataSource->jenis_data) {
+            'Harian' => (int) $param->season_length_harian,
+            'Mingguan' => (int) $param->season_length_mingguan,
+            default => null,
+        };
 
-        // Tentukan season length berdasarkan jenis data
-        if ($dataSource->jenis_data === 'Harian') {
-            $seasonLength = (int) $param->season_length_harian;//default 30
-        } elseif ($dataSource->jenis_data === 'Mingguan') {
-            $seasonLength = (int) $param->season_length_mingguan;//default 4
-        } else {
+        if (!$seasonLength) {
             return redirect()->back()->with('error', 'Jenis data tidak dikenali.');
         }
 
@@ -109,32 +301,33 @@ class SettingParamController extends Controller
         $trainingPercents = [60, 70, 80, 90];
         $results = [];
         $bestResults = [];
+        $totalCounts = [];
 
-        // Inisialisasi bestResults per training percent
         foreach ($trainingPercents as $tp) {
             $bestResults[$tp] = null;
         }
 
+        $totalData = count($allData);
+
         for ($alpha = 0.1; $alpha <= 1.0; $alpha += 0.1) {
             for ($beta = 0.1; $beta <= 1.0; $beta += 0.1) {
                 for ($gamma = 0.1; $gamma <= 1.0; $gamma += 0.1) {
+
                     foreach ($trainingPercents as $trainingPercent) {
-                        $totalData = count($allData);
-                        $trainingCount = (int) round($totalData * ($trainingPercent / 100));
+                        $trainingCount = (int) floor($totalData * ($trainingPercent / 100));
                         $testingCount = $totalData - $trainingCount;
 
-                        // Simpan total count per persentase
                         $totalCounts[$trainingPercent] = [
                             'training' => $trainingCount,
                             'testing' => $testingCount
                         ];
 
-                        $dataTraining = $allData->slice(0, $trainingCount)->values();
-                        $dataTesting = $allData->slice($trainingCount)->values();
-
-                        if ($dataTraining->count() < 2 * $seasonLength) {
+                        if ($trainingCount < 2 * $seasonLength) {
                             continue;
                         }
+
+                        $dataTraining = $allData->slice(0, $trainingCount)->values();
+                        $dataTesting = $allData->slice($trainingCount)->values();
 
                         $result = $this->runTES($dataTraining, $dataTesting, $alpha, $beta, $gamma, $seasonLength);
 
@@ -160,7 +353,7 @@ class SettingParamController extends Controller
         }
 
         return view('admin.settingParams', [
-            'setting' => SettingParam::first(),
+            'setting' => $param,
             'dataParam' => SettingParam::all(),
             'training' => HasilTraining::all(),
             'testing' => HasilTesting::all(),
@@ -171,14 +364,13 @@ class SettingParamController extends Controller
             'seasonLength' => $seasonLength,
             'grid_results' => $results,
             'best_results' => $bestResults,
-            'seasonLength' => $seasonLength,
             'totalCounts' => $totalCounts,
         ]);
     }
 
+
     private function runTES($dataTrain, $dataTest, $alpha, $beta, $gamma, $seasonLength){
         $n = count($dataTrain);
-
         if ($n < 2 * $seasonLength) {
             throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
         }
@@ -186,15 +378,13 @@ class SettingParamController extends Controller
         $level = [];
         $trend = [];
         $seasonal = [];
-
         $forecast = [];
         $errors = [];
         $abs_errors = [];
         $squared_errors = [];
 
-        // Inisialisasi
+        // 1. Inisialisasi
         $avgSeason = $dataTrain->take($seasonLength)->avg('price');
-
         for ($i = 0; $i < $seasonLength; $i++) {
             $seasonal[$i] = $dataTrain[$i]->price / $avgSeason;
         }
@@ -207,6 +397,7 @@ class SettingParamController extends Controller
         }
         $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
 
+        // 2. Hitung level, trend, seasonal dan forecast training
         for ($i = $seasonLength; $i < $n; $i++) {
             $price = $dataTrain[$i]->price;
             $prevLevel = $level[$i - 1] ?? $price;
@@ -216,9 +407,14 @@ class SettingParamController extends Controller
             $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
             $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
             $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+
+            $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
+            $errors[$i] = $price - $forecast[$i];
+            $abs_errors[$i] = abs($errors[$i] / $price);
+            $squared_errors[$i] = pow($errors[$i], 2);
         }
 
-        // Forecast Testing
+        // 3. Forecast untuk data testing (tanpa update level/trend/seasonal)
         $forecastTesting = [];
         $errorsTesting = [];
         $absErrorsTesting = [];
@@ -228,21 +424,18 @@ class SettingParamController extends Controller
         $lastLevel = $level[$lastIndexTrain];
         $lastTrend = $trend[$lastIndexTrain];
 
-        $startIndex = $lastIndexTrain + 1;
+        // Buat array seasonal index periodik
+        $seasonalIndices = [];
+        for ($i = 0; $i < $seasonLength; $i++) {
+            $seasonalIndices[] = $seasonal[$lastIndexTrain - $seasonLength + 1 + $i] ?? 1;
+        }
 
         foreach ($dataTest as $i => $testData) {
-            $t = $startIndex + $i;
+            $m = $i + 1;
             $actual = $testData->price;
+            $seasonIndex = ($lastIndexTrain + $m) % $seasonLength;
 
-            $prevLevel = $level[$t - 1] ?? $lastLevel;
-            $prevTrend = $trend[$t - 1] ?? $lastTrend;
-            $prevSeasonal = $seasonal[$t - $seasonLength] ?? 1;
-
-            $forecastVal = ($prevLevel + $prevTrend) * $prevSeasonal;
-
-            $level[$t] = $alpha * ($actual / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
-            $trend[$t] = $beta * ($level[$t] - $prevLevel) + (1 - $beta) * $prevTrend;
-            $seasonal[$t] = $gamma * ($actual / $level[$t]) + (1 - $gamma) * $prevSeasonal;
+            $forecastVal = ($lastLevel + $m * $lastTrend) * $seasonalIndices[$seasonIndex];
 
             $error = $actual - $forecastVal;
             $absError = abs($error / $actual);
@@ -254,6 +447,7 @@ class SettingParamController extends Controller
             $squaredErrorsTesting[] = $errorSquare;
         }
 
+        // Hitung akurasi
         $mape = count($absErrorsTesting) ? array_sum($absErrorsTesting) / count($absErrorsTesting) * 100 : null;
         $rmse = count($squaredErrorsTesting) ? sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting)) : null;
         $avgActual = $dataTest->pluck('price')->avg();
@@ -265,6 +459,5 @@ class SettingParamController extends Controller
             'rrmse' => $rrmse,
         ];
     }
-
 
 }

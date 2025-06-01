@@ -16,8 +16,8 @@
     <title>ForesightFluxCP | Petunjuk Penggunaan</title>
 
     <!-- Favicon -->
-    {{-- <link rel="icon" href="images/Logo_icon.png" /> --}}
-    <link rel="icon" href="images/favicon.ico" />
+    <link rel="icon" href="{{ asset('images/Logo.webp') }}" />
+    <link rel="icon" href="{{ asset('images/Logo_icon.webp') }}" />
 
     <!-- Google Fonts -->
     <link
@@ -26,28 +26,28 @@
     />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="source/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/bootstrap.min.css') }}" />
     <!-- Nice Select CSS -->
-    <link rel="stylesheet" href="source/css/nice-select.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/nice-select.css') }}" />
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="source/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/font-awesome.min.css') }}" />
     <!-- icofont CSS -->
-    <link rel="stylesheet" href="source/css/icofont.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/icofont.css') }}" />
     <!-- Slicknav -->
-    <link rel="stylesheet" href="source/css/slicknav.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/slicknav.min.css') }}" />
     <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="source/css/owl-carousel.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/owl-carousel.css') }}" />
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="source/css/datepicker.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/datepicker.css') }}" />
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="source/css/animate.min.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/animate.min.css') }}" />
     <!-- Magnific Popup CSS -->
-    <link rel="stylesheet" href="source/css/magnific-popup.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/magnific-popup.css') }}" />
 
     <!-- Medipro CSS -->
-    <link rel="stylesheet" href="source/css/normalize.css" />
-    <link rel="stylesheet" href="source/style.css" />
-    <link rel="stylesheet" href="source/css/responsive.css" />
+    <link rel="stylesheet" href="{{ asset('source/css/normalize.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/responsive.css') }}" />
   </head>
   <body>
     <!-- Preloader -->
@@ -76,7 +76,7 @@
             <div class="row">
               <div class="col-lg-3 col-md-3 col-12">
                 <div class="logo">
-                  <a href="/"><img src="" alt="Tempat logo" /></a>
+                  <a href="/"><img src="{{ asset('images/Logo.webp') }}" alt="Tempat logo" style="height: 55px; width: 180px;"/></a>
                 </div>
                 <div class="mobile-nav"></div>
               </div>
@@ -102,17 +102,22 @@
       </div>
     </header>
 
-    {{-- petunjuk impor data --}}
-    <section class="call-action overlay" data-stellar-background-ratio="0.5">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-12">
-            <div class="content">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div class="breadcrumbs overlay">
+			<div class="container">
+				<div class="bread-inner">
+					<div class="row">
+						<div class="col-12">
+							<h2>Petunjuk Penggunaan</h2>
+							<ul class="bread-list">
+								<li><a href="/">Home</a></li>
+								<li><i class="icofont-simple-right"></i></li>
+								<li class="active">Petunjuk Penggunaan</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
     <section class="why-choose section">
       <div class="container">
@@ -187,7 +192,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-1.png" alt="#" />
+              <img src="images/petunjuk-impor-1.webp" alt="#" />
             </div>
           </div>
 
@@ -213,7 +218,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-2.png" alt="#" />
+              <img src="images/petunjuk-impor-2.webp" alt="#" />
             </div>
           </div>
 
@@ -237,7 +242,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-impor-3.png" alt="#" />
+              <img src="images/petunjuk-impor-3.webp" alt="#" />
             </div>
           </div>
 
@@ -517,7 +522,7 @@
             <div class="choose-left">
               <h3>3. API Akan Tampil</h3>
               <p>
-                Data kripto dari API yang sudah dipilih akan tampil dalam bentuk tabel. Terdapat beberapa kolom yaitu 
+                Data kripto dari API yang sudah dipilih akan tampil dalam bentuk tabel. Untuk penjelasan kolom-kolomnya ada dibawah tabel ya!.
               </p>
               <p>
                 Pada proses ini data yang sudah dipilih akan disimpan dan nantinya data ini akan dilakukan 
@@ -614,7 +619,7 @@
 
           <div class="col-lg-6 col-12">
             <div class="choose-right">
-              <img src="images/petunjuk-api-7.png" alt="#" />
+              <img src="images/petunjuk-api-7.webp" alt="#" />
             </div>
           </div>
         </div>
@@ -627,7 +632,8 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="section-title">
-              <h2>Udah paham kah? kalo udah paham, gas lakuin peramalannya</h2>
+              <h2>Kalau sudah jelas</h2>
+              <h2> yuk lanjut ke peramalannya!</h2>
               <img src="images/section-img.png" alt="#" />
             </div>
           </div>
@@ -680,7 +686,7 @@
                 <li><p style="font-size: 9px"></p></li>
               </ul>
               <div class="table-bottom">
-                <a class="btn" href="{{ route('awal') }}">Balik</a>
+                <a class="btn" href="{{ route('awal') }}">Kabuuuurrrr</a>
               </div>
             </div>
           </div>
@@ -695,7 +701,7 @@
                 <h4 class="title">Udah paham nih bos</h4>
               </div>
               <ul class="table-list">
-                <p>Kalo udah paham, lanjut ke dasbor yang isinya</p>
+                <p>Kalo udah paham, lanjut ke dasbor yang </p>
                 <p  style="margin-bottom: 15px">isinya itu</p>
                 <li>
                   <i class="icofont icofont-ui-check"></i>Ya Dasbor Dong 😏
@@ -713,7 +719,7 @@
                   <i class="icofont icofont-ui-check"></i>Hasilnya dong, pasti 😎
                 </li>
               </ul>
-              <div class="table-bottom">
+              <div class="table-bottom" style="margin-top: 45px">
                 <a class="btn" href="{{ route('dashboard') }}">Meluncur Ke Dasbor Boskuh</a>
               </div>
             </div>
@@ -740,45 +746,45 @@
     </footer>
 
     <!-- jquery Min JS -->
-    <script src="source/js/jquery.min.js"></script>
+    <script src="{{ asset('source/js/jquery.min.js') }}"></script>
     <!-- jquery Migrate JS -->
-    <script src="source/js/jquery-migrate-3.0.0.js"></script>
+    <script src="{{ asset('source/js/jquery-migrate-3.0.0.js') }}"></script>
     <!-- jquery Ui JS -->
     <script src="source/js/jquery-ui.min.js"></script>
     <!-- Easing JS -->
-    <script src="source/js/easing.js"></script>
+    <script src="{{ asset('source/js/easing.js') }}"></script>
     <!-- Color JS -->
-    <script src="source/js/colors.js"></script>
+    <script src="{{ asset('source/js/colors.js') }}"></script>
     <!-- Popper JS -->
-    <script src="source/js/popper.min.js"></script>
+    <script src="{{ asset('source/js/popper.min.js') }}"></script>
     <!-- Bootstrap Datepicker JS -->
-    <script src="source/js/bootstrap-datepicker.js"></script>
+    <script src="{{ asset('source/js/bootstrap-datepicker.js') }}"></script>
     <!-- Jquery Nav JS -->
-    <script src="source/js/jquery.nav.js"></script>
+    <script src="{{ asset('source/js/jquery.nav.js') }}"></script>
     <!-- Slicknav JS -->
-    <script src="source/js/slicknav.min.js"></script>
+    <script src="{{ asset('source/js/slicknav.min.js') }}"></script>
     <!-- ScrollUp JS -->
-    <script src="source/js/jquery.scrollUp.min.js"></script>
+    <script src="{{ asset('source/js/jquery.scrollUp.min.js') }}"></script>
     <!-- Niceselect JS -->
-    <script src="source/js/niceselect.js"></script>
+    <script src="{{ asset('source/js/niceselect.js') }}"></script>
     <!-- Tilt Jquery JS -->
-    <script src="source/js/tilt.jquery.min.js"></script>
+    <script src="{{ asset('source/js/tilt.jquery.min.js') }}"></script>
     <!-- Owl Carousel JS -->
-    <script src="source/js/owl-carousel.js"></script>
+    <script src="{{ asset('source/js/owl-carousel.js') }}"></script>
     <!-- counterup JS -->
-    <script src="source/js/jquery.counterup.min.js"></script>
+    <script src="{{ asset('source/js/jquery.counterup.min.js') }}"></script>
     <!-- Steller JS -->
-    <script src="source/js/steller.js"></script>
+    <script src="{{ asset('source/js/steller.js') }}"></script>
     <!-- Wow JS -->
-    <script src="source/js/wow.min.js"></script>
+    <script src="{{ asset('source/js/wow.min.js') }}"></script>
     <!-- Magnific Popup JS -->
-    <script src="source/js/jquery.magnific-popup.min.js"></script>
+    <script src="{{ asset('source/js/jquery.magnific-popup.min.js') }}"></script>
     <!-- Counter Up CDN JS -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="source/js/bootstrap.min.js"></script>
+    <script src="{{ asset('source/js/bootstrap.min.js') }}"></script>
     <!-- Main JS -->
-    <script src="source/js/main.js"></script>
+    <script src="{{ asset('source/js/main.js') }}"></script>
     <script>
       function scrollToTop(e) {
         e.preventDefault();

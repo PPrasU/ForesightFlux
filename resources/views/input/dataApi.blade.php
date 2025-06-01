@@ -106,7 +106,8 @@
                                             <h4 class="mt-0 header-title">Pilih Data Historis Kripto Untuk Dilakukan Peramalan Nantinya</h4>
                                         </div>
                                     </div>
-                    
+                                    
+                                    {{-- <form id="apiData"> --}}
                                     <form action="{{ route('data.postDataAPI') }}" method="POST" enctype="multipart/form-data" id="apiData">
                                         @csrf
                                         {{-- Pilih Kripto --}}
@@ -183,6 +184,11 @@
                                                 Pilih Kripto
                                             </button>
                                         </div>
+                                        {{-- <div style="margin-top: 40px">
+                                            <button type="submit" id="submitApiBtn" class="btn btn-primary btn-lg btn-block mt-3 py-2" >
+                                                Pilih Kripto
+                                            </button>
+                                        </div> --}}
                                         <div style="margin-top: 20px">
                                             <a href="{{ route('data.dataAPI') }}" class="btn btn-outline-secondary btn-lg btn-block mt-3 py-2" >
                                                 Balik, ndak jadi
@@ -347,6 +353,38 @@
             // Jalankan sekali saat awal
             updateStyles();
         </script>
+
+        {{-- script ajax untuk api backend --}}
+        {{-- <script>
+            document.getElementById('apiData').addEventListener('submit', async function(e) {
+                e.preventDefault(); // cegah reload halaman
+
+                const form = e.target;
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/api/kraken/fetch', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message || 'Data berhasil disimpan!');
+                    } else {
+                        alert(data.error || 'Terjadi kesalahan.');
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    alert('Terjadi error jaringan.');
+                }
+            });
+        </script> --}}
 
     </body>
 

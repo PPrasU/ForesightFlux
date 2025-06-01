@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     @include('admin.partials.header')
-    <title>Admin | Setting Params</title>
+    <title>ForesightFluxCP | Setting Params</title>
     <!-- DataTables -->
     <link href="{{ asset('plugins/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('plugins/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
@@ -63,17 +63,6 @@
                       Isine Buat Halaman Setting Params Kayak Percentage Buat Data Training Sama Testing, Parameter Metode Kayak Alpha, Beta, sama Gamma, Gituuuuu
                     </li>
                   </ol>
-
-                  <div class="state-information d-none d-sm-block">
-                    <div class="state-graph">
-                      <div id="header-chart-1"></div>
-                      <div class="info">User</div>
-                    </div>
-                    <div class="state-graph">
-                      <div id="header-chart-2"></div>
-                      <div class="info">Setting</div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

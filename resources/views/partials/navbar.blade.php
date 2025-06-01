@@ -3,8 +3,8 @@
         <div class="container-fluid">
             <div class="logo">                
                 <a href="{{ route('dashboard') }}" class="logo">
-                    <img src="" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 150px;">
-                    <img src="" alt="" class="logo-large" style="height: 50px; width: 150px;">
+                    <img src="{{ asset('images/Logo_icon.webp') }}" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 150px;">
+                    <img src="{{ asset('images/Logo.webp') }}" alt="" class="logo-large" style="height: 50px; width: 150px;">
                 </a>
             </div>
             <div class="menu-extras topbar-custom">
@@ -17,8 +17,15 @@
                             </div>
                         </form> 
                     </li>
+
                     <li class="dropdown notification-list">
-                        <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light"
+                            data-toggle="dropdown"
+                            href="#"
+                            role="button"
+                            aria-haspopup="false"
+                            aria-expanded="false"
+                            title="Notifikasi">
                             <i id="notif-icon" class="mdi mdi-bell-outline noti-icon"></i>
                             @if(session('notifications') && count(session('notifications')) > 0)
                                 <span class="badge badge-pill badge-info noti-icon-badge" id="notification-count">
@@ -32,7 +39,7 @@
                             </h6>
                             <div class="slimscroll notification-item-list" id="notification-list">
                                 @if(session('notifications'))
-                                    @foreach(session('notifications') as $notification)
+                                    @foreach(array_reverse(session('notifications')) as $notification)
                                     <a href="javascript:void(0);" class="dropdown-item notify-item active notification-fade-in">
                                         <div class="notify-icon bg-{{ $notification['bgColor'] }}">
                                             <i class="mdi {{ $notification['icon'] }}"></i>
@@ -63,7 +70,7 @@
                             </a>                            
                         </div>
                     </li>
-                    <li class="dropdown notification-list">
+                    <!--<li class="dropdown notification-list">
                         <div class="dropdown notification-list">
                             <a class="dropdown-toggle nav-link arrow-none waves-effect nav-user waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <img src="{{ asset('images/users/user-4.jpg') }}" alt="user" class="rounded-circle">
@@ -85,7 +92,7 @@
                                 </form> --}}
                             </div>                                                                    
                         </div>
-                    </li>
+                    </li>-->
 
                     <li class="menu-item list-inline-item">
                         <a class="navbar-toggle nav-link">
@@ -104,102 +111,124 @@
     <div class="navbar-custom">
         <div class="container-fluid">
             <div id="navigation">
-                <ul class="navigation-menu">
-                    <li class="has-submenu {{ Request::is('dasbor') ? 'active' : '' }}">
-                        <a href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
-                    </li>
-                    <li class="has-submenu {{ Request::is('pergerakan-kripto') ? 'active' : '' }}">
-                        <a href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
-                    </li>
-                    <li class="has-submenu {{ Request::is('data/*') ? 'active' : '' }}">
-                        <a href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
-                        <ul class="submenu">
-                            <li class="{{ Request::is('data/API*') ? 'active' : '' }}">
-                                <a href="{{ route('data.dataAPI') }}">Data dari API</a>
-                            </li>
-                            <li class="{{ Request::is('data/import*') ? 'active' : '' }}">
-                                <a href="{{ route('data.importData') }}">Import Data</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu {{ Request::is('peramalan/*') ? 'active' : '' }}">
-                        <a href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
-                        <ul class="submenu">
-                            <li class="{{ Request::is('peramalan/proses*') ? 'active' : '' }}">
-                                <a href="{{ route('peramalan.index') }}">Proses Peramalan</a>
-                            </li>
-                            <li class="{{ Request::is('peramalan/hasil*') ? 'active' : '' }}">
-                                <a href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
-                        <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-finance"></i>Petunjuk Penggunaan</a>
-                    </li>
-                    <style>
-                        #datetime {
-                            margin-left: auto; /* Membuat elemen berada di kanan */
-                            color: #9e9e9e;
-                            font-size: 14px; /* Sesuaikan ukuran font jika perlu */
-                            display: flex; /* Gunakan flexbox untuk kontrol lebih baik */
-                            align-items: center; /* Vertikal tengah jika diperlukan */
-                        }
-                        .navigation-menu {
-                            display: flex;
-                            align-items: center; /* Untuk vertikal tengah */
-                            width: 100%; /* Pastikan menu memiliki lebar penuh */
-                        }
+                <div class="navbar-wrapper" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <ul class="navigation-menu">
+                        <li class="has-submenu {{ Request::is('dasbor') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
+                        </li>
+                        <li class="has-submenu {{ Request::is('pergerakan-kripto') ? 'active' : '' }}">
+                            <a href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
+                        </li>
+                        <li class="has-submenu {{ Request::is('data/*') ? 'active' : '' }}">
+                            <a href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
+                            <ul class="submenu">
+                                <li class="{{ Request::is('data/API*') ? 'active' : '' }}">
+                                    <a href="{{ route('data.dataAPI') }}">Data dari API</a>
+                                </li>
+                                <li class="{{ Request::is('data/import*') ? 'active' : '' }}">
+                                    <a href="{{ route('data.importData') }}">Import Data</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu {{ Request::is('peramalan/*') ? 'active' : '' }}">
+                            <a href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
+                            <ul class="submenu">
+                                <li class="{{ Request::is('peramalan/proses*') ? 'active' : '' }}">
+                                    <a href="{{ route('peramalan.index') }}">Proses Peramalan</a>
+                                </li>
+                                <li class="{{ Request::is('peramalan/hasil*') ? 'active' : '' }}">
+                                    <a href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
+                            <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
+                        </li>
+                        <li class="has-submenu {{ Request::is('pertanyaan-umum') ? 'active' : '' }}">
+                            <a href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
+                        </li>
+                        <style>
+                            .navbar-wrapper {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 100%;
+                            }
 
-                    </style>
-                    
-                    <li class="has-submenu" style="margin-left:auto;">
-                        <a id="datetime" class="breadcrumb-item active" style="color: #9e9e9e;"></a>
-                    </li>                    
-                </ul>
+                            .navigation-menu {
+                                gap: 20px;
+                                list-style: none;
+                                padding-left: 0;
+                                margin: 0;
+                            }
+
+                            .navigation-menu li a {
+                                text-decoration: none;
+                                color: #616161;
+                            }
+
+                            .navigation-menu li a:hover {
+                                color: #1976d2;
+                            }
+
+                            #datetime {
+                                white-space: normal;
+                                font-size: 14px;
+                                color: #9e9e9e;
+                            }
+                            
+                        </style>
+                    </ul>
+                    <ul class="navigation-menu">
+                        <li class="has-submenu">
+                            <div id="datetime" class="breadcrumb-item" style="color: #9e9e9e;"></div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropdownToggle = document.querySelector('.notification-list .nav-link');
-        const notifIcon = document.getElementById('notif-icon');
-        const dropdownMenu = document.querySelector('.notification-list .dropdown-menu');
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownToggle = document.querySelector('.notification-list .nav-link');
+            const notifIcon = document.getElementById('notif-icon');
+            const dropdownMenu = document.querySelector('.notification-list .dropdown-menu');
 
-        let dropdownOpen = false;
+            let dropdownOpen = false;
 
-        function closeDropdown() {
-            if (dropdownOpen) {
-                notifIcon.classList.remove('mdi-bell');
-                notifIcon.classList.add('mdi-bell-outline');
-                dropdownMenu.classList.remove('show'); // Sembunyikan menu
-                dropdownOpen = false;
+            function closeDropdown() {
+                if (dropdownOpen) {
+                    notifIcon.classList.remove('mdi-bell');
+                    notifIcon.classList.add('mdi-bell-outline');
+                    dropdownMenu.classList.remove('show'); // Sembunyikan menu
+                    dropdownOpen = false;
+                }
             }
-        }
 
-        dropdownToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation(); // cegah bubbling
+            dropdownToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // cegah bubbling
 
-            dropdownOpen = !dropdownOpen;
+                dropdownOpen = !dropdownOpen;
 
-            if (dropdownOpen) {
-                notifIcon.classList.remove('mdi-bell-outline');
-                notifIcon.classList.add('mdi-bell');
-                dropdownMenu.classList.add('show'); // Tampilkan menu
-            } else {
-                notifIcon.classList.remove('mdi-bell');
-                notifIcon.classList.add('mdi-bell-outline');
-                dropdownMenu.classList.remove('show'); // Sembunyikan menu
-            }
+                if (dropdownOpen) {
+                    notifIcon.classList.remove('mdi-bell-outline');
+                    notifIcon.classList.add('mdi-bell');
+                    dropdownMenu.classList.add('show'); // Tampilkan menu
+                } else {
+                    notifIcon.classList.remove('mdi-bell');
+                    notifIcon.classList.add('mdi-bell-outline');
+                    dropdownMenu.classList.remove('show'); // Sembunyikan menu
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdownMenu.contains(e.target) && !dropdownToggle.contains(e.target)) {
+                    closeDropdown();
+                }
+            });
         });
-
-        document.addEventListener('click', function (e) {
-            if (!dropdownMenu.contains(e.target) && !dropdownToggle.contains(e.target)) {
-                closeDropdown();
-            }
-        });
-    });
-</script>
+    </script>
 
 
 </header>

@@ -82,7 +82,7 @@
                                         @csrf
                                         {{-- Jenis Kripto --}}
                                         <div class="form-group">
-                                            <label>Jenis Kripto</label>
+                                            <label>Nama Kripto</label>
                                             <input type="text" class="form-control" placeholder="Masukkan jenis kriptonya" value="{{ old('name') }}" name="name"/>
                                         </div>
                     

@@ -11,8 +11,11 @@ use App\Models\SettingParam;
 use Illuminate\Http\Request;
 use App\Models\DataPraProses;
 use App\Models\HasilTraining;
+use App\Models\DataImport;
+use App\Models\DataAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class DataPraProsesController extends Controller
 {
@@ -244,6 +247,454 @@ class DataPraProsesController extends Controller
     //     }
     // }
 
+
+
+
+
+    // INI YANG hasil 2%, forecastFutureFromAllData tetap sama, 
+    // mengupdate level, trend, seasonal dari saat testing 
+    // public function post(Request $request){
+    //     try {
+    //         ini_set('max_execution_time', 300); // 5 menit
+    //         $dataPraProses = DataPraProses::orderBy('date')->get();
+
+    //         if ($dataPraProses->isEmpty()) {
+    //             return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+    //         }
+
+    //         $sourceId = $dataPraProses->first()->source_id;
+    //         $dataSource = DataSource::find($sourceId);
+
+    //         if (!$dataSource) {
+    //             return redirect()->back()->with('error', 'Sumber data tidak ditemukan.');
+    //         }
+
+    //         DB::beginTransaction();
+
+    //         $param = SettingParam::first();
+    //         $alpha = $param->alpha;
+    //         $beta = $param->beta;
+    //         $gamma = $param->gamma;
+
+    //         if (!$param || is_null($alpha) || is_null($beta) || is_null($gamma)) {
+    //             throw new \Exception("Parameter TES belum lengkap di tabel setting_param.");
+    //         }
+
+    //         $seasonLength = match ($dataSource->jenis_data) {
+    //             'Harian' => (int) $param->season_length_harian,
+    //             'Mingguan' => (int) $param->season_length_mingguan,
+    //             default => throw new \Exception('Jenis data tidak dikenali.')
+    //         };
+
+    //         $data = DataPraProses::where('category', 'Training')->orderBy('date')->get();
+    //         $n = count($data);
+
+    //         if ($n < 2 * $seasonLength) {
+    //             throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
+    //         }
+
+    //         $level = [];
+    //         $trend = [];
+    //         $seasonal = [];
+    //         $forecast = [];
+    //         $errors = [];
+    //         $abs_errors = [];
+    //         $squared_errors = [];
+
+    //         // Inisialisasi
+    //         $avgSeason = $data->take($seasonLength)->avg('price');
+    //         for ($i = 0; $i < $seasonLength; $i++) {
+    //             $seasonal[$i] = $data[$i]->price / $avgSeason;
+    //         }
+
+    //         $level[$seasonLength - 1] = $avgSeason;
+
+    //         $sum = 0;
+    //         for ($i = 0; $i < $seasonLength; $i++) {
+    //             $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+    //         }
+    //         $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //         for ($i = $seasonLength; $i < $n; $i++) {
+    //             $price = $data[$i]->price;
+    //             $prevLevel = $level[$i - 1] ?? $price;
+    //             $prevTrend = $trend[$i - 1] ?? 0;
+    //             $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //             $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //             $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //             $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+
+    //             $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
+    //             $errors[$i] = $price - $forecast[$i];
+    //             $abs_errors[$i] = abs($errors[$i] / $price);
+    //             $squared_errors[$i] = pow($errors[$i], 2);
+
+    //             HasilTraining::create([
+    //                 'source_id' => $sourceId,
+    //                 'date' => $data[$i]->date,
+    //                 'price' => $price,
+    //                 'level' => $level[$i],
+    //                 'trend' => $trend[$i],
+    //                 'seasonal' => $seasonal[$i],
+    //                 'forecast' => $forecast[$i],
+    //                 'error' => $errors[$i],
+    //                 'abs_error' => $abs_errors[$i],
+    //                 'error_square' => $squared_errors[$i],
+    //             ]);
+    //         }
+
+    //         $dataTesting = DataPraProses::where('category', 'Testing')->orderBy('date')->get();
+
+    //         $forecastTesting = [];
+    //         $errorsTesting = [];
+    //         $absErrorsTesting = [];
+    //         $squaredErrorsTesting = [];
+
+    //         $lastIndexTrain = array_key_last($level);
+    //         $lastLevel = $level[$lastIndexTrain];
+    //         $lastTrend = $trend[$lastIndexTrain];
+
+    //         // Awal indeks testing
+    //         $startIndex = $lastIndexTrain + 1;
+
+    //         foreach ($dataTesting as $i => $testData) {
+    //             $t = $startIndex + $i;
+    //             $date = $testData->date;
+    //             $actual = $testData->price;
+    //             $seasonIndex = $t - $seasonLength;
+
+    //             $prevLevel = $level[$t - 1];
+    //             $prevTrend = $trend[$t - 1];
+    //             $prevSeasonal = $seasonal[$seasonIndex];
+
+    //             $forecastVal = ($prevLevel + $prevTrend) * $prevSeasonal;
+
+    //             // Update komponen
+    //             $level[$t] = $alpha * ($actual / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //             $trend[$t] = $beta * ($level[$t] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //             $seasonal[$t] = $gamma * ($actual / $level[$t]) + (1 - $gamma) * $prevSeasonal;
+
+    //             $error = $actual - $forecastVal;
+    //             $absError = abs($error / $actual);
+    //             $errorSquare = pow($error, 2);
+
+    //             HasilTesting::create([
+    //                 'source_id' => $sourceId,
+    //                 'date' => $date,
+    //                 'actual' => $actual,
+    //                 'forecast' => $forecastVal,
+    //                 'level' => $level[$t],
+    //                 'trend' => $trend[$t],
+    //                 'seasonal' => $seasonal[$t],
+    //                 'error' => $error,
+    //                 'abs_error' => $absError,
+    //                 'error_square' => $errorSquare,
+    //             ]);
+
+    //             Log::info("Testing {$date}: Forecast=" . round($forecastVal, 2) .
+    //                     ", Actual=" . round($actual, 2) .
+    //                     ", Level=" . round($level[$t], 2) .
+    //                     ", Trend=" . round($trend[$t], 2) .
+    //                     ", Seasonal=" . $seasonal[$t]);
+
+    //             // Simpan untuk MAPE dan lainnya
+    //             $forecastTesting[] = $forecastVal;
+    //             $errorsTesting[] = $error;
+    //             $absErrorsTesting[] = $absError;
+    //             $squaredErrorsTesting[] = $errorSquare;
+    //         }
+
+
+    //         $mape = array_sum($absErrorsTesting) / count($absErrorsTesting) * 100;
+    //         $rmse = sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting));
+    //         $avgActual = $dataTesting->pluck('price')->avg();
+    //         $rrmse = ($rmse / $avgActual) * 100;
+
+    //         HasilAkurasi::create([
+    //             'mape' => $mape,
+    //             'rmse' => $rmse,
+    //             'avg_actual' => $avgActual,
+    //             'relative_rmse' => $rrmse,
+    //         ]);
+
+    //         $jumlahHariKeDepan = 30;
+    //         $startDate = Carbon::parse($dataTesting->last()->date ?? $data->last()->date);
+
+    //         for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+    //             $futureDate = $startDate->copy()->addDays($h);
+    //             $seasonIndex = ($lastIndexTrain + $h) % $seasonLength;
+    //             $seasonFactor = $seasonal[$seasonIndex];
+    //             $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+
+    //             DataHasil::create([
+    //                 'source_id' => $sourceId,
+    //                 'date_forecast' => $futureDate->format('Y-m-d'),
+    //                 'forecast' => $futureForecast,
+    //                 'level' => $lastLevel,
+    //                 'trend' => $lastTrend,
+    //                 'seasonal' => $seasonFactor,
+    //             ]);
+    //         }
+
+    //         DB::commit();
+    //         session()->push('notifications', [
+    //             'icon' => 'mdi-flag-variant',
+    //             'bgColor' => 'info',
+    //             'title' => 'Proses Peramalan Berhasil',
+    //             'text' => 'Data berhasil dilakukan peramalan silahkan menuju halaman hasil.',
+    //             'time' => Carbon::now()->toDateTimeString(),
+    //         ]);
+    //         // Ambil 5 data terakhir dari DataHasil berdasarkan tanggal prediksi
+    //         $last5Forecasts = DataHasil::orderBy('date_forecast')->take(5)->get();
+
+    //         // Simpan ke session
+    //         session(['last_forecasts' => $last5Forecasts]);
+
+    //         $testing = HasilTesting::with('source')->where('source_id', $sourceId)->first();
+
+    //         if ($testing && $testing->source) {
+    //             $sumber = $testing->source->sumber;
+
+    //             if ($sumber === 'Import') {
+    //                 $historicalData = DataImport::where('source_id', $sourceId)
+    //                     ->orderByDesc('id')  // urut berdasarkan id descending
+    //                     ->take(5)
+    //                     ->get();
+    //                 $historicalData = $historicalData->sortBy('id')->values();
+    //                 Session::put('historical_backup', $historicalData);
+    //                 Session::put('historical_type', 'Import');
+    //             } elseif ($sumber === 'API') {
+    //                 $historicalData = DataAPI::where('source_id', $sourceId)
+    //                     ->orderByDesc('id')  // urut berdasarkan id descending
+    //                     ->take(5)
+    //                     ->get();
+    //                 $historicalData = $historicalData->sortBy('id')->values();
+    //                 Session::put('historical_backup', $historicalData);
+    //                 Session::put('historical_type', 'API');
+    //             }
+
+    //         }
+
+    //         return redirect()->route('peramalan.hasil')->with('Success', 'Proses Peramalan Berhasil!');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return redirect()->back()->with('error', 'Gagal melakukan proses peramalan: ' . $e->getMessage());
+    //     }
+    // }
+
+
+
+
+    
+
+    public function post(Request $request){
+        try {
+            ini_set('max_execution_time', 300); // 5 menit
+            $dataPraProses = DataPraProses::orderBy('date')->get();
+
+            if ($dataPraProses->isEmpty()) {
+                return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+            }
+
+            $sourceId = $dataPraProses->first()->source_id;
+            $dataSource = DataSource::find($sourceId);
+
+            if (!$dataSource) {
+                return redirect()->back()->with('error', 'Sumber data tidak ditemukan.');
+            }
+
+            DB::beginTransaction();
+
+            $param = SettingParam::first();
+            $alpha = $param->alpha;
+            $beta = $param->beta;
+            $gamma = $param->gamma;
+
+            if (!$param || is_null($alpha) || is_null($beta) || is_null($gamma)) {
+                throw new \Exception("Parameter TES belum lengkap di tabel setting_param.");
+            }
+
+            $seasonLength = match ($dataSource->jenis_data) {
+                'Harian' => (int) $param->season_length_harian,
+                'Mingguan' => (int) $param->season_length_mingguan,
+                default => throw new \Exception('Jenis data tidak dikenali.')
+            };
+
+            $data = DataPraProses::where('category', 'Training')->orderBy('date')->get();
+            $n = count($data);
+
+            if ($n < 2 * $seasonLength) {
+                throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
+            }
+
+            $level = [];
+            $trend = [];
+            $seasonal = [];
+            $forecast = [];
+            $errors = [];
+            $abs_errors = [];
+            $squared_errors = [];
+
+            // Inisialisasi
+            $avgSeason = $data->take($seasonLength)->avg('price');
+            for ($i = 0; $i < $seasonLength; $i++) {
+                $seasonal[$i] = $data[$i]->price / $avgSeason;
+            }
+
+            $level[$seasonLength - 1] = $avgSeason;
+
+            $sum = 0;
+            for ($i = 0; $i < $seasonLength; $i++) {
+                $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+            }
+            $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+            for ($i = $seasonLength; $i < $n; $i++) {
+                $price = $data[$i]->price;
+                $prevLevel = $level[$i - 1] ?? $price;
+                $prevTrend = $trend[$i - 1] ?? 0;
+                $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+                $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+                $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+                $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+
+                $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
+                $errors[$i] = $price - $forecast[$i];
+                $abs_errors[$i] = abs($errors[$i] / $price);
+                $squared_errors[$i] = pow($errors[$i], 2);
+
+                HasilTraining::create([
+                    'source_id' => $sourceId,
+                    'date' => $data[$i]->date,
+                    'price' => $price,
+                    'level' => $level[$i],
+                    'trend' => $trend[$i],
+                    'seasonal' => $seasonal[$i],
+                    'forecast' => $forecast[$i],
+                    'error' => $errors[$i],
+                    'abs_error' => $abs_errors[$i],
+                    'error_square' => $squared_errors[$i],
+                ]);
+            }
+
+            $dataTesting = DataPraProses::where('category', 'Testing')->orderBy('date')->get();
+
+            $forecastTesting = [];
+            $errorsTesting = [];
+            $absErrorsTesting = [];
+            $squaredErrorsTesting = [];
+
+            $lastIndexTrain = array_key_last($level);
+            $lastLevel = $level[$lastIndexTrain];
+            $lastTrend = $trend[$lastIndexTrain];
+
+            // Untuk menjaga konsistensi seasonal, buat array periodik
+            $seasonalIndices = [];
+            for ($i = 0; $i < $seasonLength; $i++) {
+                $seasonalIndices[] = $seasonal[$lastIndexTrain - $seasonLength + 1 + $i] ?? 1;
+            }
+
+            foreach ($dataTesting as $i => $testData) {
+                $m = $i + 1;
+                $date = $testData->date;
+                $actual = $testData->price;
+                $seasonIndex = ($lastIndexTrain + $m) % $seasonLength;
+
+                $forecastVal = ($lastLevel + $m * $lastTrend) * $seasonalIndices[$seasonIndex];
+
+                $error = $actual - $forecastVal;
+                $absError = abs($error / $actual);
+                $errorSquare = pow($error, 2);
+
+                HasilTesting::create([
+                    'source_id' => $sourceId,
+                    'date' => $date,
+                    'actual' => $actual,
+                    'forecast' => $forecastVal,
+                    'level' => $lastLevel,
+                    'trend' => $lastTrend,
+                    'seasonal' => $seasonalIndices[$seasonIndex],
+                    'error' => $error,
+                    'abs_error' => $absError,
+                    'error_square' => $errorSquare,
+                ]);
+
+                Log::info("Testing {$date}: Forecast=" . round($forecastVal, 2) .
+                        ", Actual=" . round($actual, 2) .
+                        ", Level=" . round($lastLevel, 2) .
+                        ", Trend=" . round($lastTrend, 2) .
+                        ", Seasonal=" . $seasonalIndices[$seasonIndex]);
+
+                // Simpan untuk MAPE dan lainnya
+                $forecastTesting[] = $forecastVal;
+                $errorsTesting[] = $error;
+                $absErrorsTesting[] = $absError;
+                $squaredErrorsTesting[] = $errorSquare;
+            }
+
+            $mape = array_sum($absErrorsTesting) / count($absErrorsTesting) * 100;
+            $rmse = sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting));
+            $avgActual = $dataTesting->pluck('price')->avg();
+            $rrmse = ($rmse / $avgActual) * 100;
+
+            HasilAkurasi::create([
+                'mape' => $mape,
+                'rmse' => $rmse,
+                'avg_actual' => $avgActual,
+                'relative_rmse' => $rrmse,
+            ]);
+
+            // Forecast 30 hari ke depan (menggunakan seluruh data pra proses)
+            $this->forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma);
+
+            DB::commit();
+            session()->push('notifications', [
+                'icon' => 'mdi-flag-variant',
+                'bgColor' => 'info',
+                'title' => 'Proses Peramalan Berhasil',
+                'text' => 'Data berhasil dilakukan peramalan silahkan menuju halaman hasil.',
+                'time' => Carbon::now()->toDateTimeString(),
+            ]);
+            // Ambil 5 data terakhir dari DataHasil berdasarkan tanggal prediksi
+            $last5Forecasts = DataHasil::orderBy('date_forecast')->take(5)->get();
+
+            // Simpan ke session
+            session(['last_forecasts' => $last5Forecasts]);
+
+            $testing = HasilTesting::with('source')->where('source_id', $sourceId)->first();
+
+            if ($testing && $testing->source) {
+                $sumber = $testing->source->sumber;
+
+                if ($sumber === 'Import') {
+                    $historicalData = DataImport::where('source_id', $sourceId)
+                        ->orderByDesc('id')  // urut berdasarkan id descending
+                        ->take(5)
+                        ->get();
+                    $historicalData = $historicalData->sortBy('id')->values();
+                    Session::put('historical_backup', $historicalData);
+                    Session::put('historical_type', 'Import');
+                } elseif ($sumber === 'API') {
+                    $historicalData = DataAPI::where('source_id', $sourceId)
+                        ->orderByDesc('id')  // urut berdasarkan id descending
+                        ->take(5)
+                        ->get();
+                    $historicalData = $historicalData->sortBy('id')->values();
+                    Session::put('historical_backup', $historicalData);
+                    Session::put('historical_type', 'API');
+                }
+
+            }
+
+            return redirect()->route('peramalan.hasil')->with('Success', 'Proses Peramalan Berhasil!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal melakukan proses peramalan: ' . $e->getMessage());
+        }
+    }
+
     private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
         $data = DataPraProses::orderBy('date')->get();
 
@@ -387,210 +838,6 @@ class DataPraProsesController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
-        }
-    }
-
-    // INI YANG FIX, forecastFutureFromAllData tetap sama, hasil 2%
-    public function post(Request $request){
-        try {
-            ini_set('max_execution_time', 300); // 5 menit
-            $dataPraProses = DataPraProses::orderBy('date')->get();
-
-            if ($dataPraProses->isEmpty()) {
-                return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
-            }
-
-            $sourceId = $dataPraProses->first()->source_id;
-            $dataSource = DataSource::find($sourceId);
-
-            if (!$dataSource) {
-                return redirect()->back()->with('error', 'Sumber data tidak ditemukan.');
-            }
-
-            DB::beginTransaction();
-
-            $param = SettingParam::first();
-            $alpha = $param->alpha;
-            $beta = $param->beta;
-            $gamma = $param->gamma;
-
-            if (!$param || is_null($alpha) || is_null($beta) || is_null($gamma)) {
-                throw new \Exception("Parameter TES belum lengkap di tabel setting_param.");
-            }
-
-            $seasonLength = match ($dataSource->jenis_data) {
-                'Harian' => (int) $param->season_length_harian,
-                'Mingguan' => (int) $param->season_length_mingguan,
-                default => throw new \Exception('Jenis data tidak dikenali.')
-            };
-
-            $data = DataPraProses::where('category', 'Training')->orderBy('date')->get();
-            $n = count($data);
-
-            if ($n < 2 * $seasonLength) {
-                throw new \Exception("Jumlah data training minimal harus >= 2 × season length");
-            }
-
-            $level = [];
-            $trend = [];
-            $seasonal = [];
-            $forecast = [];
-            $errors = [];
-            $abs_errors = [];
-            $squared_errors = [];
-
-            // Inisialisasi
-            $avgSeason = $data->take($seasonLength)->avg('price');
-            for ($i = 0; $i < $seasonLength; $i++) {
-                $seasonal[$i] = $data[$i]->price / $avgSeason;
-            }
-
-            $level[$seasonLength - 1] = $avgSeason;
-
-            $sum = 0;
-            for ($i = 0; $i < $seasonLength; $i++) {
-                $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
-            }
-            $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
-
-            for ($i = $seasonLength; $i < $n; $i++) {
-                $price = $data[$i]->price;
-                $prevLevel = $level[$i - 1] ?? $price;
-                $prevTrend = $trend[$i - 1] ?? 0;
-                $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
-
-                $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
-                $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
-                $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
-
-                $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
-                $errors[$i] = $price - $forecast[$i];
-                $abs_errors[$i] = abs($errors[$i] / $price);
-                $squared_errors[$i] = pow($errors[$i], 2);
-
-                HasilTraining::create([
-                    'source_id' => $sourceId,
-                    'date' => $data[$i]->date,
-                    'price' => $price,
-                    'level' => $level[$i],
-                    'trend' => $trend[$i],
-                    'seasonal' => $seasonal[$i],
-                    'forecast' => $forecast[$i],
-                    'error' => $errors[$i],
-                    'abs_error' => $abs_errors[$i],
-                    'error_square' => $squared_errors[$i],
-                ]);
-            }
-
-            $dataTesting = DataPraProses::where('category', 'Testing')->orderBy('date')->get();
-
-            $forecastTesting = [];
-            $errorsTesting = [];
-            $absErrorsTesting = [];
-            $squaredErrorsTesting = [];
-
-            $lastIndexTrain = array_key_last($level);
-            $lastLevel = $level[$lastIndexTrain];
-            $lastTrend = $trend[$lastIndexTrain];
-
-            // Awal indeks testing
-            $startIndex = $lastIndexTrain + 1;
-
-            foreach ($dataTesting as $i => $testData) {
-                $t = $startIndex + $i;
-                $date = $testData->date;
-                $actual = $testData->price;
-                $seasonIndex = $t - $seasonLength;
-
-                $prevLevel = $level[$t - 1];
-                $prevTrend = $trend[$t - 1];
-                $prevSeasonal = $seasonal[$seasonIndex];
-
-                $forecastVal = ($prevLevel + $prevTrend) * $prevSeasonal;
-
-                // Update komponen
-                $level[$t] = $alpha * ($actual / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
-                $trend[$t] = $beta * ($level[$t] - $prevLevel) + (1 - $beta) * $prevTrend;
-                $seasonal[$t] = $gamma * ($actual / $level[$t]) + (1 - $gamma) * $prevSeasonal;
-
-                $error = $actual - $forecastVal;
-                $absError = abs($error / $actual);
-                $errorSquare = pow($error, 2);
-
-                HasilTesting::create([
-                    'source_id' => $sourceId,
-                    'date' => $date,
-                    'actual' => $actual,
-                    'forecast' => $forecastVal,
-                    'level' => $level[$t],
-                    'trend' => $trend[$t],
-                    'seasonal' => $seasonal[$t],
-                    'error' => $error,
-                    'abs_error' => $absError,
-                    'error_square' => $errorSquare,
-                ]);
-
-                Log::info("Testing {$date}: Forecast=" . round($forecastVal, 2) .
-                        ", Actual=" . round($actual, 2) .
-                        ", Level=" . round($level[$t], 2) .
-                        ", Trend=" . round($trend[$t], 2) .
-                        ", Seasonal=" . $seasonal[$t]);
-
-                // Simpan untuk MAPE dan lainnya
-                $forecastTesting[] = $forecastVal;
-                $errorsTesting[] = $error;
-                $absErrorsTesting[] = $absError;
-                $squaredErrorsTesting[] = $errorSquare;
-            }
-
-
-            $mape = array_sum($absErrorsTesting) / count($absErrorsTesting) * 100;
-            $rmse = sqrt(array_sum($squaredErrorsTesting) / count($squaredErrorsTesting));
-            $avgActual = $dataTesting->pluck('price')->avg();
-            $rrmse = ($rmse / $avgActual) * 100;
-
-            HasilAkurasi::create([
-                'mape' => $mape,
-                'rmse' => $rmse,
-                'avg_actual' => $avgActual,
-                'relative_rmse' => $rrmse,
-            ]);
-
-            $jumlahHariKeDepan = 30;
-            $startDate = Carbon::parse($dataTesting->last()->date ?? $data->last()->date);
-
-            for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
-                $futureDate = $startDate->copy()->addDays($h);
-                $seasonIndex = ($lastIndexTrain + $h) % $seasonLength;
-                $seasonFactor = $seasonal[$seasonIndex];
-                $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
-
-                DataHasil::create([
-                    'source_id' => $sourceId,
-                    'date_forecast' => $futureDate->format('Y-m-d'),
-                    'forecast' => $futureForecast,
-                    'level' => $lastLevel,
-                    'trend' => $lastTrend,
-                    'seasonal' => $seasonFactor,
-                ]);
-            }
-
-            // Forecast 30 hari ke depan (menggunakan seluruh data pra proses)
-            // $this->forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma);
-
-            DB::commit();
-            session()->push('notifications', [
-                'icon' => 'mdi-flag-variant',
-                'bgColor' => 'info',
-                'title' => 'Proses Peramalan Berhasil',
-                'text' => 'Data berhasil dilakukan peramalan silahkan menuju halaman hasil.',
-                'time' => Carbon::now()->toDateTimeString(),
-            ]);
-
-            return redirect()->route('peramalan.hasil')->with('Success', 'Proses Peramalan Berhasil!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal melakukan proses peramalan: ' . $e->getMessage());
         }
     }
 

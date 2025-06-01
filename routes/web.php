@@ -4,29 +4,29 @@ use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\DataAPIController;
 use App\Http\Controllers\DataHasilController;
+use App\Http\Controllers\DasborUserController;
 use App\Http\Controllers\DataImportController;
-use App\Http\Controllers\DataPraProsesController;
+use App\Http\Controllers\DasborAdminController;
 use App\Http\Controllers\PetunjukAPIController;
-use App\Http\Controllers\PetunjukImportController;
 use App\Http\Controllers\SettingParamController;
+use App\Http\Controllers\DataPraProsesController;
+use App\Http\Controllers\PetunjukImportController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('awal');
 
-Route::get('/dasbor', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-// Route::get('/petunjuk-penggunaan', function () {
-//     return view('petunjukPenggunaan');
-// })->name('petunjukPenggunaan');
+Route::get('/dasbor', [DasborUserController::class, 'index'])->name('dashboard');
 
 Route::get('/petunjuk-penggunaan', [PetunjukImportController::class, 'petunjukPenggunaan'])->name('petunjukPenggunaan');
 
 Route::get('/pergerakan-kripto', function () {
     return view('pergerakan');
 })->name('pergerakan-kripto');
+
+Route::get('/pertanyaan-umum', function () {
+    return view('faq');
+})->name('faq');
 
 Route::prefix('data')->name('data.')->group(function () {
     Route::get('/API', [DataAPIController::class, 'index'])->name('dataAPI');
@@ -56,9 +56,7 @@ Route::prefix('peramalan')->name('peramalan.')->group(function () {
 // ------------------------------------ ADMIN -----------------------------------
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dasbor', function () {
-        return view('admin.dasbor');
-    })->name('dasbor');
+    Route::get('/dasbor', [DasborAdminController::class, 'index'])->name('dasbor');
 
     Route::get('/petunjuk-import', [PetunjukImportController::class, 'index'])->name('petunjukImport');
     Route::get('/petunjuk-import/input', [PetunjukImportController::class, 'input'])->name('inputpetunjukImport');

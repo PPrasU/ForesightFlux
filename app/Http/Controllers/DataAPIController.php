@@ -492,7 +492,7 @@ class DataAPIController extends Controller
                 // Simpan cache selama 1 jam
                 Cache::put('cryptoPairs', $cryptoPairs, now()->addHour());
             }
-
+            Http::timeout(3)->get('https://api.kraken.com/0/public/Time');
             return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'));
         } catch (\Throwable $e) {
             // fallback jika API dan cache gagal
@@ -986,7 +986,9 @@ class DataAPIController extends Controller
             $pair = $request->crypto_pair;
             $interval = $request->jenis_data === 'Mingguan' ? 10080 : 1440; // 1440 harian, 10080 mingguan
 
-            $response = Http::get("https://api.kraken.com/0/public/OHLC", [
+            $response = Http::withOptions([
+                'verify' => storage_path('cacert.pem')
+            ])->get("https://api.kraken.com/0/public/OHLC", [
                 'pair' => $pair,
                 'interval' => $interval,
                 'since' => $startTime,

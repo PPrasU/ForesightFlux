@@ -59,18 +59,27 @@
                                             @endforeach
                                         </div>
                                     @endif
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h3 class="mt-0 header-title">NOTE: Harap Dibaca Terlebih Dahulu</h3>
-                                    @if ($akurasi->count() > 0)
-                                        <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
-                                            Hapus Semua Data Pra Proses dan Data Hasil Peramalan
-                                        </button>
-                                        <form id="hapusSemuaDataForm" method="POST" style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    @endif
-                                </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 class="mt-0 header-title">NOTE: Harap Dibaca Terlebih Dahulu</h3>
+                                            <ul class="mb-0">
+                                                <li><strong>⚠️ Titik sebagai pembacaan nilai desimal, sedangkan koma untuk pemisah ribuan.</strong></li>
+                                                <li><strong>📌 Hasil peramalan ini bersifat informatif saja</strong>, bukan sebagai patokan pasti untuk membeli atau menjual kripto.</li>
+                                                <li><strong>📈 Akurasi peramalan dapat berubah</strong> tergantung dari data sebelumnya dan pola pergerakan pasar yang tidak selalu konsisten.</li>
+                                                <li><strong>💡 Gunakan hasil prediksi sebagai bahan pertimbangan tambahan</strong>, bukan satu-satunya dasar untuk pengambilan keputusan.</li>
+                                                <li><strong>🌍 Hasil ini tidak mempertimbangkan faktor eksternal seperti kebijakan ekonomi, sentimen pasar, isu geopolitik, </strong> yang sebenarnya bisa sangat memengaruhi naik turunnya harga kripto.</li>
+                                            </ul>
+                                        </div>
+                                        @if ($akurasi->count() > 0)
+                                            <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
+                                                Hapus Semua Data Pra Proses dan Data Hasil Peramalan
+                                            </button>
+                                            <form id="hapusSemuaDataForm" method="POST" style="display: none;">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,6 +169,64 @@
                                         </select>
                                     </form>
                                     <canvas id="grafikTesting" height="100"></canvas>
+                                    @php
+                                        $dataAkurasi = $akurasi->first();
+                                    @endphp
+
+                                    @if ($dataAkurasi)
+                                        <div class="mb-4">
+                                            <br>
+                                            <p class="mb-1"><strong>⚠️ Keterangan:</strong></p>
+
+                                            <p class="mb-1"><strong>📊 MAPE:</strong> {{ number_format($dataAkurasi->mape, 2) }}% 
+                                                <br><small>
+                                                    Ini menunjukkan seberapa besar rata-rata kesalahan prediksi dibanding nilai aslinya. 
+                                                    Semakin kecil angkanya, semakin akurat prediksinya. <strong>(angka dibelakang titik itu angka desimal)</strong>
+                                                    <br>
+                                                    <strong>Keterangan:</strong>
+                                                    @if ($dataAkurasi->mape < 10)
+                                                        Sangat Akurat — Prediksi hampir sama dengan data asli.
+                                                    @elseif ($dataAkurasi->mape < 20)
+                                                        Baik — Cukup dekat dengan data asli.
+                                                    @elseif ($dataAkurasi->mape < 50)
+                                                        Cukup — Masih bisa diterima, tapi perlu hati-hati.
+                                                    @else
+                                                        Buruk — Prediksi jauh dari data sebenarnya.
+                                                    @endif
+                                                </small>
+                                            </p>
+
+                                            <p class="mb-1"><strong>📊 RMSE:</strong> {{ number_format(+$dataAkurasi->rmse) }} 
+                                                <br><small>
+                                                    Ini adalah ukuran rata-rata kesalahan dalam angka asli (misalnya: rupiah, unit, dsb). 
+                                                    Nilainya tidak dalam persen, tapi langsung nunjukin seberapa jauh salahnya. <strong>(koma pemisah ribuan)</strong>
+                                                    <br>
+                                                    <strong>Catatan:</strong> Semakin kecil nilai ini, makin bagus hasil prediksinya.
+                                                </small>
+                                            </p>
+
+                                            <p class="mb-1"><strong>📊 rRMSE:</strong> {{ number_format($dataAkurasi->relative_rmse, 2) }}% 
+                                                <br><small>
+                                                    Ini mirip dengan RMSE, tapi dalam bentuk persentase supaya lebih mudah dibandingkan.
+                                                    Berguna untuk tahu seberapa besar kesalahan relatif terhadap rata-rata data. <strong>(angka dibelakang titik itu angka desimal)</strong>
+                                                    <br>
+                                                    <strong>Keterangan:</strong>
+                                                    @if ($dataAkurasi->relative_rmse < 10)
+                                                        Sangat Baik — Prediksi sangat mendekati kenyataan.
+                                                    @elseif ($dataAkurasi->relative_rmse < 20)
+                                                        Baik — Hasil cukup akurat untuk keperluan umum.
+                                                    @elseif ($dataAkurasi->relative_rmse < 30)
+                                                        Cukup — Bisa dipakai, tapi kurang presisi.
+                                                    @else
+                                                        Kurang Akurat — Perlu evaluasi model prediksinya.
+                                                    @endif
+                                                </small>
+                                            </p>
+                                        </div>
+                                    @else
+                                        <p>Tidak ada data akurasi.</p>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -190,7 +257,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>> 50%</td>
-                                                    <td>Tidak Akurat</td>
+                                                    <td>Sangat Tidak Akurat</td>
                                                 </tr>
                                             </tbody>
                                         </table>

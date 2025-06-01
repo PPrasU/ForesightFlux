@@ -3,14 +3,14 @@
       <div id="sidebar-menu">
         <ul class="metismenu" id="side-menu">
           <li class="menu-title">Main</li>
-          <li>
+          {{-- <li>
             <a href="{{ route('admin.dasbor') }}" class="waves-effect">
               <i class="mdi mdi-home"></i>
               <span> Dasbor Admin</span>
             </a>
-          </li>
+          </li> --}}
           
-          <li>
+          {{-- <li>
             <a href="javascript:void(0);" class="waves-effect">
               <i class="mdi mdi-book-multiple"></i>
               <span>
@@ -19,19 +19,19 @@
                   <i class="mdi mdi-plus"></i>
                 </span> 
               </span>
-          </a>
+            </a>
             <ul class="submenu">
               <li><a href="{{ route('admin.petunjukImport') }}">Import</a></li>
               <li><a href="{{ route('admin.petunjukAPI') }}">API</a></li>
             </ul>
-          </li>
+          </li> --}}
 
-          <li>
+          {{-- <li>
             <a href="{{ route('admin.userManagement') }}" class="waves-effect">
               <i class="mdi mdi-account-group"></i>
               <span> User Management </span>
             </a>
-          </li>
+          </li> --}}
 
           <li class="{{ request()->routeIs('admin.settingParams') ? 'active' : '' }}">
             <a href="{{ route('admin.settingParams') }}" class="waves-effect">
@@ -53,7 +53,7 @@
           <li>
             <a href="{{ route('dashboard') }}" class="waves-effect">
               <i class="mdi mdi-account-box"></i>
-              <span> Ke Dasbor User </span>
+              <span> Ke Dasbor </span>
             </a>
           </li>
         </ul>

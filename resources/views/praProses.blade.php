@@ -91,7 +91,7 @@
                                             <p class="mb-1"><strong>Jangka Waktu:</strong> {{ $start }} s/d {{ $end }}</p>
                                             <p class="mb-1">
                                             </p>
-                                            <p class="mb-1"><strong>Persentase training dan testing:</strong> {{ $param->training_percentage }}:{{ $param->testing_percentage }}</p>
+                                            <p class="mb-1"><strong>Persentase training dan testing:</strong> {{ +$param->training_percentage }}:{{ +$param->testing_percentage }}</p>
                                             <p class="mb-1"><strong>Total Data training {{ $totalTraining }} </strong> testing {{ $totalTesting }} </p>
                                         </div>
                                     @endif

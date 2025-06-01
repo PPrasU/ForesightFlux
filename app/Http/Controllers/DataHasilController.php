@@ -21,7 +21,7 @@ class DataHasilController extends Controller
         $testing = HasilTesting::orderBy('date', 'desc')->first();
         $akurasi = HasilAkurasi::all();
 
-        $range = $request->input('range', 3); // default 7
+        $range = $request->input('range', 5); // default 7
 
         $hasil = DataHasil::orderBy('date_forecast', 'asc')
             ->take($range)
@@ -42,10 +42,9 @@ class DataHasilController extends Controller
             'hasil',
             'range',
             'range2',
-            'testingChart', // variabel baru untuk grafik
+            'testingChart',
         ));
     }
-
 
     public function hapus(Request $request){
         try {
@@ -82,16 +81,6 @@ class DataHasilController extends Controller
             DB::table('data_hasil')->delete();
             DB::table('hasil_testing')->delete();
 
-            // Hapus semua data pra proses
-            // DataPraProses::delete();
-
-            // Hapus semua data hasil
-            // HasilAkurasi::delete();
-            // HasilTesting::delete();
-            // HasilTraining::delete();
-            // DataHasil::delete();
-            // Jika ingin hapus pra-proses juga, bisa diaktifkan:
-            // DataPraProses::truncate();
             DB::commit();
 
             // Notifikasi ke session

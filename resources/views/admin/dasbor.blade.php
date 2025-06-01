@@ -65,12 +65,12 @@
                           <div class="card bg-primary mini-stat position-relative">
                               <div class="card-body">
                                   <div class="mini-stat-desc">
-                                      <h6 class="text-uppercase verti-label text-white-50">Setting</h6>
+                                      <h6 class="text-uppercase verti-label text-white-50">Parameter</h6>
                                       <div class="text-white">
                                           <h6 class="text-uppercase mt-0 text-white-50">Total</h6>
                                           <h3 class="mb-3 mt-0">6</h3>
                                           <div class="">
-                                              <span class="badge badge-light text-danger"> -29% </span> <span class="ml-2">Dari Hari Sebelumnya</span>
+                                              <span class="badge badge-light text-danger"> -29% </span> <span class="ml-2">Dari Sebelumnya</span>
                                           </div>
                                       </div>
                                       <div class="mini-stat-icon">
@@ -87,9 +87,9 @@
                                       <h6 class="text-uppercase verti-label text-white-50">Import Data</h6>
                                       <div class="text-white">
                                           <h6 class="text-uppercase mt-0 text-white-50">Petunjuk Penggunaan</h6>
-                                          <h3 class="mb-3 mt-0">10</h3>
+                                          <h3 class="mb-3 mt-0">12</h3>
                                           <div class="">
-                                              <span class="badge badge-light text-primary"> 0% </span> <span class="ml-2">Dari Hari Sebelumnya</span>
+                                              <span class="badge badge-light text-primary"> +19% </span> <span class="ml-2">Dari Sebelumnya</span>
                                           </div>
                                       </div>
                                       <div class="mini-stat-icon">
@@ -106,9 +106,9 @@
                                       <h6 class="text-uppercase verti-label text-white-50">Data API</h6>
                                       <div class="text-white">
                                           <h6 class="text-uppercase mt-0 text-white-50">Petunjuk Penggunaan</h6>
-                                          <h3 class="mb-3 mt-0">5</h3>
+                                          <h3 class="mb-3 mt-0">7</h3>
                                           <div class="">
-                                              <span class="badge badge-light text-info"> +89% </span> <span class="ml-2">Dari Hari Sebelumnya</span>
+                                              <span class="badge badge-light text-info"> +8% </span> <span class="ml-2">Dari Hari Sebelumnya</span>
                                           </div>
                                       </div>
                                       <div class="mini-stat-icon">
@@ -175,7 +175,7 @@
                       <div class="col-xl-3">
                           <div class="card">
                               <div class="card-body">
-                                  <h4 class="mt-0 header-title mb-3">Tabel Setting</h4>
+                                  <h4 class="mt-0 header-title mb-3">Tabel Setting Parameter</h4>
                                   <div class="table-responsive order-table">
                                       <table class="table table-hover mb-0">
                                           <thead>
@@ -189,27 +189,32 @@
                                               <tr>
                                                   <th scope="row">1</th>
                                                   <td>Persentase Training (%)</td>
-                                                  <td>80</td>
+                                                  <td>{{ +$dataParam->training_percentage }}</td>
                                               </tr>
                                               <tr>
                                                   <th scope="row">2</th>
                                                   <td>Persentase Testing (%)</td>
-                                                  <td>20</td>
+                                                  <td>{{ +$dataParam->testing_percentage }}</td>
                                               </tr>
                                               <tr>
                                                   <th scope="row">3</th>
                                                   <td>Alpha (0 s/d 1)</td>
-                                                  <td>0.01</td>
+                                                  <td>{{ +$dataParam->alpha }}</td>
                                               </tr>
                                               <tr>
                                                   <th scope="row">4</th>
                                                   <td>Beta (0 s/d 1)</td>
-                                                  <td>0.02</td>
+                                                  <td>{{ +$dataParam->beta }}</td>
                                               </tr>
                                               <tr>
                                                   <th scope="row">5</th>
                                                   <td>Gamma (0 s/d 1)</td>
-                                                  <td>0.03</td>
+                                                  <td>{{ +$dataParam->gamma }}</td>
+                                              </tr>
+                                              <tr>
+                                                  <th scope="row">5</th>
+                                                  <td>Season Length</td>
+                                                  <td>{{ +$dataParam->season_length_harian }}</td>
                                               </tr>
                                           </tbody>
                                       </table>
@@ -218,123 +223,7 @@
                           </div>
                       </div>
                   </div>
-
-                  <div class="row">
-                      <div class="col-xl-6">
-                          <div class="card">
-                              <div class="card-body">
-                                  <h4 class="mt-0 header-title mb-3">Tabel Petunjuk Penggunaan Import Data</h4>
-                                  <div class="table-responsive">
-                                      <table class="table table-hover mb-0">
-                                          <thead>
-                                            <tr>
-                                              <th scope="col">No</th>
-                                              <th scope="col">Judul</th>
-                                              <th scope="col">Deskripsi 1</th>
-                                              <th scope="col">Deskripsi 2</th>
-                                              <th scope="col">Deskripsi 3</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <th scope="row">1</th>
-                                              <td>Cari Sumber Data Historis</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                            </tr>
-                                            <tr>
-                                              <th scope="row">2</th>
-                                              <td>Pilih Aset Kripto lalu Masuk Ke Submenu Historical Data/Data Historis</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                            </tr>
-                                            <tr>
-                                              <th scope="row">3</th>
-                                              <td>Pilih Jangka Waktu, Ubah Mata Uang, Ubah Menjadi Ascending</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                            </tr>
-                                            <tr>
-                                              <th scope="row">4</th>
-                                              <td>Data Historis Yang Sudah Diatur</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                            </tr>
-                                            <tr>
-                                              <th scope="row">5</th>
-                                              <td>Download Data Historis Yang Sudah Diatur</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                              <td>-----</td>
-                                            </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-xl-6">
-                          <div class="card">
-                              <div class="card-body">
-                                  <h4 class="mt-0 header-title mb-3">Tabel Petunjuk Penggunaan API</h4>
-                                  <div class="table-responsive order-table">
-                                    <table class="table table-hover mb-0">
-                                      <thead>
-                                        <tr>
-                                          <th scope="col">No</th>
-                                          <th scope="col">Judul</th>
-                                          <th scope="col">Deskripsi 1</th>
-                                          <th scope="col">Deskripsi 2</th>
-                                          <th scope="col">Deskripsi 3</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr>
-                                          <th scope="row">1</th>
-                                          <td>Cari Sumber Data Historis</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                        </tr>
-                                        <tr>
-                                          <th scope="row">2</th>
-                                          <td>Pilih Aset Kripto lalu Masuk Ke Submenu Historical Data/Data Historis</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                        </tr>
-                                        <tr>
-                                          <th scope="row">3</th>
-                                          <td>Pilih Jangka Waktu, Ubah Mata Uang, Ubah Menjadi Ascending</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                        </tr>
-                                        <tr>
-                                          <th scope="row">4</th>
-                                          <td>Data Historis Yang Sudah Diatur</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                        </tr>
-                                        <tr>
-                                          <th scope="row">5</th>
-                                          <td>Download Data Historis Yang Sudah Diatur</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                          <td>-----</td>
-                                        </tr>
-                                      </tbody>
-                                  </table>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                  
               </div>
           </div>
           </div>

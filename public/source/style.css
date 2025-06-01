@@ -309,7 +309,7 @@ body {
 }
 .header .logo {
     float: left;
-    margin-top: 18px;
+    margin: 10px;
 }
 .header .navbar {
     background: none;
@@ -321,13 +321,14 @@ body {
 }
 .header .nav li {
     margin-right: 15px;
-    float: left;
+    float: right;
     position: relative;
 }
 .header .nav li:last-child {
     margin: 0;
 }
 .header .nav li a {
+    margin-left: 100px;
     color: #2c2d3f;
     font-size: 14px;
     font-weight: 500;
@@ -2433,7 +2434,7 @@ body {
 }
 /* Blockqoute */
 .news-single blockquote {
-    background-image: url("img/blockqoute-bg.jpg");
+    background-image: url("../images/slider.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
