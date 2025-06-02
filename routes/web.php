@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Controllers\KrakenController;
 use App\Http\Controllers\DataAPIController;
 use App\Http\Controllers\DataHasilController;
 use App\Http\Controllers\DasborUserController;
@@ -9,10 +11,9 @@ use App\Http\Controllers\DataImportController;
 use App\Http\Controllers\DasborAdminController;
 use App\Http\Controllers\PetunjukAPIController;
 use App\Http\Controllers\SettingParamController;
+
 use App\Http\Controllers\DataPraProsesController;
 use App\Http\Controllers\PetunjukImportController;
-
-use Illuminate\Support\Facades\Artisan;
 
 Route::get('/migrate-now', function () {
     try {
@@ -52,6 +53,7 @@ Route::get('/migrate-fresh', function () {
     }
 });
 
+Route::post('/kraken/fetch', [KrakenController::class, 'fetchOHLC']);
 
 Route::get('/', function () {
     return view('welcome');
