@@ -4,7 +4,7 @@ services:
     env: docker
     region: singapore
     plan: free
-    buildCommand: ""
+    buildCommand: "composer install --no-dev && php artisan key:generate && php artisan migrate --force"
     startCommand: "php artisan serve --host 0.0.0.0 --port 8000"
     envVars:
       - key: APP_ENV
@@ -18,7 +18,7 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        value: 
+        value: dpg-d0ueum3e5dus73969n6g-a
       - key: DB_PORT
         value: 5432
       - key: DB_DATABASE
@@ -26,4 +26,4 @@ services:
       - key: DB_USERNAME
         value: ffcpadominto
       - key: DB_PASSWORD
-        value: bAEGgea321@hebd
+        value: 2X3eSh1Rt81cPAKl1OqA4obRkjRKND0t
