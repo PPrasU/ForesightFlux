@@ -1,15 +1,29 @@
 services:
   - type: web
-    name: laravel-app
-    env: php
+    name: foresightfluxcp
+    env: docker
+    region: singapore
     plan: free
-    buildCommand: |
-      composer install --no-dev
-      php artisan key:generate
-      php artisan migrate --force
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    buildCommand: ""
+    startCommand: "php artisan serve --host 0.0.0.0 --port 8000"
     envVars:
-      - key: local
+      - key: APP_ENV
         value: production
-      - key: base64:1qy/x6H0fJja0d37hKvr62alRkNwZ7cyJJPFE78ZS6A=
-        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: base64:1qy/x6H0fJja0d37hKvr62alRkNwZ7cyJJPFE78ZS6A=
+      - key: APP_URL
+        value: https://foresightflux-cp.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: 
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: ffcpdb
+      - key: DB_USERNAME
+        value: ffcpadominto
+      - key: DB_PASSWORD
+        value: bAEGgea321@hebd
