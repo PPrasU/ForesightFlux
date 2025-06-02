@@ -12,6 +12,17 @@ use App\Http\Controllers\SettingParamController;
 use App\Http\Controllers\DataPraProsesController;
 use App\Http\Controllers\PetunjukImportController;
 
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/migrate-now', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return 'Migration berhasil dijalankan.';
+    } catch (\Exception $e) {
+        return 'Migration gagal: ' . $e->getMessage();
+    }
+});
+
 Route::get('/', function () {
     return view('welcome');
 })->name('awal');
