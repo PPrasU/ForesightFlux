@@ -35,6 +35,15 @@ Route::get('/check-db', function () {
         return 'Koneksi database gagal: ' . $e->getMessage();
     }
 });
+Route::get('/clear-routes', function () {
+    Artisan::call('route:clear');
+    return 'Route cache cleared!';
+});
+Route::get('/link-storage', function () {
+    Artisan::call('storage:link');
+    return 'Storage linked!';
+});
+
 
 Route::get('/', function () {
     return view('welcome');
