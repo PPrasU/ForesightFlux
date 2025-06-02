@@ -14,7 +14,7 @@ services:
       - key: APP_KEY
         value: base64:1qy/x6H0fJja0d37hKvr62alRkNwZ7cyJJPFE78ZS6A=
       - key: APP_URL
-        value: https://foresightflux-cp.onrender.com
+        value: https://foresightfluxcp.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
