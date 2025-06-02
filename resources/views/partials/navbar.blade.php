@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="logo">                
                 <a href="{{ route('dashboard') }}" class="logo">
-                    <img src="{{ asset('images/Logo_icon.webp') }}" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 150px;">
+                    <img src="{{ asset('images/Logo_icon.webp') }}" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 50px;">
                     <img src="{{ asset('images/Logo.webp') }}" alt="" class="logo-large" style="height: 50px; width: 150px;">
                 </a>
             </div>

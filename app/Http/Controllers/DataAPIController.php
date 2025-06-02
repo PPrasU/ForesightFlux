@@ -20,7 +20,7 @@ class DataAPIController extends Controller
         $data = DataAPI::all();
         $dataPraProses = DataPraProses::exists();
     
-        return view('dataAPI', [
+        return view('dataApi', [
             'data' => $data,
             'sudahPraProses' => $dataPraProses,
         ]);

@@ -43,6 +43,14 @@ Route::get('/link-storage', function () {
     Artisan::call('storage:link');
     return 'Storage linked!';
 });
+Route::get('/migrate-fresh', function () {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true]);
+        return 'Migrate fresh berhasil dijalankan.';
+    } catch (\Exception $e) {
+        return 'Gagal: ' . $e->getMessage();
+    }
+});
 
 
 Route::get('/', function () {

@@ -368,7 +368,6 @@ class SettingParamController extends Controller
         ]);
     }
 
-
     private function runTES($dataTrain, $dataTest, $alpha, $beta, $gamma, $seasonLength){
         $n = count($dataTrain);
         if ($n < 2 * $seasonLength) {

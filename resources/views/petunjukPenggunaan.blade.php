@@ -4,9 +4,6 @@
     <!-- Meta Tags -->
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="keywords" content="Site keywords here" />
-    <meta name="description" content="" />
-    <meta name="copyright" content="" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -86,6 +83,9 @@
                     <ul class="nav menu">
                         <li class="active">
                             <a>Petunjuk Penggunaan Peramalan Harga Kripto</a>
+                        </li>
+                        <li class="active">
+                            <a href="{{ route('dashboard') }}">Menuju Dasbor</a>
                         </li>
                     </ul>
                   </nav>
@@ -186,7 +186,6 @@
               <b>
                 Pilih aset kripto yang ingin dilakukan peramalan, misalnya Bitcoin.
               </b>
-              <br><br><br>
             </div>
           </div>
 
@@ -196,7 +195,7 @@
             </div>
           </div>
 
-        </div>
+        </div><br><br><br>
         {{-- 2 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -236,7 +235,6 @@
                 <b style="color: red">Penting:</b> Ubah bagian Date agar data urut menjadi tanggal terlama (Awal) ke tanggal terbaru (Akhir) 
                 atau bisa disebut Ascending
               </b>
-              <br><br><br><br>
             </div>
           </div>
 
@@ -246,7 +244,7 @@
             </div>
           </div>
 
-        </div>
+        </div><br><br><br><br>
         {{-- 4 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -260,7 +258,7 @@
                 Atur agar kolom Date urut dari tanggal terlama (awal) hingga tanggal terbaru (akhir) untuk 
                 untuk dapat dilakukan proses peramalan
               </b>
-              <br><br><br><br><br>
+              
             </div>
           </div>
 
@@ -270,7 +268,7 @@
             </div>
           </div>
 
-        </div>
+        </div><br><br><br><br><br>
         {{-- 5 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -283,7 +281,7 @@
               <p>
                 Data historis yang diunduh ini berupa file format .csv, nantinya data ini dapat dilakukan 
                 proses peramalan nantinya. Proses peramalan hanya melakukan unggahan data yang sudah diunduh sebelumnya.
-              </p><br>
+              </p>
             </div>
           </div>
 
@@ -292,7 +290,7 @@
               <img src="images/petunjuk-impor-5.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br>
         {{-- 6 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -304,7 +302,7 @@
               <p>
                 Ikuti langkah-langkahnya agar dapat menuju ke halaman import data csv dari <a href="investing.com" target="_blank">investing.com</a> 
                 jangan lupa data csv harus sudah ada agar bisa melakukan import data.
-              </p><br><br>
+              </p>
             </div>
           </div>
 
@@ -313,7 +311,7 @@
               <img src="images/petunjuk-impor-6.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br>
         {{-- 7 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -326,7 +324,7 @@
               <p>
                 Pastikan bahwa semua diisi, jika ada satu yang kosong nanti akan error. Setelah itu klik tombol Import Filenya. Mungkin 
                 proses akan lama, tergantung dari jumlah data historis yang sudah di unduh sebelumnya. 
-              </p><br><br>
+              </p>
             </div>
           </div>
 
@@ -335,7 +333,7 @@
               <img src="images/petunjuk-impor-7.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br>
         {{-- 8 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -347,7 +345,7 @@
               </p>
               <p>
                 Penjelasan mengenai kegunaan kolom-kolom dapat dilihat dibawah tabel.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -356,7 +354,7 @@
               <img src="images/petunjuk-impor-8.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 9 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -369,7 +367,7 @@
               <p>
                 Pra-Proses akan dilakukan oleh sistem, jangan lupa klik tombol "Ya". Kalau tidak maka data nantinya belum bisa dilakukan peramalan. 
                 Pra-Proses ini mungkin akan memakan waktu 5 detik, harap bersabar ya!
-              </p><br>
+              </p>
             </div>
           </div>
 
@@ -378,7 +376,7 @@
               <img src="images/petunjuk-impor-9.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br>
         {{-- 10 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -389,7 +387,7 @@
               </p>
               <p>
                 Sama seperti Pra-Proses, jangan lupa menekan tombol "Iya Dong!" untuk melakukan prosesnya.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -398,7 +396,7 @@
               <img src="images/petunjuk-impor-10.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 11 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -412,7 +410,7 @@
                 Mengingat volatilitas pasar kripto yang sangat tinggi dan dipengaruhi oleh berbagai faktor eksternal, 
                 maka hasil peramalan ini tidak bersifat prediktif absolut. Hasil yang disajikan hanya dimaksudkan 
                 sebagai referensi tambahan (insight), bukan sebagai saran finansial.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -421,7 +419,7 @@
               <img src="images/petunjuk-impor-11.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 12 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -483,7 +481,7 @@
               <p>
                 Pada halaman data API ini kalian tinggal memilih kripto apa yang di inginkan. Tapi data API ini hanya menyediakan maksimum 
                 720 data historis kripto saja.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -492,7 +490,7 @@
               <img src="images/petunjuk-api-1.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 2 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -527,7 +525,7 @@
               <p>
                 Pada proses ini data yang sudah dipilih akan disimpan dan nantinya data ini akan dilakukan 
                 proses peramalan.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -536,7 +534,7 @@
               <img src="images/petunjuk-api-3.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 4 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -549,7 +547,7 @@
               <p>
                 Pra-Proses akan dilakukan oleh sistem, jangan lupa klik tombol "Ya". Kalau tidak maka data nantinya belum bisa dilakukan peramalan. 
                 Pra-Proses ini mungkin akan memakan waktu 5 detik, harap bersabar ya!
-              </p><br>
+              </p>
             </div>
           </div>
 
@@ -558,7 +556,7 @@
               <img src="images/petunjuk-api-4.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br>
         {{-- 5 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -569,7 +567,7 @@
               </p>
               <p>
                 Sama seperti Pra-Proses, jangan lupa menekan tombol "Iya Dong!" untuk melakukan prosesnya.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -578,7 +576,7 @@
               <img src="images/petunjuk-api-5.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 6 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
@@ -592,7 +590,7 @@
                 Mengingat volatilitas pasar kripto yang sangat tinggi dan dipengaruhi oleh berbagai faktor eksternal, 
                 maka hasil peramalan ini tidak bersifat prediktif absolut. Hasil yang disajikan hanya dimaksudkan 
                 sebagai referensi tambahan (insight), bukan sebagai saran finansial.
-              </p><br><br><br>
+              </p>
             </div>
           </div>
 
@@ -601,7 +599,7 @@
               <img src="images/petunjuk-api-6.webp" alt="#" />
             </div>
           </div>
-        </div>
+        </div><br><br><br>
         {{-- 7 --}}
         <div class="row">
           <div class="col-lg-6 col-12">
