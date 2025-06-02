@@ -142,7 +142,7 @@
             </div>
           </div>
         </div>
-        <div class="single-slider" style="background-image: url('images/slider2.jpg')">
+        <div class="single-slider" style="background-image: url('images/Slider2.jpg')">
           <div class="container">
             <div class="row">
               <div class="col-lg-7">
