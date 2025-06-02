@@ -493,12 +493,12 @@ class DataAPIController extends Controller
                 Cache::put('cryptoPairs', $cryptoPairs, now()->addHour());
             }
             Http::timeout(3)->get('https://api.kraken.com/0/public/Time');
-            return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'));
+            return view('input.dataApi', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'));
         } catch (\Throwable $e) {
             // fallback jika API dan cache gagal
             $cryptoPairs = Cache::get('cryptoPairs', collect()); // Kosong jika tak ada cache
 
-            return view('input.dataAPI', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'))
+            return view('input.dataApi', compact('dataSource', 'dataAPI', 'cryptoPairs', 'cryptoNames'))
                 ->with('error', '❌ Gagal ambil data dari API: ' . $e->getMessage());
         }
     }
@@ -1038,7 +1038,7 @@ class DataAPIController extends Controller
                 'text' => 'Data sudah siap untuk dilakukan pra-proses.', 
                 'time' => Carbon::now()->toDateTimeString(), 
             ]);
-            return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
+            return redirect()->route('data.dataApi')->with('Success', 'Data API berhasil diambil dan disimpan.');
         } catch (\Throwable $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -1136,14 +1136,14 @@ class DataAPIController extends Controller
             
             DB::beginTransaction();
             // Ambil semua data_source dengan jenis API
-            // $sources = DataSource::where('sumber', 'API')->get();
+            $sources = DataSource::where('sumber', 'API')->get();
             
             // Hapus semuanya (otomatis akan menghapus data_api yang berkaitan karena onDelete('cascade'))
-            // foreach ($sources as $source) {
-            //     $source->delete();
-            // }
+            foreach ($sources as $source) {
+                $source->delete();
+            }
             
-            DB::table('data_api')->delete();//khusus sqlite
+            // DB::table('data_api')->delete();//khusus sqlite
             DB::commit();
 
             session()->push('notifications', [
@@ -1153,7 +1153,7 @@ class DataAPIController extends Controller
                 'text' => 'Data berhasil dihapus.',
                 'time' => Carbon::now()->toDateTimeString(), 
             ]); 
-            return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil dihapus.');
+            return redirect()->route('data.dataApi')->with('Success', 'Data API berhasil dihapus.');
         }catch(\Exception $e){
             DB::rollBack();
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());

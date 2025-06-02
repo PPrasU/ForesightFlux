@@ -230,15 +230,15 @@ class DataImporTController extends Controller
             DB::beginTransaction();
 
             // Ambil semua data_source dengan jenis Import
-            // $sources = DataSource::where('sumber', 'Import')->get();
+            $sources = DataSource::where('sumber', 'Import')->get();
             
 
             // Hapus semuanya (otomatis akan menghapus data_import yang berkaitan karena onDelete('cascade'))
-            // foreach ($sources as $source) {
-            //     $source->delete();
-            // }
+            foreach ($sources as $source) {
+                $source->delete();
+            }
 
-            DB::table('data_import')->delete();//khusus sqlite
+            // DB::table('data_import')->delete();//khusus sqlite
             DB::commit();
 
             session()->push('notifications', [
