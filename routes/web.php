@@ -22,6 +22,18 @@ Route::get('/migrate-now', function () {
         return 'Migration gagal: ' . $e->getMessage();
     }
 });
+Route::get('/config-cache', function () {
+    Artisan::call('config:cache');
+    return 'Config cache sudah di-refresh';
+});
+Route::get('/check-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return 'Database terkoneksi dengan baik.';
+    } catch (\Exception $e) {
+        return 'Koneksi database gagal: ' . $e->getMessage();
+    }
+});
 
 Route::get('/', function () {
     return view('welcome');
