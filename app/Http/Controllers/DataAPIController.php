@@ -1158,7 +1158,7 @@ class DataAPIController extends Controller
                 'text' => 'Data berhasil dihapus.',
                 'time' => Carbon::now()->toDateTimeString(), 
             ]); 
-            return redirect()->route('data.dataApi')->with('Success', 'Data API berhasil dihapus.');
+            return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil dihapus.');
         }catch(\Exception $e){
             DB::rollBack();
             return redirect()->back()->with('error', 'Huhuhuhu gagal hapus data nih: ' . $e->getMessage());

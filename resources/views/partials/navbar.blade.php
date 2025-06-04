@@ -114,38 +114,38 @@
                 <div class="navbar-wrapper" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <ul class="navigation-menu">
                         <li class="has-submenu {{ Request::is('dasbor') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
+                            <a href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
                         </li>
                         <li class="has-submenu {{ Request::is('pergerakan-kripto') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
+                            <a href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
                         </li>
                         <li class="has-submenu {{ Request::is('data/*') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
+                            <a href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
                             <ul class="submenu">
                                 <li class="{{ Request::is('data/API*') ? 'active' : '' }}">
-                                    <a style="font-size: 8px" href="{{ route('data.dataAPI') }}">Data dari API</a>
+                                    <a href="{{ route('data.dataAPI') }}">Data dari API</a>
                                 </li>
                                 <li class="{{ Request::is('data/import*') ? 'active' : '' }}">
-                                    <a style="font-size: 8px" href="{{ route('data.importData') }}">Import Data</a>
+                                    <a href="{{ route('data.importData') }}">Import Data</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="has-submenu {{ Request::is('peramalan/*') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
+                            <a href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
                             <ul class="submenu">
                                 <li class="{{ Request::is('peramalan/proses*') ? 'active' : '' }}">
-                                    <a style="font-size: 8px" href="{{ route('peramalan.index') }}">Proses Peramalan</a>
+                                    <a href="{{ route('peramalan.index') }}">Proses Peramalan</a>
                                 </li>
                                 <li class="{{ Request::is('peramalan/hasil*') ? 'active' : '' }}">
-                                    <a style="font-size: 8px" href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
+                                    <a href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
+                            <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
                         </li>
                         <li class="has-submenu {{ Request::is('pertanyaan-umum') ? 'active' : '' }}">
-                            <a style="font-size: 8px" href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
+                            <a href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
                         </li>
                         <style>
                             .navbar-wrapper {
@@ -181,7 +181,7 @@
                     </ul>
                     <ul class="navigation-menu">
                         <li class="has-submenu">
-                            <div id="datetime" class="breadcrumb-item" style="color: #9e9e9e; font-size: 9px"></div>
+                            <div id="datetime" class="breadcrumb-item" style="color: #9e9e9e"></div>
                         </li>
                     </ul>
                 </div>
