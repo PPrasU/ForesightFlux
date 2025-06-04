@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\DataAPI;
+use App\Models\DataHasil;
 use App\Models\DataSource;
 use App\Models\SettingParam;
 use Illuminate\Http\Request;

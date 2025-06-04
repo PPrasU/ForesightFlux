@@ -107,7 +107,7 @@
                                         </div>
                                     </div>
                                     
-                                    <form id="apiData" method="POST" action="{{ url('/kraken/fetch') }}">
+                                    <form id="apiData" method="POST" action="{{ url('data.postDataAPI') }}">
                                         @csrf
                                         {{-- Pilih Kripto --}}
                                         <div class="form-group">
