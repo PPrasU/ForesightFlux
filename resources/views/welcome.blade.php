@@ -13,8 +13,8 @@
     <title>ForesightFluxCP | Homepage</title>
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ secure_asset('images/Logo.webp') }}" />
-    <link rel="icon" href="{{ secure_asset('images/Logo_icon.webp') }}" />
+    <link rel="icon" href="{{ asset('images/Logo.webp') }}" />
+    <link rel="icon" href="{{ asset('images/Logo_icon.webp') }}" />
 
     <!-- Google Fonts -->
     <link
@@ -23,28 +23,28 @@
     />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/bootstrap.min.css') }}" />
     <!-- Nice Select CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/nice-select.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/nice-select.css') }}" />
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/font-awesome.min.css') }}" />
     <!-- icofont CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/icofont.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/icofont.css') }}" />
     <!-- Slicknav -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/slicknav.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/slicknav.min.css') }}" />
     <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/owl-carousel.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/owl-carousel.css') }}" />
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/datepicker.css') }}" />
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/animate.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/animate.min.css') }}" />
     <!-- Magnific Popup CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/magnific-popup.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/magnific-popup.css') }}" />
 
     <!-- Medipro CSS -->
-    <link rel="stylesheet" href="{{ secure_asset('source/css/normalize.css') }}" />
-    <link rel="stylesheet" href="{{ secure_asset('source/style.css') }}" />
-    <link rel="stylesheet" href="{{ secure_asset('source/css/responsive.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/normalize.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('source/css/responsive.css') }}" />
   </head>
   <body>
     <!-- Preloader -->
@@ -73,7 +73,7 @@
             <div class="row">
               <div class="col-lg-3 col-md-3 col-12">
                 <div class="logo">
-                  <a href="/"><img src="{{ secure_asset('images/Logo.webp') }}" alt="Tempat logo" style="height: 55px; width: 180px;"/></a>
+                  <a href="/"><img src="{{ asset('images/Logo.webp') }}" alt="Tempat logo" style="height: 55px; width: 180px;"/></a>
                 </div>
                 <div class="mobile-nav"></div>
               </div>
@@ -83,6 +83,9 @@
                     <ul class="nav menu">
                         <li class="active">
                             <a>Peramalan Harga Kripto Berbasis Data Historis</a>
+                        </li>
+                        <li class="active d-block d-lg-none">
+                            <a href="{{ route('dashboard') }}">Menuju Dasbor</a>
                         </li>
                     </ul>
                   </nav>
@@ -309,10 +312,10 @@
               <ul class="table-list">
                 <p style="margin-bottom: 15px">Berisi rincian seperti</p>
                 <li class="cross">
-                  <i class="icofont icofont-ui-close"></i>Cara Gunain Menu Impor Data
+                  <i class="icofont icofont-ui-check"></i>Cara Gunain Menu Impor Data
                 </li>
                 <li class="cross">
-                  <i class="icofont icofont-ui-close"></i>Cara Gunain Menu Data Dari API
+                  <i class="icofont icofont-ui-check"></i>Cara Gunain Menu Data Dari API
                 </li>
                 <li class="cross">
                   <i class="icofont icofont-ui-check"></i>Nah Kalo Udah Paham Baru Ke Dasbor
@@ -380,45 +383,45 @@
     </footer>
 
     <!-- jquery Min JS -->
-    <script src="{{ secure_asset('source/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('source/js/jquery.min.js') }}"></script>
     <!-- jquery Migrate JS -->
-    <script src="{{ secure_asset('source/js/jquery-migrate-3.0.0.js') }}"></script>
+    <script src="{{ asset('source/js/jquery-migrate-3.0.0.js') }}"></script>
     <!-- jquery Ui JS -->
     <script src="source/js/jquery-ui.min.js"></script>
     <!-- Easing JS -->
-    <script src="{{ secure_asset('source/js/easing.js') }}"></script>
+    <script src="{{ asset('source/js/easing.js') }}"></script>
     <!-- Color JS -->
-    <script src="{{ secure_asset('source/js/colors.js') }}"></script>
+    <script src="{{ asset('source/js/colors.js') }}"></script>
     <!-- Popper JS -->
-    <script src="{{ secure_asset('source/js/popper.min.js') }}"></script>
+    <script src="{{ asset('source/js/popper.min.js') }}"></script>
     <!-- Bootstrap Datepicker JS -->
-    <script src="{{ secure_asset('source/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('source/js/bootstrap-datepicker.js') }}"></script>
     <!-- Jquery Nav JS -->
-    <script src="{{ secure_asset('source/js/jquery.nav.js') }}"></script>
+    <script src="{{ asset('source/js/jquery.nav.js') }}"></script>
     <!-- Slicknav JS -->
-    <script src="{{ secure_asset('source/js/slicknav.min.js') }}"></script>
+    <script src="{{ asset('source/js/slicknav.min.js') }}"></script>
     <!-- ScrollUp JS -->
-    <script src="{{ secure_asset('source/js/jquery.scrollUp.min.js') }}"></script>
+    <script src="{{ asset('source/js/jquery.scrollUp.min.js') }}"></script>
     <!-- Niceselect JS -->
-    <script src="{{ secure_asset('source/js/niceselect.js') }}"></script>
+    <script src="{{ asset('source/js/niceselect.js') }}"></script>
     <!-- Tilt Jquery JS -->
-    <script src="{{ secure_asset('source/js/tilt.jquery.min.js') }}"></script>
+    <script src="{{ asset('source/js/tilt.jquery.min.js') }}"></script>
     <!-- Owl Carousel JS -->
-    <script src="{{ secure_asset('source/js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('source/js/owl-carousel.js') }}"></script>
     <!-- counterup JS -->
-    <script src="{{ secure_asset('source/js/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('source/js/jquery.counterup.min.js') }}"></script>
     <!-- Steller JS -->
-    <script src="{{ secure_asset('source/js/steller.js') }}"></script>
+    <script src="{{ asset('source/js/steller.js') }}"></script>
     <!-- Wow JS -->
-    <script src="{{ secure_asset('source/js/wow.min.js') }}"></script>
+    <script src="{{ asset('source/js/wow.min.js') }}"></script>
     <!-- Magnific Popup JS -->
-    <script src="{{ secure_asset('source/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('source/js/jquery.magnific-popup.min.js') }}"></script>
     <!-- Counter Up CDN JS -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="{{ secure_asset('source/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('source/js/bootstrap.min.js') }}"></script>
     <!-- Main JS -->
-    <script src="{{ secure_asset('source/js/main.js') }}"></script>
+    <script src="{{ asset('source/js/main.js') }}"></script>
     <script>
       function scrollToTop(e) {
         e.preventDefault();

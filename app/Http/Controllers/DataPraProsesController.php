@@ -494,7 +494,7 @@ class DataPraProsesController extends Controller
             $dataPraProses = DataPraProses::orderBy('date')->get();
 
             if ($dataPraProses->isEmpty()) {
-                return redirect()->back()->with('error', 'Data API kosong. Tidak bisa melakukan pra-proses.');
+                return redirect()->back()->with('error', 'Data Pra Proses kosong. Tidak bisa melakukan proses peramalan.');
             }
 
             $sourceId = $dataPraProses->first()->source_id;

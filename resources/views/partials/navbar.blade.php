@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="logo">                
                 <a href="{{ route('dashboard') }}" class="logo">
-                    <img src="{{ asset('images/Logo_icon.webp') }}" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 50px;">
+                    <img src="{{ asset('images/Logo.webp') }}" alt="Tempat Logo" class="logo-small" style="height: 50px; width: 150px;">
                     <img src="{{ asset('images/Logo.webp') }}" alt="" class="logo-large" style="height: 50px; width: 150px;">
                 </a>
             </div>
@@ -114,38 +114,38 @@
                 <div class="navbar-wrapper" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <ul class="navigation-menu">
                         <li class="has-submenu {{ Request::is('dasbor') ? 'active' : '' }}">
-                            <a href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
+                            <a style="font-size: 8px" href="{{ route('dashboard') }}"><i class="mdi mdi-home"></i>Dasbor</a>
                         </li>
                         <li class="has-submenu {{ Request::is('pergerakan-kripto') ? 'active' : '' }}">
-                            <a href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
+                            <a style="font-size: 8px" href="{{ route('pergerakan-kripto') }}"><i class="mdi mdi-finance"></i>Pergerakan Kripto Real-Time</a>
                         </li>
                         <li class="has-submenu {{ Request::is('data/*') ? 'active' : '' }}">
-                            <a href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
+                            <a style="font-size: 8px" href="#"><i class="mdi mdi-buffer"></i>Pengambilan Data</a>
                             <ul class="submenu">
                                 <li class="{{ Request::is('data/API*') ? 'active' : '' }}">
-                                    <a href="{{ route('data.dataAPI') }}">Data dari API</a>
+                                    <a style="font-size: 8px" href="{{ route('data.dataAPI') }}">Data dari API</a>
                                 </li>
                                 <li class="{{ Request::is('data/import*') ? 'active' : '' }}">
-                                    <a href="{{ route('data.importData') }}">Import Data</a>
+                                    <a style="font-size: 8px" href="{{ route('data.importData') }}">Import Data</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="has-submenu {{ Request::is('peramalan/*') ? 'active' : '' }}">
-                            <a href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
+                            <a style="font-size: 8px" href="#"><i class="mdi mdi-black-mesa"></i>Peramalan</a>
                             <ul class="submenu">
                                 <li class="{{ Request::is('peramalan/proses*') ? 'active' : '' }}">
-                                    <a href="{{ route('peramalan.index') }}">Proses Peramalan</a>
+                                    <a style="font-size: 8px" href="{{ route('peramalan.index') }}">Proses Peramalan</a>
                                 </li>
                                 <li class="{{ Request::is('peramalan/hasil*') ? 'active' : '' }}">
-                                    <a href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
+                                    <a style="font-size: 8px" href="{{ route('peramalan.hasil') }}">Hasil Peramalan</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
-                            <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
+                            <a style="font-size: 8px" href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
                         </li>
                         <li class="has-submenu {{ Request::is('pertanyaan-umum') ? 'active' : '' }}">
-                            <a href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
+                            <a style="font-size: 8px" href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
                         </li>
                         <style>
                             .navbar-wrapper {
@@ -181,7 +181,7 @@
                     </ul>
                     <ul class="navigation-menu">
                         <li class="has-submenu">
-                            <div id="datetime" class="breadcrumb-item" style="color: #9e9e9e;"></div>
+                            <div id="datetime" class="breadcrumb-item" style="color: #9e9e9e; font-size: 9px"></div>
                         </li>
                     </ul>
                 </div>

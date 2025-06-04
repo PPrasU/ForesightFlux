@@ -70,7 +70,7 @@
                                         <div>
                                             @if ($data->isEmpty())
                                                 <a href="{{ route('data.inputDataAPI') }}" class="btn btn-primary waves-effect waves-light"> 
-                                                    Datanya Kosong Nih, Yuk Pilih Data Kriptonya
+                                                    Pilih Data Kripto
                                                 </a>
                                             @else
                                                 <button id="hapusDataAPI" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
@@ -110,37 +110,38 @@
                                             <p class="mb-1"><strong>Total Data:</strong> {{ $total }}</p>
                                         </div>
                                     @endif
-
-                                    <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 100px; font-style: italic;">Tanggal</th>
-                                                <th>Open</th>
-                                                <th>High</th>
-                                                <th>Low</th>
-                                                <th style="font-style: italic;">Close</th>
-                                                <th style="width: 100px">VWAP</th>
-                                                <th style="width: 150px">Volume</th>
-                                                <th style="width: 100px">Count</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data as $row)
+                                    <div class="table-responsive">
+                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
                                                 <tr>
-                                                    <td style="text-align: center" hidden>{{ $row->id }}</td>
-                                                    <td style="text-align: center; font-style: italic;">{{ $row->date }}</td>
-                                                    <td>{{ $row->open }}</td>
-                                                    <td>{{ $row->high }}</td>
-                                                    <td>{{ $row->low }}</td>
-                                                    <td style="font-style: italic;">{{ $row->close }}</td>
-                                                    <td>{{ $row->vwap }}</td>
-                                                    <td>{{ $row->vol }}</td>
-                                                    <td>{{ $row->count }}</td>
+                                                    <th style="width: 10px" hidden>No</th>
+                                                    <th style="width: 100px; font-style: italic;">Tanggal</th>
+                                                    <th>Open</th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    <th style="font-style: italic;">Close</th>
+                                                    <th style="width: 100px">VWAP</th>
+                                                    <th style="width: 150px">Volume</th>
+                                                    <th style="width: 100px">Count</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data as $row)
+                                                    <tr>
+                                                        <td style="text-align: center" hidden>{{ $row->id }}</td>
+                                                        <td style="text-align: center; font-style: italic;">{{ $row->date }}</td>
+                                                        <td>{{ $row->open }}</td>
+                                                        <td>{{ $row->high }}</td>
+                                                        <td>{{ $row->low }}</td>
+                                                        <td style="font-style: italic;">{{ $row->close }}</td>
+                                                        <td>{{ $row->vwap }}</td>
+                                                        <td>{{ $row->vol }}</td>
+                                                        <td>{{ $row->count }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
 
                                     @if ($source)
                                         @php

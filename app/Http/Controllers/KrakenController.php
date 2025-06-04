@@ -547,10 +547,12 @@ class KrakenController extends Controller
                 'text' => 'Data sudah siap untuk dilakukan pra-proses.', 
                 'time' => Carbon::now()->toDateTimeString(), 
             ]);
-            return response()->json(['message' => 'Data berhasil diambil dan disimpan.']);
+            // return response()->json(['message' => 'Data berhasil diambil dan disimpan.']);
+            return redirect()->route('data.dataApi')->with('Success', 'Data API berhasil diambil dan disimpan.');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Gagal mengambil data.'], 500);
+            // return response()->json(['error' => 'Gagal mengambil data.'], 500);
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

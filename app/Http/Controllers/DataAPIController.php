@@ -1133,8 +1133,12 @@ class DataAPIController extends Controller
 
     public function hapus(){
         try{
+            if (DataHasil::exists()) {
+                return redirect()->back()->with('error', 'Hapus data pada halaman hasil peramalan terlebih dahulu, sebelum menghapus data impor.');
+            } 
             
             DB::beginTransaction();
+
             // Ambil semua data_source dengan jenis API
             $sources = DataSource::where('sumber', 'API')->get();
             

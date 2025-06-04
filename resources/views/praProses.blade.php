@@ -79,8 +79,9 @@
 
                                     @if ($source)
                                         <div class="mb-4">
-                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}<strong style="margin-left: 15px">Total Data:</strong> {{ $total }}
-                                                <strong style="margin-left: 15px">Sumber:</strong>
+                                            <p class="mb-1"><strong>Nama Kripto:</strong> {{ $name }}<strong style="margin-left: 15px">Total Data:</strong> {{ $total }}</p>
+                                            <p class="mb-1">
+                                                <strong>Sumber:</strong>
                                                 @if($source->sumber === 'API')
                                                     API 🖥️
                                                 @elseif($source->sumber === 'Import')

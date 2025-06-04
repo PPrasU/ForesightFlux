@@ -306,7 +306,7 @@
             document.getElementById("hapusSemuaData").addEventListener("click", function () {
                 Swal.fire({
                     title: 'Yakin Mau Hapus Semua Data?',
-                    text: 'Aksi ini akan menghapus semua data API yang ada! Yakin mau melanjutkan?',
+                    text: 'Aksi ini akan menghapus data Hasil dan Pra Proses yang ada! Yakin mau melanjutkan?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Hapus!',

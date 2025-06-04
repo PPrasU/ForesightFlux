@@ -103,34 +103,36 @@
                                         </div>
                                     @endif
                                     
-                                    <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 10px" hidden>No</th>
-                                                <th style="width: 100px; font-style: italic">Date</th>
-                                                <th style="font-style: italic;">Price</th>
-                                                <th>Open</th>
-                                                <th>High</th>
-                                                <th>Low</th>
-                                                <th>Vol.</th>
-                                                <th>Change %</th>
-                                            </tr>
-                                        </thead>                                     
-                                        <tbody>
-                                            @foreach ($data as $row)
+                                    <div class="table-responsive">
+                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
                                                 <tr>
-                                                    <td style="text-align: center" hidden>{{ $row->id }}</td>
-                                                    <td style="text-align: center; font-style: italic">{{ $row->date }}</td>
-                                                    <td style="font-style: italic;">{{ $row->price }}</td>
-                                                    <td>{{ $row->open }}</td>
-                                                    <td>{{ $row->high }}</td>
-                                                    <td>{{ $row->low }}</td>
-                                                    <td>{{ $row->vol }}</td>
-                                                    <td>{{ $row->change }}</td>
+                                                    <th style="width: 10px" hidden>No</th>
+                                                    <th style="width: 100px; font-style: italic">Date</th>
+                                                    <th style="font-style: italic;">Price</th>
+                                                    <th>Open</th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    <th>Vol.</th>
+                                                    <th>Change %</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>                                     
+                                            <tbody>
+                                                @foreach ($data as $row)
+                                                    <tr>
+                                                        <td style="text-align: center" hidden>{{ $row->id }}</td>
+                                                        <td style="text-align: center; font-style: italic">{{ $row->date }}</td>
+                                                        <td style="font-style: italic;">{{ $row->price }}</td>
+                                                        <td>{{ $row->open }}</td>
+                                                        <td>{{ $row->high }}</td>
+                                                        <td>{{ $row->low }}</td>
+                                                        <td>{{ $row->vol }}</td>
+                                                        <td>{{ $row->change }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
 
                                     @if ($source)
                                         @php
@@ -250,7 +252,7 @@
                         // Menampilkan loading setelah konfirmasi
                         Swal.fire({
                             title: 'Siap Boskuh!',
-                            text: 'Sistemnya mikir dulu bentar, kayak lagi ujian 😬🧠',
+                            text: 'Tunggu sebentar ya, sistemnya lagi kerja keras nih 🤖💪',
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             didOpen: () => {

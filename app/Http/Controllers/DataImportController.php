@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\DataHasil;
 use App\Models\DataImport;
 use App\Models\DataSource;
 use App\Models\SettingParam;
@@ -227,8 +228,12 @@ class DataImporTController extends Controller
     
     public function hapus() {
         try {
-            DB::beginTransaction();
+            if (DataHasil::exists()) {
+                return redirect()->back()->with('error', 'Hapus data pada halaman hasil peramalan terlebih dahulu, sebelum menghapus data impor.');
+            } 
 
+            DB::beginTransaction();
+            
             // Ambil semua data_source dengan jenis Import
             $sources = DataSource::where('sumber', 'Import')->get();
             

@@ -45,6 +45,18 @@
     <link rel="stylesheet" href="{{ asset('source/css/normalize.css') }}" />
     <link rel="stylesheet" href="{{ asset('source/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('source/css/responsive.css') }}" />
+    <style>
+      a {
+        color: #007bff;
+        text-decoration: underline;
+      }
+
+      a:hover {
+        color: #0056b3;
+        text-decoration: none;
+      }
+    </style>
+
   </head>
   <body>
     <!-- Preloader -->
@@ -84,8 +96,8 @@
                         <li class="active">
                             <a>Petunjuk Penggunaan Peramalan Harga Kripto</a>
                         </li>
-                        <li class="active">
-                            <a href="{{ route('dashboard') }}">Menuju Dasbor</a>
+                        <li class="d-none d-sm-block d-md-none">
+                            <a href="{{ route('dashboard') }}" class="btn btn-primary waves-effect waves-light">Menuju Dasbor</a>
                         </li>
                     </ul>
                   </nav>
@@ -93,7 +105,7 @@
               </div>
               <div class="col-lg-2 col-12">
                 <div class="get-quote">
-                  <a href="{{ route('dashboard') }}" class="btn">Dasbor</a>
+                  <a href="{{ route('dashboard') }}" class="btn btn-primary waves-effect waves-light">Dasbor</a>
                 </div>
               </div>
             </div>
@@ -620,6 +632,185 @@
               <img src="images/petunjuk-api-7.webp" alt="#" />
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    {{-- Beberapa data --}}
+    <section class="call-action-1 overlay" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-12">
+            <div class="content">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="why-choose section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="section-title">
+              <h2>Beberapa data historis untuk impor (bila males ke investing.com)</h2>
+              <img src="images/section-img.png" alt="#" />
+              <p>
+                Tingkat kesulitan: <a style="color: green">Sangat Mudah</a><br>
+                Kelemahan: <a style="color: red">Data yang didapat terbatas</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        {{-- baris 1 --}}
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>Bitcoin, Ethereum, Tether USDt, XRP, BNB</h3>
+              <h6>
+                2020-2025
+              </h6>
+              <ul style="list-style-type: disc; padding-left: 20px;">
+                <li>
+                  <a href="{{ asset('files/Bitcoin Historical Data (2020-2025).csv') }}" download>
+                    Bitcoin Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Ethereum Historical Data (2020-2025).csv') }}" download>
+                    Ethereum Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Tether USDt Historical Data (2020-2025).csv') }}" download>
+                    Tether USDt Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/XRP Historical Data (2020-2025).csv') }}" download>
+                    XRP Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/BNB Historical Data (2020-2025).csv') }}" download>
+                    BNB Historical Data (2020-2025).csv
+                  </a>
+                </li>
+              </ul>
+              <br>
+              <h6>
+                Maks data
+              </h6>
+              <ul style="list-style-type: disc; padding-left: 20px;">
+                <li>
+                  <a href="{{ asset('files/Bitcoin Historical Data (2013-2025).csv') }}" download>
+                    Bitcoin Historical Data (2013-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Ethereum Historical Data (2016-2025).csv') }}" download>
+                    Ethereum Historical Data (2016-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Tether USDt Historical Data (2017-2025).csv') }}" download>
+                    Tether USDt Historical Data (2017-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/XRP Historical Data (2015-2025).csv') }}" download>
+                    XRP Historical Data (2015-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/BNB Historical Data (2017-2025).csv') }}" download>
+                    BNB Historical Data (2017-2025).csv
+                  </a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="choose-left">
+              <h3>Solana, USDC, Dogecoin, TRON, Cardano</h3>
+              <h6>
+                2020-2025
+              </h6>
+              <ul style="list-style-type: disc; padding-left: 20px;">
+                <li>
+                  <a href="{{ asset('files/Solana Historical Data (2020-2025).csv') }}" download>
+                    Solana Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/USDC Historical Data (2020-2025).csv') }}" download>
+                    USDC Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Dogecoin Historical Data (2020-2025).csv') }}" download>
+                    Dogecoin Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/TRON Historical Data (2020-2025).csv') }}" download>
+                    TRON Historical Data (2020-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Cardano Historical Data (2020-2025).csv') }}" download>
+                    Cardano Historical Data (2020-2025).csv
+                  </a>
+                </li>
+              </ul>
+              <br>
+              <h6>
+                Maks data
+              </h6>
+              <ul style="list-style-type: disc; padding-left: 20px;">
+                <li>
+                  <a href="{{ asset('files/USDC Historical Data (2018-2025).csv') }}" download>
+                    USDC Historical Data (2018-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Dogecoin Historical Data (2017-2025).csv') }}" download>
+                    Dogecoin Historical Data (2017-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/TRON Historical Data (2017-2025).csv') }}" download>
+                    TRON Historical Data (2017-2025).csv
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ asset('files/Cardano Historical Data (2018-2025).csv') }}" download>
+                    Cardano Historical Data (2018-2025).csv
+                  </a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+         
+
+          <div class="col-lg-12">
+            <div class="section-title">
+              <br><br>
+              <h5>Catatan</h5>
+              <img src="images/section-img.png" alt="#" />
+              <p>
+                <strong>2020–2025:</strong> Data dimulai dari 01 Januari 2020 <em>(jika ada)</em> sampai 31 Mei 2025<br>
+                <strong>Maks data:</strong> Data diambil dari paling awal sesuai dengan yang ada di 
+                <a href="https://www.investing.com" target="_blank">investing.com</a> sampai 31 Mei 2025
+              </p>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
