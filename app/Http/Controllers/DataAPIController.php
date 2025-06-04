@@ -1039,7 +1039,7 @@ class DataAPIController extends Controller
                 'text' => 'Data sudah siap untuk dilakukan pra-proses.', 
                 'time' => Carbon::now()->toDateTimeString(), 
             ]);
-            return redirect()->route('data.dataApi')->with('Success', 'Data API berhasil diambil dan disimpan.');
+            return redirect()->route('data.dataAPI')->with('Success', 'Data API berhasil diambil dan disimpan.');
         } catch (\Throwable $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
