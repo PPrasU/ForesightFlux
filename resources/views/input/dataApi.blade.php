@@ -107,7 +107,8 @@
                                         </div>
                                     </div>
                                     
-                                    <form id="apiData" method="POST" action="{{ url('data.postDataAPI') }}">
+                                    {{-- <form id="apiData" method="POST" action="{{ url('data.postDataAPI') }}"> --}}
+                                    <form action="{{ route('data.postDataAPI') }}" method="POST" enctype="multipart/form-data" id="apiData">
                                         @csrf
                                         {{-- Pilih Kripto --}}
                                         <div class="form-group">
