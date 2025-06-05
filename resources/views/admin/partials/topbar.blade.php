@@ -2,7 +2,7 @@
     <!-- LOGO -->
     <div class="topbar-left">
       {{-- <a href="{{ route('admin.dasbor') }}" class="logo"> --}}
-      <a href="{{ route('admin.settingParams') }}" class="logo">
+      <a href="{{ route('settingParams') }}" class="logo">
         <span>
           <img src="{{ asset('images/Logo.png') }}" alt="" height="60" />
         </span>

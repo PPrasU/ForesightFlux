@@ -71,7 +71,7 @@
               <div class="container-fluid">
                 {{-- Isine tabel --}}
                 <div class="row">
-                  <div class="col-xl-12">
+                  <div class="col-xl-9">
                       <div class="card">
                           <div class="card-body">
                             @if(session('error'))
@@ -190,17 +190,23 @@
                                         <input type="hidden" name="id" id="setting-id">
                                         
                                         <div class="mb-3">
-                                          <label for="alpha" class="form-label">Alpha</label>
-                                          <input type="text" class="form-control" name="alpha" id="alpha">
+                                            <label for="alpha" class="form-label">Alpha</label>
+                                            <input type="text" class="form-control" name="alpha" id="alpha"
+                                                    value="{{ old('alpha', $row->alpha !== null ? floatval($row->alpha) : '') }}">
                                         </div>
+
                                         <div class="mb-3">
-                                          <label for="beta" class="form-label">Beta</label>
-                                          <input type="text" class="form-control" name="beta" id="beta">
+                                            <label for="beta" class="form-label">Beta</label>
+                                            <input type="text" class="form-control" name="beta" id="beta"
+                                                    value="{{ old('beta', $row->beta !== null ? floatval($row->beta) : '') }}">
                                         </div>
+
                                         <div class="mb-3">
-                                          <label for="gamma" class="form-label">Gamma</label>
-                                          <input type="text" class="form-control" name="gamma" id="gamma">
+                                            <label for="gamma" class="form-label">Gamma</label>
+                                            <input type="text" class="form-control" name="gamma" id="gamma"
+                                                    value="{{ old('gamma', $row->gamma !== null ? floatval($row->gamma) : '') }}">
                                         </div>
+
                                         <div class="mb-3">
                                           <label for="training_percentage" class="form-label">Training %</label>
                                           <input type="number" class="form-control" name="training_percentage" id="training_percentage" min="0" max="100">
@@ -239,8 +245,20 @@
                           </div>
                       </div>
                   </div>
+                  <div class="col-xl-3">
+                    <div class="card">
+                          <div class="card-body">
+                            <h3 class="mt-0 header-title">Cara Set Parameter</h3>
+                            <p>
+                                <strong>> Tekan tombol (🔍 Jalankan Grid Search)</strong><br>
+                                <strong>> Pilih MAPE terkecil, ingat α β γ training dan testing</strong><br>
+                                <strong>> Edit tabel setting params agar nilai α β γ training dan testing berisi dari hasil MAPE terbaik</strong><br>
+                            </p>
+                          </div>
+                    </div>
+                  </div>
                 </div>
-                @if ($training->count() > 0)
+                {{-- @if ($training->count() > 0)
                   <div class="row">
                     <div class="col-xl-12">
                         <div class="card">
@@ -313,7 +331,6 @@
                         </div>
                     </div>
                   </div>
-                  {{-- buat ngecek aja ini --}}
                   <div class="row">
                       <div class="col-xl-12">
                           <div class="card">
@@ -383,7 +400,7 @@
                           </div>
                       </div>
                   </div>
-                @endif
+                @endif --}}
                 
                 @if ($dataPraproses->count() > 0)
                   <div class="row">
@@ -393,7 +410,7 @@
                                   <div class="d-flex justify-content-between align-items-center mb-4">
                                       <h3 class="mt-0 header-title">Kombinasi Parameter Terbaik</h3>
                                   </div>
-                                  <form id="optimizeForm" method="POST" action="{{ route('admin.optimize') }}">
+                                  <form id="optimizeForm" method="POST" action="{{ route('optimize') }}">
                                     @csrf
                                     <button id="optimizeBtn" class="btn btn-primary mb-3" type="submit">
                                         🔍 Jalankan Grid Search

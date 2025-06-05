@@ -66,7 +66,7 @@ class SettingParamController extends Controller
             $setting = SettingParam::findOrFail($id);
             $setting->update($request->all());
         
-            return redirect()->route('admin.settingParams')->with('Success', 'Berhasil memperbarui parameter.');
+            return redirect()->route('settingParams')->with('Success', 'Berhasil memperbarui parameter.');
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }

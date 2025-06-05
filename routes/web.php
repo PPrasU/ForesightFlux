@@ -114,17 +114,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/petunjuk-API/edit/{id}', [PetunjukAPIController::class, 'edit'])->name('editpetunjukAPI');
     Route::post('/petunjuk-API/update/{id}', [PetunjukAPIController::class, 'update'])->name('updatepetunjukAPI');
     Route::get('/petunjuk-API/hapus/{id}', [PetunjukAPIController::class, 'hapus'])->name('hapuspetunjukAPI');
-
-    Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
-    Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
-    Route::post('/optimize', [SettingParamController::class, 'optimize'])->name('optimize');
     
 
     Route::get('/user-management', function () {
         return view('admin.um');
     })->name('userManagement');
-
 });
+
+Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
+Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
+Route::post('/optimize', [SettingParamController::class, 'optimize'])->name('optimize');
 
 Route::get('/clear-notifications', function() {
     session()->forget('notifications');

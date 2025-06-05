@@ -70,15 +70,6 @@
                                                 <li><strong>🌍 Hasil ini tidak mempertimbangkan faktor eksternal seperti kebijakan ekonomi, sentimen pasar, isu geopolitik, </strong> yang sebenarnya bisa sangat memengaruhi naik turunnya harga kripto.</li>
                                             </ul>
                                         </div>
-                                        @if ($akurasi->count() > 0)
-                                            <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
-                                                Hapus Semua Data Pra Proses dan Data Hasil Peramalan
-                                            </button>
-                                            <form id="hapusSemuaDataForm" method="POST" style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -90,8 +81,16 @@
                         <div class="col-xl-9">
                             <div class="card">
                                 <div class="card-body">
-
                                     <h4 class="mt-0 header-title mb-4">Grafik Hasil Peramalan Kriptonya</h4>
+                                    @if ($akurasi->count() > 0)
+                                        <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
+                                            Hapus Semua Data Pra Proses dan Data Hasil Peramalan
+                                        </button>
+                                        <form id="hapusSemuaDataForm" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @endif
                                     <!-- hapus d-none untuk user bisa memilih hasil peramalan -->
                                     <form method="GET" id="range-form" class="mb-3 d-none">
                                         <div class="d-flex align-items-center gap-2">
@@ -176,10 +175,10 @@
                                     @if ($dataAkurasi)
                                         <div class="mb-4">
                                             <br>
-                                            <p class="mb-1"><strong>⚠️ Keterangan:</strong></p>
+                                            <h5 class="mb-1"><strong>⚠️ Keterangan:</strong></h5>
 
                                             <p class="mb-1"><strong>📊 MAPE:</strong> {{ number_format($dataAkurasi->mape, 2) }}% 
-                                                <br><small>
+                                                <br><p>
                                                     Ini menunjukkan seberapa besar rata-rata kesalahan prediksi dibanding nilai aslinya. 
                                                     Semakin kecil angkanya, semakin akurat prediksinya. <strong>(angka dibelakang titik itu angka desimal)</strong>
                                                     <br>
@@ -189,24 +188,24 @@
                                                     @elseif ($dataAkurasi->mape < 20)
                                                         Baik — Cukup dekat dengan data asli.
                                                     @elseif ($dataAkurasi->mape < 50)
-                                                        Cukup — Masih bisa diterima, tapi perlu hati-hati.
+                                                        Cukup — Masih bisa diterima, tapi perlu hati-hati. <strong>(⚠️ Lakukan Grid Search (Button warna kuning sebelah kanan) untuk atur parameter agar nilai MAPE kecil dan agar hasil peramalan lebih baik)</strong>
                                                     @else
-                                                        Buruk — Prediksi jauh dari data sebenarnya.
+                                                        Buruk — Prediksi jauh dari data sebenarnya. <strong>(⚠️ Lakukan Grid Search (Button warna kuning sebelah kanan)⚠️ untuk atur parameter agar nilai MAPE kecil dan agar hasil peramalan lebih baik)</strong>
                                                     @endif
-                                                </small>
+                                                </p>
                                             </p>
 
                                             <p class="mb-1"><strong>📊 RMSE:</strong> {{ number_format(+$dataAkurasi->rmse) }} 
-                                                <br><small>
+                                                <br><p>
                                                     Ini adalah ukuran rata-rata kesalahan dalam angka asli (misalnya: rupiah, unit, dsb). 
                                                     Nilainya tidak dalam persen, tapi langsung nunjukin seberapa jauh salahnya. <strong>(koma pemisah ribuan)</strong>
                                                     <br>
                                                     <strong>Catatan:</strong> Semakin kecil nilai ini, makin bagus hasil prediksinya.
-                                                </small>
+                                                </p>
                                             </p>
 
                                             <p class="mb-1"><strong>📊 rRMSE:</strong> {{ number_format($dataAkurasi->relative_rmse, 2) }}% 
-                                                <br><small>
+                                                <br><p>
                                                     Ini mirip dengan RMSE, tapi dalam bentuk persentase supaya lebih mudah dibandingkan.
                                                     Berguna untuk tahu seberapa besar kesalahan relatif terhadap rata-rata data. <strong>(angka dibelakang titik itu angka desimal)</strong>
                                                     <br>
@@ -220,7 +219,7 @@
                                                     @else
                                                         Kurang Akurat — Perlu evaluasi model prediksinya.
                                                     @endif
-                                                </small>
+                                                </p>
                                             </p>
                                         </div>
                                     @else
@@ -261,6 +260,11 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        @if ($dataAkurasi->mape > 20)
+                                            <a href="{{ route('settingParams') }}" type="button" class="btn btn-outline-warning waves-effect waves-light me-4">
+                                                Grid Search
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

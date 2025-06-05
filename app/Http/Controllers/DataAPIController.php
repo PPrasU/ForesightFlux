@@ -1110,7 +1110,7 @@ class DataAPIController extends Controller
                 DataPraProses::create([
                     'source_id' => $data['source_id'],
                     'date' => $data['date'],
-                    'price' => $data['price'],
+                    'price' => round($data['price'], 2),
                     'category' => $index < $trainingCount ? 'Training' : 'Testing',
                 ]);
             }

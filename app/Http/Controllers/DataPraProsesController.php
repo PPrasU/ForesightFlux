@@ -566,16 +566,16 @@ class DataPraProsesController extends Controller
                 $squared_errors[$i] = pow($errors[$i], 2);
 
                 HasilTraining::create([
-                    'source_id' => $sourceId,
-                    'date' => $data[$i]->date,
-                    'price' => $price,
-                    'level' => $level[$i],
-                    'trend' => $trend[$i],
-                    'seasonal' => $seasonal[$i],
-                    'forecast' => $forecast[$i],
-                    'error' => $errors[$i],
-                    'abs_error' => $abs_errors[$i],
-                    'error_square' => $squared_errors[$i],
+                    'source_id'   => $sourceId,
+                    'date'        => $data[$i]->date,
+                    'price'       => round($price, 2),
+                    'level'       => round($level[$i], 8),
+                    'trend'       => round($trend[$i], 8),
+                    'seasonal'    => round($seasonal[$i], 8),
+                    'forecast'    => round($forecast[$i], 5),
+                    'error'       => round($errors[$i], 8),
+                    'abs_error'   => round($abs_errors[$i], 8),
+                    'error_square'=> round($squared_errors[$i], 8),
                 ]);
             }
 
@@ -611,14 +611,14 @@ class DataPraProsesController extends Controller
                 HasilTesting::create([
                     'source_id' => $sourceId,
                     'date' => $date,
-                    'actual' => $actual,
-                    'forecast' => $forecastVal,
-                    'level' => $lastLevel,
-                    'trend' => $lastTrend,
-                    'seasonal' => $seasonalIndices[$seasonIndex],
-                    'error' => $error,
-                    'abs_error' => $absError,
-                    'error_square' => $errorSquare,
+                    'actual' => round($actual, 2),
+                    'forecast' => round($forecastVal, 5),
+                    'level' => round($lastLevel, 8),
+                    'trend' => round($lastTrend, 8),
+                    'seasonal' => round($seasonalIndices[$seasonIndex], 8),
+                    'error' => round($error, 8),
+                    'abs_error' => round($absError, 8),
+                    'error_square' => round($errorSquare, 8),
                 ]);
 
                 Log::info("Testing {$date}: Forecast=" . round($forecastVal, 2) .
@@ -640,10 +640,10 @@ class DataPraProsesController extends Controller
             $rrmse = ($rmse / $avgActual) * 100;
 
             HasilAkurasi::create([
-                'mape' => $mape,
-                'rmse' => $rmse,
-                'avg_actual' => $avgActual,
-                'relative_rmse' => $rrmse,
+                'mape' => round($mape, 8),
+                'rmse' => round($rmse, 8),
+                'avg_actual' => round($avgActual, 8),
+                'relative_rmse' => round($rrmse, 8),
             ]);
 
             // Forecast 30 hari ke depan (menggunakan seluruh data pra proses)
@@ -743,13 +743,14 @@ class DataPraProsesController extends Controller
                 $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
 
                 DataHasil::create([
-                    'source_id' => $sourceId,
+                    'source_id'     => $sourceId,
                     'date_forecast' => $data[$i]->date,
-                    'forecast' => $forecast[$i],
-                    'level' => $level[$i],
-                    'trend' => $trend[$i],
-                    'seasonal' => $seasonal[$i - $seasonLength] ?? 1,
+                    'forecast'      => round($forecast[$i], 2),
+                    'level'         => round($level[$i], 8),
+                    'trend'         => round($trend[$i], 8),
+                    'seasonal'      => round($seasonal[$i - $seasonLength] ?? 1, 8),
                 ]);
+
             }
         } else {
             // ❗ Tambahkan ini agar array seasonal cukup panjang untuk forecast ke depan
@@ -786,10 +787,10 @@ class DataPraProsesController extends Controller
             DataHasil::create([
                 'source_id' => $sourceId,
                 'date_forecast' => $futureDate->format('Y-m-d'),
-                'forecast' => $futureForecast,
-                'level' => $lastLevel,
-                'trend' => $lastTrend,
-                'seasonal' => $seasonFactor,
+                'forecast' => round($futureForecast, 8),
+                'level' => round($lastLevel, 8),
+                'trend' => round($lastTrend, 8),
+                'seasonal' => round($seasonFactor, 8),
             ]);
         }
     }

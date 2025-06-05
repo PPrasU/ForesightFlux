@@ -33,8 +33,8 @@
             </a>
           </li> --}}
 
-          <li class="{{ request()->routeIs('admin.settingParams') ? 'active' : '' }}">
-            <a href="{{ route('admin.settingParams') }}" class="waves-effect">
+          <li class="{{ request()->routeIs('settingParams') ? 'active' : '' }}">
+            <a href="{{ route('settingParams') }}" class="waves-effect">
               <i class="mdi mdi-cogs"></i>
               <span> Set Params </span>
             </a>
