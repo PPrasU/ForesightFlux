@@ -261,7 +261,7 @@
                                             </tbody>
                                         </table>
                                         @if ($dataAkurasi->mape > 20)
-                                            <a href="{{ route('settingParams') }}" type="button" class="btn btn-outline-warning waves-effect waves-light me-4">
+                                            <a href="{{ route('settingParams') }}" target="_blank" type="button" class="btn btn-outline-warning waves-effect waves-light me-4">
                                                 Grid Search
                                             </a>
                                         @endif

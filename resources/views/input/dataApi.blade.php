@@ -167,7 +167,7 @@
                                         <div class="form-group mb-4">
                                             <label class="font-weight-bold">Jangka Waktu</label>
                                             <label id="keterangan-jangka-waktu" style="font-size: 11px; font-style: italic;" class="d-block mb-2">
-                                                * Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.
+                                                * Rekomendasi Jenis Data Harian. Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.
                                             </label>
                                             <div class="d-flex align-items-center">
                                                 <input type="text" id="date-startt" name="date-start" class="form-control" placeholder="Tanggal awal" value="{{ old('date-start') }}" onkeydown="return false">
@@ -232,7 +232,7 @@
                 const jenis = document.querySelector('input[name="jenis_data"]:checked')?.value;
 
                 if (jenis === 'Harian') {
-                    label.textContent = '* Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.';
+                    label.textContent = '* Rekomendasi Jenis Data Harian. Data harian dari Kraken hanya dapat diambil maksimal sebanyak 720 hari ke belakang dari hari ini.';
                 } else if (jenis === 'Mingguan') {
                     label.textContent = '* Data disajikan secara mingguan, dengan satu baris mencerminkan aktivitas kripto selama tujuh hari.';
                 }

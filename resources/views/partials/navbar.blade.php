@@ -11,12 +11,81 @@
                 <ul class="navbar-right d-flex list-inline float-right mb-0">
                     <li class="dropdown notification-list d-none d-sm-block">
                         <form role="search" class="app-search">
-                            <div class="form-group mb-0"> 
-                                <input type="text" class="form-control" placeholder="Search..">
+                            <div class="form-group mb-0 position-relative"> 
+                                <input type="text" class="form-control" placeholder="Search.." id="searchInput">
                                 <button type="submit"><i class="fa fa-search"></i></button>
+                                <ul id="searchResults" class="list-group position-absolute w-100" style="z-index: 1000; max-height: 300px; overflow-y: auto;"></ul>
                             </div>
                         </form> 
                     </li>
+                    <script>
+                        const pages = [
+                            { title: "Beranda", url: "/", keywords: "beranda home welcome" },
+                            { title: "Dasbor", url: "/dasbor", keywords: "dasbor dashboard" },
+                            { title: "Petunjuk Penggunaan", url: "/petunjuk-penggunaan", keywords: "petunjuk panduan bantuan" },
+                            { title: "Pergerakan Kripto", url: "/pergerakan-kripto", keywords: "pergerakan harga kripto" },
+                            { title: "FAQ", url: "/pertanyaan-umum", keywords: "faq pertanyaan bantuan" },
+
+                            { title: "Data API", url: "/data/API", keywords: "data api historis otomatis" },
+                            { title: "Input Data API", url: "/data/API/input", keywords: "input api" },
+                            { title: "Data Import", url: "/data/import", keywords: "data impor manual upload" },
+                            { title: "Input Import", url: "/data/import/input", keywords: "input impor" },
+
+                            { title: "Pra-proses", url: "/peramalan/proses", keywords: "pra proses cleaning" },
+                            { title: "Hasil Peramalan", url: "/peramalan/hasil", keywords: "hasil peramalan grafik" },
+                            { title: "Pengaturan Parameter", url: "/setting-params", keywords: "pengaturan setting parameter" }
+                        ];
+
+                        const input = document.getElementById('searchInput');
+                        const resultsContainer = document.getElementById('searchResults');
+
+                        // Tampilkan semua saat fokus
+                        input.addEventListener('focus', () => {
+                            tampilkanHasil('');
+                        });
+
+                        // Filter saat mengetik
+                        input.addEventListener('input', function () {
+                            const query = this.value.toLowerCase();
+                            tampilkanHasil(query);
+                        });
+
+                        function tampilkanHasil(query) {
+                            resultsContainer.innerHTML = '';
+                            const filtered = pages.filter(page =>
+                                page.title.toLowerCase().includes(query) ||
+                                page.keywords.toLowerCase().includes(query)
+                            );
+
+                            if (filtered.length === 0) {
+                                resultsContainer.innerHTML = '<li class="list-group-item">Tidak ditemukan</li>';
+                            } else {
+                                filtered.forEach(page => {
+                                    const li = document.createElement('li');
+                                    li.className = "list-group-item list-group-item-action";
+                                    li.textContent = page.title;
+                                    li.onclick = () => window.location.href = page.url;
+                                    resultsContainer.appendChild(li);
+                                });
+                            }
+                        }
+
+                        // Kosongkan saat klik di luar
+                        document.addEventListener('click', function (e) {
+                            if (!e.target.closest('.app-search')) {
+                                resultsContainer.innerHTML = '';
+                            }
+                        });
+
+                        // Pilih hasil pertama jika tekan enter
+                        document.querySelector('.app-search').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const firstResult = resultsContainer.querySelector('li');
+                            if (firstResult && firstResult.textContent !== "Tidak ditemukan") {
+                                firstResult.click();
+                            }
+                        });
+                    </script>
 
                     <li class="dropdown notification-list">
                         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light"
