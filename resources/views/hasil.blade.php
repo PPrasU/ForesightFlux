@@ -175,25 +175,49 @@
                                     @if ($dataAkurasi)
                                         <div class="mb-4">
                                             <br>
-                                            <h5 class="mb-1"><strong>⚠️ Keterangan:</strong></h5>
+                                            <h5 class="mb-1"><strong>⚠️ Keterangan:</strong></h5><br>
 
-                                            <p class="mb-1"><strong>📊 MAPE:</strong> {{ number_format($dataAkurasi->mape, 2) }}% 
-                                                <br><p>
+                                            <div class="mb-2" style="font-size: 14px;">
+                                                <div style="margin-bottom: 4px;">
+                                                    <strong>📊 MAPE:</strong> {{ number_format($dataAkurasi->mape, 2) }}%
+                                                </div>
+
+                                                <div style="margin-bottom: 4px;">
                                                     Ini menunjukkan seberapa besar rata-rata kesalahan prediksi dibanding nilai aslinya. 
-                                                    Semakin kecil angkanya, semakin akurat prediksinya. <strong>(angka dibelakang titik itu angka desimal)</strong>
-                                                    <br>
-                                                    <strong>Keterangan:</strong>
-                                                    @if ($dataAkurasi->mape < 10)
-                                                        Sangat Akurat — Prediksi hampir sama dengan data asli.
-                                                    @elseif ($dataAkurasi->mape < 20)
-                                                        Baik — Cukup dekat dengan data asli.
-                                                    @elseif ($dataAkurasi->mape < 50)
-                                                        Cukup — Masih bisa diterima, tapi perlu hati-hati. <strong>(⚠️ Lakukan Grid Search (Button warna kuning sebelah kanan) untuk atur parameter agar nilai MAPE kecil dan agar hasil peramalan lebih baik)</strong>
-                                                    @else
-                                                        Buruk — Prediksi jauh dari data sebenarnya. <strong>(⚠️ Lakukan Grid Search (Button warna kuning sebelah kanan)⚠️ untuk atur parameter agar nilai MAPE kecil dan agar hasil peramalan lebih baik)</strong>
-                                                    @endif
-                                                </p>
-                                            </p>
+                                                    Semakin kecil angkanya, semakin akurat prediksinya. 
+                                                    <strong>(angka di belakang titik itu angka desimal)</strong>
+                                                </div>
+
+                                                <div style="margin-bottom: 4px;"><strong>Keterangan:</strong></div>
+
+                                                @if ($dataAkurasi->mape < 10)
+                                                    <div style="color: green; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
+                                                        ✅ Sangat Akurat — Prediksi hampir sama dengan data asli.
+                                                    </div>
+                                                @elseif ($dataAkurasi->mape < 20)
+                                                    <div style="color: #2E8B57; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
+                                                        👍 Baik — Cukup dekat dengan data asli.
+                                                    </div>
+                                                @elseif ($dataAkurasi->mape < 50)
+                                                    <div style="color: orange; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
+                                                        ⚠️ Cukup — Masih bisa diterima, tapi perlu hati-hati.
+                                                    </div>
+                                                    <div style="color: orange; margin-bottom: 4px;">
+                                                        <strong>🛠️ Lakukan <u>Grid Search</u> (tombol warna kuning di sebelah kanan) untuk mengatur parameter agar nilai MAPE kecil dan hasil peramalan lebih baik.</strong>
+                                                    </div>
+                                                @else
+                                                    <div style="color: red; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
+                                                        ❌ Buruk — Prediksi jauh dari data sebenarnya.
+                                                    </div>
+                                                    <div style="color: red; margin-bottom: 4px;">
+                                                        <strong>⚠️ Lakukan <u>Grid Search</u> (tombol warna kuning di sebelah kanan) untuk mengatur parameter agar nilai MAPE kecil dan hasil peramalan lebih baik.</strong>
+                                                    </div>
+                                                @endif
+
+                                                <br> {{-- Tambahkan jarak bawah --}}
+                                            </div>
+
+
 
                                             <p class="mb-1"><strong>📊 RMSE:</strong> {{ number_format(+$dataAkurasi->rmse) }} 
                                                 <br><p>

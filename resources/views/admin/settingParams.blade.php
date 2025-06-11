@@ -192,19 +192,19 @@
                                         <div class="mb-3">
                                             <label for="alpha" class="form-label">Alpha</label>
                                             <input type="text" class="form-control" name="alpha" id="alpha"
-                                                    value="{{ old('alpha', $row->alpha !== null ? floatval($row->alpha) : '') }}">
+                                                value="{{ old('alpha', $row->alpha !== null ? rtrim(rtrim(number_format($row->alpha, 4, '.', ''), '0'), '.') : '') }}">
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="beta" class="form-label">Beta</label>
                                             <input type="text" class="form-control" name="beta" id="beta"
-                                                    value="{{ old('beta', $row->beta !== null ? floatval($row->beta) : '') }}">
+                                                value="{{ old('beta', $row->beta !== null ? rtrim(rtrim(number_format($row->beta, 4, '.', ''), '0'), '.') : '') }}">
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="gamma" class="form-label">Gamma</label>
                                             <input type="text" class="form-control" name="gamma" id="gamma"
-                                                    value="{{ old('gamma', $row->gamma !== null ? floatval($row->gamma) : '') }}">
+                                                value="{{ old('gamma', $row->gamma !== null ? rtrim(rtrim(number_format($row->gamma, 4, '.', ''), '0'), '.') : '') }}">
                                         </div>
 
                                         <div class="mb-3">
@@ -253,6 +253,7 @@
                                 <strong>> Tekan tombol (🔍 Jalankan Grid Search)</strong><br>
                                 <strong>> Pilih MAPE terkecil, ingat α β γ training dan testing</strong><br>
                                 <strong>> Edit tabel setting params agar nilai α β γ training dan testing berisi dari hasil MAPE terbaik</strong><br>
+                                <strong>> Hapus hasil peramalan dan lakukan pra proses dan proses dari awal lagi</strong><br>
                             </p>
                           </div>
                     </div>
@@ -605,7 +606,7 @@
                 // Tampilkan SweetAlert2 loading
                 Swal.fire({
                     title: 'Sedang melakukan Grid Search...',
-                    text: 'Sabar ya, ini bukan ngelag... cuma kerja keras ajah 😆🔄, proses memakan waktu 1-3 menit SABAR',
+                    text: 'Sabar ya, ini bukan ngelag... cuma kerja keras ajah 😆🔄  proses memakan waktu 1-3 menit, SABAR YE',
                     allowOutsideClick: false,
                     showConfirmButton: false,
                     didOpen: () => {
