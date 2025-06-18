@@ -167,7 +167,7 @@
                                             <option value="90" {{ request('range2') == 90 ? 'selected' : '' }}>90</option>
                                         </select>
                                     </form>
-                                    <canvas id="grafikTesting" height="100"></canvas>
+                                    <div id="grafikTesting" height="250"></div>
                                     @php
                                         $dataAkurasi = $akurasi->first();
                                     @endphp
@@ -483,63 +483,82 @@
             chart.render();
         </script>
 
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const ctx = document.getElementById('grafikTesting').getContext('2d');
-                
                 const labels = @json($testingChart->pluck('date'));
                 const actualData = @json($testingChart->pluck('actual'));
                 const forecastData = @json($testingChart->pluck('forecast'));
 
-                const chart = new Chart(ctx, {
-                    type: 'line',
+                // Siapkan kolom data
+                const xValues = ['x'];
+                const actualSeries = ['Actual'];
+                const forecastSeries = ['Forecast'];
+
+                for (let i = 0; i < labels.length; i++) {
+                    // Pastikan semua data valid
+                    const date = labels[i];
+                    let actual = actualData[i];
+                    let forecast = forecastData[i];
+
+                    // Konversi data kosong atau tidak numerik menjadi null
+                    actual = (actual === null || isNaN(actual)) ? null : Number(actual);
+                    forecast = (forecast === null || isNaN(forecast)) ? null : Number(forecast);
+
+                    xValues.push(date);
+                    actualSeries.push(actual);
+                    forecastSeries.push(forecast);
+                }
+
+                const chart = c3.generate({
+                    bindto: '#grafikTesting',
                     data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Actual',
-                                data: actualData,
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderWidth: 2,
-                                fill: false,
-                                tension: 0.1
-                            },
-                            {
-                                label: 'Forecast',
-                                data: forecastData,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderWidth: 2,
-                                fill: false,
-                                tension: 0.1
-                            }
-                        ]
+                        x: 'x',
+                        columns: [
+                            xValues,
+                            actualSeries,
+                            forecastSeries
+                        ],
+                        type: 'line'
                     },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: 'Tanggal'
-                                }
-                            },
-                            y: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: 'Nilai'
-                                },
-                                beginAtZero: false
+                    axis: {
+                        x: {
+                            type: 'timeseries',
+                            label: 'Tanggal',
+                            tick: {
+                                format: '%Y-%m-%d',
+                                rotate: -45,
+                                values: {!! json_encode(
+                                    collect($testingChart)->pluck('date')->filter()->values()
+                                        ->chunk(ceil($testingChart->count() / 15))
+                                        ->map(fn($chunk) => $chunk->first())
+                                ) !!}
                             }
+
+                        },
+                        y: {
+                            label: 'Nilai'
                         }
+                    },
+                    color: {
+                        pattern: ['#4BC0C0', '#FF6384']
+                    },
+                    line: {
+                        connectNull: true
+                    },
+                    point: {
+                        show: true
                     }
                 });
             });
         </script>
+
+        <pre>
+        @json($testingChart)
+        </pre>
+
 
 
     </body>
