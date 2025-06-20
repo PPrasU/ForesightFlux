@@ -17,15 +17,15 @@ services:
         value: https://foresightfluxcp.onrender.com
       - key: DB_CONNECTION
         value: pgsql
-      # - key: DB_HOST
-      #   value: dpg-d0ueum3e5dus73969n6g-a
-      # - key: DB_PORT
-      #   value: 5432
-      # - key: DB_DATABASE
-      #   value: ffcpdb
-      # - key: DB_USERNAME
-      #   value: ffcpadominto
-      # - key: DB_PASSWORD
-      #   value: 2X3eSh1Rt81cPAKl1OqA4obRkjRKND0t
-      - key: DATABASE_URL
-        value: postgresql://neondb_owner:npg_oTsaIjMl27xG@ep-square-shadow-a1wykhlh-pooler.ap-southeast-1.aws.neon.tech/ffcpdb?sslmode=require
+      - key: DB_HOST
+        value: dpg-d0ueum3e5dus73969n6g-a
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: ffcpdb
+      - key: DB_USERNAME
+        value: ffcpadominto
+      - key: DB_PASSWORD
+        value: 2X3eSh1Rt81cPAKl1OqA4obRkjRKND0t
+      # - key: DATABASE_URL
+      #   value: postgresql://neondb_owner:npg_oTsaIjMl27xG@ep-square-shadow-a1wykhlh-pooler.ap-southeast-1.aws.neon.tech/ffcpdb?sslmode=require
