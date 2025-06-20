@@ -59,7 +59,19 @@ Route::get('/drop-all-tables', function () {
     }
     return 'Semua tabel berhasil dihapus';
 });
+Route::get('/drop-all-tabless', function () {
+    DB::beginTransaction();
 
+    try {
+        DB::statement('DROP SCHEMA public CASCADE');
+        DB::statement('CREATE SCHEMA public');
+        DB::commit();
+        return 'Schema public berhasil di-reset total';
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return 'Gagal reset schema: ' . $e->getMessage();
+    }
+});
 
 Route::post('/kraken/fetch', [KrakenController::class, 'fetchOHLC']);
 
