@@ -73,6 +73,24 @@ Route::get('/drop-all-tabless', function () {
     }
 });
 
+Route::get('/reset-database', function () {
+    try {
+        // 1. Hapus semua tabel (kalau ada sisa)
+        $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+        foreach ($tables as $table) {
+            DB::statement("DROP TABLE IF EXISTS {$table->tablename} CASCADE");
+        }
+
+        // 2. Reset migration tracking
+        DB::statement("DROP TABLE IF EXISTS migrations");
+
+        return '✅ Semua tabel & riwayat migrasi dihapus';
+    } catch (\Exception $e) {
+        return '❌ Error: ' . $e->getMessage();
+    }
+});
+
+
 Route::post('/kraken/fetch', [KrakenController::class, 'fetchOHLC']);
 
 Route::get('/', function () {
