@@ -17,7 +17,7 @@ use App\Http\Controllers\PetunjukImportController;
 
 Route::get('/migrate-now', function () {
     try {
-        Artisan::call('session:table');
+        // Artisan::call('session:table');
         Artisan::call('migrate', ['--force' => true]);
         return 'Migration berhasil dijalankan.';
     } catch (\Exception $e) {
@@ -52,6 +52,14 @@ Route::get('/migrate-fresh', function () {
         return 'Gagal: ' . $e->getMessage();
     }
 });
+Route::get('/drop-all-tables', function () {
+    $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+    foreach ($tables as $table) {
+        DB::statement("DROP TABLE IF EXISTS {$table->tablename} CASCADE");
+    }
+    return 'Semua tabel berhasil dihapus';
+});
+
 
 Route::post('/kraken/fetch', [KrakenController::class, 'fetchOHLC']);
 
