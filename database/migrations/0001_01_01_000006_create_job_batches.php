@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('job_batches', function (Blueprint $table) {
             // $table->string('id')->primary();
-            $table->primary('id');
+            $table->id();
             $table->string('name');
             $table->integer('total_jobs');
             $table->integer('pending_jobs');
