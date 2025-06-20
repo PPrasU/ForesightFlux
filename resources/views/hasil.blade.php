@@ -81,7 +81,7 @@
                         <div class="col-xl-9">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="mt-0 header-title mb-4">Grafik Hasil Peramalan Kriptonya</h4>
+                                    <h4 class="mt-0 header-title mb-4">Grafik Hasil Peramalan Kripto 7 Hari Berikutnya</h4>
                                     @if ($akurasi->count() > 0)
                                         <button id="hapusSemuaData" type="button" class="btn btn-outline-danger waves-effect waves-light me-2">
                                             Hapus Semua Data Pra Proses dan Data Hasil Peramalan
@@ -192,22 +192,22 @@
 
                                                 @if ($dataAkurasi->mape < 10)
                                                     <div style="color: green; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
-                                                        ✅ Sangat Akurat — Prediksi hampir sama dengan data asli.
+                                                        ✅ Sangat Akurat — Prediksi hampir sama dengan data asli. Berdasarkan Perhitungan Error MAPE.
                                                     </div>
                                                 @elseif ($dataAkurasi->mape < 20)
                                                     <div style="color: #2E8B57; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
-                                                        👍 Baik — Cukup dekat dengan data asli.
+                                                        👍 Baik — Cukup dekat dengan data asli. Berdasarkan Perhitungan Error MAPE.
                                                     </div>
                                                 @elseif ($dataAkurasi->mape < 50)
                                                     <div style="color: orange; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
-                                                        ⚠️ Cukup — Masih bisa diterima, tapi perlu hati-hati.
+                                                        ⚠️ Cukup — Masih bisa diterima, tapi perlu hati-hati. Berdasarkan Perhitungan Error MAPE.
                                                     </div>
                                                     <div style="color: orange; margin-bottom: 4px;">
                                                         <strong>🛠️ Lakukan <u>Grid Search</u> (tombol warna kuning di sebelah kanan) untuk mengatur parameter agar nilai MAPE kecil dan hasil peramalan lebih baik.</strong>
                                                     </div>
                                                 @else
                                                     <div style="color: red; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">
-                                                        ❌ Buruk — Prediksi jauh dari data sebenarnya.
+                                                        ❌ Buruk — Prediksi jauh dari data sebenarnya. Berdasarkan Perhitungan Error MAPE.
                                                     </div>
                                                     <div style="color: red; margin-bottom: 4px;">
                                                         <strong>⚠️ Lakukan <u>Grid Search</u> (tombol warna kuning di sebelah kanan) untuk mengatur parameter agar nilai MAPE kecil dan hasil peramalan lebih baik.</strong>
@@ -290,6 +290,16 @@
                                             </a>
                                         @endif
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-9">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="mt-0 header-title mb-4">Grafik Hasil Perhitungan Training</h4>
+                                    <div id="trainingChart" style="height: 400px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -405,58 +415,68 @@
             use Carbon\Carbon;
 
             $labels = collect();
-            $data = collect();
+            $actualData = collect();   // titik untuk data aktual dari testing
+            $forecastData = collect(); // titik untuk data forecast
 
-            // ⬅️ Tambahkan data dari $testing di awal
+            // Tambahkan data dari $testing
             if ($testing) {
                 $labels->push(Carbon::parse($testing->date)->translatedFormat('d F Y'));
-                $data->push(round((float) $testing->actual, 2));
+                $actualData->push(round((float) $testing->actual, 2));
+                $forecastData->push(null); // ⬅️ kosongkan titik forecast di titik actual
             }
 
-            // ⬅️ Lanjutkan dengan data hasil prediksi
-            $labels = $labels->merge($hasil->pluck('date_forecast')->map(function ($date) {
-                return Carbon::parse($date)->translatedFormat('d F Y');
-            }));
+            // Tambahkan hasil prediksi ke labels & data
+            foreach ($hasil as $item) {
+                $labels->push(Carbon::parse($item->date_forecast)->translatedFormat('d F Y'));
+                $actualData->push(null); // ⬅️ kosongkan titik actual di titik forecast
+                $forecastData->push(round((float) $item->forecast, 2));
+            }
 
-            $data = $data->merge($hasil->pluck('forecast')->map(fn($v) => round((float) $v, 2)));
+            // Hitung Y-axis range
+            $combined = $actualData->merge($forecastData)->filter(); // gabung dan hilangkan null
 
-            // ⬅️ Hitung range untuk Y-axis
-            $yMin = floor($data->min() / 200) * 200 - 200;
-            $yMax = ceil($data->max() / 200) * 200 + 200;
-        @endphp 
+            $yMin = floor($combined->min() / 200) * 200 - 200;
+            $yMax = ceil($combined->max() / 200) * 200 + 200;
 
-        {{-- grafik hasil peramalan 30 hari kedepan --}}
+        @endphp
+
+        {{-- grafik hasil peramalan 7 hari kedepan --}}
         <script>
             const options = {
                 chart: {
                     type: 'line',
                     height: 400,
-                    // height: 592,//untuk 30 hari
                     zoom: { enabled: false },
                     toolbar: { show: false }
                 },
-                series: [{
-                    name: 'Forecast',
-                    data: {!! json_encode($data) !!}
-                }],
+                series: [
+                    {
+                        name: 'Aktual',
+                        data: {!! json_encode($actualData) !!}
+                    },
+                    {
+                        name: 'Forecast',
+                        data: {!! json_encode($forecastData) !!}
+                    }
+                ],
                 xaxis: {
                     categories: {!! json_encode($labels) !!},
                     title: { text: 'Tanggal' },
                     tooltip: {
-                        enabled: false // ⛔ ini yang menonaktifkan bubble tanggal di bawah sumbu X
+                        enabled: false
                     },
                     labels: {
                         rotate: -45,
                         formatter: function (value) {
-                            return value; // Sudah diformat di PHP
+                            return value;
                         }
-                    },
+                    }
                 },
                 yaxis: {
                     min: {{ $yMin }},
                     max: {{ $yMax }},
                     tickAmount: 7,
-                    title: { text: 'Nilai Forecast' }
+                    title: { text: 'Nilai' }
                 },
                 stroke: {
                     curve: 'smooth',
@@ -465,27 +485,89 @@
                 tooltip: {
                     enabled: true,
                     shared: true,
-                    intersect: false,
+                    intersect: false
                 },
                 markers: {
-                    size: 4
+                    size: 5
                 },
                 grid: {
-                    padding: {
-                        bottom: 20 // ← beri ruang agar label tanggal tidak terpotong
-                    }
+                    padding: { bottom: 20 }
                 },
-
-                colors: ['#34c38f']
+                colors: ['#007bff', '#34c38f'] // 🔵 biru untuk Aktual, 🟢 hijau untuk Forecast
             };
 
             const chart = new ApexCharts(document.querySelector("#forecastChart"), options);
             chart.render();
+
         </script>
+
+        {{-- grafik hasil training --}}
+        <script>
+            const trainingOptions = {
+                chart: {
+                    type: 'line',
+                    height: 400,
+                    zoom: { enabled: false },
+                    toolbar: { show: false }
+                },
+                series: [
+                    {
+                        name: 'Aktual',
+                        data: {!! json_encode($trainingPrices) !!}
+                    },
+                    {
+                        name: 'Forecast',
+                        data: {!! json_encode($trainingForecasts) !!}
+                    }
+                ],
+                xaxis: {
+                    categories: {!! json_encode($trainingLabels) !!},
+                    title: { text: 'Tanggal' },
+                    tooltip: {
+                        enabled: false // ⛔ ini yang menonaktifkan bubble tanggal di bawah sumbu X
+                    },
+                    labels: {
+                        rotate: -45,
+                        formatter: function (value) {
+                            return value;
+                        }
+                    }
+                },
+                yaxis: {
+                    title: { text: 'Nilai' }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                tooltip: {
+                    enabled: true,
+                    shared: true,
+                    intersect: false
+                },
+                markers: {
+                    size: 4
+                },
+                colors: ['#007bff', '#f39c12'], // Biru untuk price, oranye untuk forecast
+                grid: {
+                    padding: {
+                        bottom: 20
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            };
+
+            const trainingChart = new ApexCharts(document.querySelector("#trainingChart"), trainingOptions);
+            trainingChart.render();
+        </script>
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
 
+        {{-- grafik hasil testing --}}
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const labels = @json($testingChart->pluck('date'));
@@ -554,12 +636,6 @@
                 });
             });
         </script>
-
-        <pre>
-        @json($testingChart)
-        </pre>
-
-
 
     </body>
 </html>
