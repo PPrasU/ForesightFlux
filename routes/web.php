@@ -17,6 +17,8 @@ use App\Http\Controllers\PetunjukImportController;
 
 Route::get('/migrate-now', function () {
     try {
+        Artisan::call('config:clear');
+        Artisan::call('config:cache');
         Artisan::call('session:table');
         Artisan::call('migrate', ['--force' => true]);
         return 'Migration berhasil dijalankan.';
@@ -24,6 +26,7 @@ Route::get('/migrate-now', function () {
         return 'Migration gagal: ' . $e->getMessage();
     }
 });
+
 Route::get('/migrate-noww', function () {
     try {
         // Artisan::call('session:table');
