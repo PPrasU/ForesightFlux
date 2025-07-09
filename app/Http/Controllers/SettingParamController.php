@@ -351,7 +351,7 @@ class SettingParamController extends Controller
                 }
             }
         }
-
+        
         return view('admin.settingParams', [
             'setting' => $param,
             'dataParam' => SettingParam::all(),
