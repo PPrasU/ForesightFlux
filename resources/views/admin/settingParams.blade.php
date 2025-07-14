@@ -694,7 +694,7 @@
                 // Tampilkan SweetAlert2 loading
                 Swal.fire({
                     title: 'Sedang melakukan Grid Search...',
-                    text: 'Sabar ya, ini bukan ngelag... cuma kerja keras ajah 😆🔄  proses memakan waktu 1-3 menit, SABAR YE',
+                    text: 'Sabar ya, proses memakan waktu 1-3 menit',
                     allowOutsideClick: false,
                     showConfirmButton: false,
                     didOpen: () => {

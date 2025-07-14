@@ -187,7 +187,7 @@
               }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Siap Boskuh!',
+                        title: 'Siap!',
                         text: 'Data bakal diproses. Sabar yaa!',
                         allowOutsideClick: false,
                         showConfirmButton: false,

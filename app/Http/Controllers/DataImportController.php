@@ -96,7 +96,7 @@ class DataImporTController extends Controller
             $testingPercentage = floatval($setting->testing_percentage);
 
             $total = $sortedData->count();
-            $trainingCount = (int) round($total * ($trainingPercentage / 100));
+            $trainingCount = (int) floor($total * ($trainingPercentage / 100));
 
     
             foreach ($sortedData as $index => $data) {

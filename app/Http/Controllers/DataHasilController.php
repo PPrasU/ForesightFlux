@@ -47,6 +47,20 @@ class DataHasilController extends Controller
         $trainingPrices = $trainingChart->pluck('price')->map(fn($v) => (float) $v)->toArray();
         $trainingForecasts = $trainingChart->pluck('forecast')->map(fn($v) => (float) $v)->toArray();
 
+        $data = DataPraProses::all();
+        $param = SettingParam::first();
+        $hasilTraining = HasilTraining::exists();
+        $totalTraining = $data->where('category', 'Training')->count();
+        $totalTesting = $data->where('category', 'Testing')->count();
+
+        $dataPraProses = DataPraProses::first();
+
+        if ($dataPraProses) {
+            $source = DataSource::find($dataPraProses->source_id);
+            $sumber = $source?->sumber; // nilainya: 'Import' atau 'API'
+        } else {
+            $sumber = null;
+        }
 
         return view('hasil', compact(
             'training',
@@ -60,7 +74,14 @@ class DataHasilController extends Controller
             'range',
             'range2',
             'testingChart',
-        ));
+        ), [
+            'data' => $data,
+            'sudahHasil' => $hasilTraining,
+            'param' => $param,
+            'totalTraining' => $totalTraining,
+            'totalTesting' => $totalTesting,
+            'source' 
+        ]);
     }
 
     public function hapus(Request $request){
