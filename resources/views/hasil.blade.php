@@ -95,14 +95,27 @@
                             <div class="card-body">
                                 <h4 class="mt-0 header-title mb-4">Grafik Hasil Peramalan Kripto 7 Hari Berikutnya</h4>
                                 @if ($akurasi->count() > 0)
-                                    <button id="hapusSemuaData" type="button"
-                                        class="btn btn-outline-danger waves-effect waves-light me-2">
-                                        Hapus Semua Data Pra Proses dan Data Hasil Peramalan
-                                    </button>
-                                    <form id="hapusSemuaDataForm" method="POST" style="display: none;">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                        {{-- Tombol Hapus di Kiri --}}
+                                        <div>
+                                            <button id="hapusSemuaData" type="button"
+                                                class="btn btn-outline-danger waves-effect waves-light me-2">
+                                                Hapus Semua Data Pra Proses dan Data Hasil Peramalan
+                                            </button>
+                                            <form id="hapusSemuaDataForm" method="POST" style="display: none;">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </div>
+
+                                        {{-- Tombol Update di Kanan --}}
+                                        @php
+                                            $mape = $akurasi->first()->mape ?? null;
+                                            $paramUpdatedAt = $param->updated_at ?? null;
+                                            $akurasiUpdatedAt = $akurasi->first()->updated_at ?? null;
+                                        @endphp
+                                    </div>
                                 @endif
                                 @php
                                     use Carbon\Carbon;
@@ -423,6 +436,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- ini sebagai contoh tambahan --}}
                 </div>
             </div>
         </div>
