@@ -213,9 +213,9 @@
                         <li class="has-submenu {{ Request::is('petunjuk-penggunaan') ? 'active' : '' }}">
                             <a href="{{ route('petunjukPenggunaan') }}"><i class="mdi mdi-file-document"></i>Petunjuk Penggunaan</a>
                         </li>
-                        <li class="has-submenu {{ Request::is('pertanyaan-umum') ? 'active' : '' }}">
+                        {{-- <li class="has-submenu {{ Request::is('pertanyaan-umum') ? 'active' : '' }}">
                             <a href="{{ route('faq') }}"><i class="mdi mdi-information"></i>FAQ (Pertanyaan Umum)</a>
-                        </li>
+                        </li> --}}
                         <style>
                             .navbar-wrapper {
                                 display: flex;

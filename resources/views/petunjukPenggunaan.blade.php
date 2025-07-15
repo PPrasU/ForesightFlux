@@ -133,7 +133,7 @@
 
     <section class="why-choose section">
       <div class="container">
-        @foreach($petunjukImport as $index => $petunjuk)
+        {{-- @foreach($petunjukImport as $index => $petunjuk)
           <div class="row mb-5">
             <div class="col-lg-6 col-12">
               <div class="choose-left">
@@ -161,7 +161,7 @@
               </div>
             </div>
           </div>
-          @endforeach
+          @endforeach --}}
 
         <div class="row">
           <div class="col-lg-12">
