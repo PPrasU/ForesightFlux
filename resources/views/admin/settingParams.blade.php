@@ -468,7 +468,8 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-center mb-4">
-                                                    <h3 class="mt-0 header-title">Kombinasi Parameter Terbaik</h3>
+                                                    <h3 class="mt-0 header-title">Mencari Kombinasi Parameter Terbaik
+                                                    </h3>
                                                 </div>
                                                 <form id="optimizeForm" method="POST"
                                                     action="{{ route('optimize') }}">
@@ -579,6 +580,225 @@
                                     </div>
                                 </div>
                             @endif
+
+                            @if ($dataPraproses->count() > 0)
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                                    <h3 class="mt-0 header-title">Pengujian Ketahanan Model (Sliding
+                                                        Window)</h3>
+                                                </div>
+
+                                                <form id="slidingForm" method="POST"
+                                                    action="{{ route('slidingWindowForecast') }}">
+                                                    @csrf
+                                                    <button id="slidingBtn" class="btn btn-warning mb-3"
+                                                        type="submit">
+                                                        📈 Jalankan Sliding Window
+                                                    </button>
+                                                </form>
+
+                                                <div class="mb-4">
+                                                    <p class="mb-1"><strong>Forecast Horizon:</strong>
+                                                        {{ $forecastHorizon }} hari</p>
+                                                    <p class="mb-1"><strong>Sliding Step:</strong>
+                                                        {{ $slidingStep }} data</p>
+                                                    <p class="mb-1"><strong>Jenis Data:</strong> {{ $jenisData }}
+                                                        (Season Length: {{ $seasonLength }})</p>
+                                                </div>
+
+                                                @if (!empty($allResults))
+                                                    <h4 class="mt-0 header-title mb-4">📊 Hasil Sliding Window per Iterasi</h4>
+                                                    <div class="table-responsive">
+                                                        @foreach ($allResults as $group)
+                                                            @if ($group['window_size'] == 90)
+                                                                <h5 class="mt-0 header-title mb-4">Window Size: 90</h5>
+                                                                <table id="datatable90" class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Window Size</th>
+                                                                            <th>Iterasi</th>
+                                                                            <th>Start Date</th>
+                                                                            <th>End Date</th>
+                                                                            <th>MAPE</th>
+                                                                            <th>RMSE</th>
+                                                                            <th>rRMSE</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($group['results'] as $res)
+                                                                            <tr>
+                                                                                <td>{{ $group['window_size'] }}</td>
+                                                                                <td>{{ $res['iterasi'] }}</td>
+                                                                                <td>{{ $res['start_date'] }}</td>
+                                                                                <td>{{ $res['end_date'] }}</td>
+                                                                                <td>{{ $res['mape'] }}</td>
+                                                                                <td>{{ $res['rmse'] }}</td>
+                                                                                <td>{{ $res['rrmse'] }}</td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
+                                                            @if ($group['window_size'] == 180)
+                                                                <h5 class="mt-0 header-title mb-4">Window Size: 180</h5>
+                                                                <table id="datatable180" class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Window Size</th>
+                                                                            <th>Iterasi</th>
+                                                                            <th>Start Date</th>
+                                                                            <th>End Date</th>
+                                                                            <th>MAPE</th>
+                                                                            <th>RMSE</th>
+                                                                            <th>rRMSE</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($group['results'] as $res)
+                                                                            <tr>
+                                                                                <td>{{ $group['window_size'] }}</td>
+                                                                                <td>{{ $res['iterasi'] }}</td>
+                                                                                <td>{{ $res['start_date'] }}</td>
+                                                                                <td>{{ $res['end_date'] }}</td>
+                                                                                <td>{{ $res['mape'] }}</td>
+                                                                                <td>{{ $res['rmse'] }}</td>
+                                                                                <td>{{ $res['rrmse'] }}</td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
+                                                            @if ($group['window_size'] == 365)
+                                                                <h5 class="mt-0 header-title mb-4">Window Size: 365</h5>
+                                                                <table id="datatable365" class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Window Size</th>
+                                                                            <th>Iterasi</th>
+                                                                            <th>Start Date</th>
+                                                                            <th>End Date</th>
+                                                                            <th>MAPE</th>
+                                                                            <th>RMSE</th>
+                                                                            <th>rRMSE</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($group['results'] as $res)
+                                                                            <tr>
+                                                                                <td>{{ $group['window_size'] }}</td>
+                                                                                <td>{{ $res['iterasi'] }}</td>
+                                                                                <td>{{ $res['start_date'] }}</td>
+                                                                                <td>{{ $res['end_date'] }}</td>
+                                                                                <td>{{ $res['mape'] }}</td>
+                                                                                <td>{{ $res['rmse'] }}</td>
+                                                                                <td>{{ $res['rrmse'] }}</td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
+                                                            @if ($group['window_size'] == 730)
+                                                                <h5 class="mt-0 header-title mb-4">Window Size: 730</h5>
+                                                                <table id="datatable730" class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Window Size</th>
+                                                                            <th>Iterasi</th>
+                                                                            <th>Start Date</th>
+                                                                            <th>End Date</th>
+                                                                            <th>MAPE</th>
+                                                                            <th>RMSE</th>
+                                                                            <th>rRMSE</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($group['results'] as $res)
+                                                                            <tr>
+                                                                                <td>{{ $group['window_size'] }}</td>
+                                                                                <td>{{ $res['iterasi'] }}</td>
+                                                                                <td>{{ $res['start_date'] }}</td>
+                                                                                <td>{{ $res['end_date'] }}</td>
+                                                                                <td>{{ $res['mape'] }}</td>
+                                                                                <td>{{ $res['rmse'] }}</td>
+                                                                                <td>{{ $res['rrmse'] }}</td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
+                                                        @endforeach
+
+                                                    </div>
+                                                    <h5 class="mt-4">📌 Ringkasan Statistik Per Window Size</h5>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Window Size</th>
+                                                                <th>MAPE Mean</th>
+                                                                <th>MAPE Max</th>
+                                                                <th>MAPE Min</th>
+                                                                <th>MAPE Std</th>
+                                                                <th>RMSE Mean</th>
+                                                                <th>RMSE Max</th>
+                                                                <th>RMSE Min</th>
+                                                                <th>RMSE Std</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @php
+                                                                $totalWindow = count($allResults);
+                                                                $mapeMeans = $mapeMaxes = $mapeMins = $mapeStds = [];
+                                                                $rmseMeans = $rmseMaxes = $rmseMins = $rmseStds = [];
+                                                            @endphp
+
+                                                            @foreach ($allResults as $group)
+                                                                @php
+                                                                    $summary = $group['summary'];
+                                                                    $mapeMeans[] = $summary['mape_mean'];
+                                                                    $mapeMaxes[] = $summary['mape_max'];
+                                                                    $mapeMins[] = $summary['mape_min'];
+                                                                    $mapeStds[] = $summary['mape_std'];
+
+                                                                    $rmseMeans[] = $summary['rmse_mean'];
+                                                                    $rmseMaxes[] = $summary['rmse_max'];
+                                                                    $rmseMins[] = $summary['rmse_min'];
+                                                                    $rmseStds[] = $summary['rmse_std'];
+                                                                @endphp
+                                                                <tr>
+                                                                    <td>{{ $group['window_size'] }}</td>
+                                                                    <td>{{ $summary['mape_mean'] }}</td>
+                                                                    <td>{{ $summary['mape_max'] }}</td>
+                                                                    <td>{{ $summary['mape_min'] }}</td>
+                                                                    <td>{{ $summary['mape_std'] }}</td>
+                                                                    <td>{{ $summary['rmse_mean'] }}</td>
+                                                                    <td>{{ $summary['rmse_max'] }}</td>
+                                                                    <td>{{ $summary['rmse_min'] }}</td>
+                                                                    <td>{{ $summary['rmse_std'] }}</td>
+                                                                </tr>
+                                                            @endforeach
+
+                                                            <tr style="font-weight: bold; background-color: #f8f9fa;">
+                                                                <td>Rata-rata Semua</td>
+                                                                <td>{{ round(array_sum($mapeMeans) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($mapeMaxes) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($mapeMins) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($mapeStds) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($rmseMeans) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($rmseMaxes) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($rmseMins) / $totalWindow, 4) }}</td>
+                                                                <td>{{ round(array_sum($rmseStds) / $totalWindow, 4) }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -613,7 +833,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Inisialisasi DataTables
-            ['#datatable1', '#datatable2', '#datatable3', '#datatable4'].forEach(id => {
+            ['#datatable1', '#datatable2', '#datatable3', '#datatable4', '#datatable90', '#datatable180', '#datatable365', '#datatable730'].forEach(id => {
                 $(id).DataTable();
             });
 
@@ -707,7 +927,26 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("slidingForm");
 
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Cegah submit default
+
+                Swal.fire({
+                    title: 'Proses Sliding Window sedang berjalan...',
+                    text: 'Mohon tunggu beberapa saat.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        form.submit(); // submit form setelah alert muncul
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

@@ -28,14 +28,14 @@ class DataHasilController extends Controller
             ->get();
 
         // Tambahan untuk grafik testing (actual vs forecast)
-        $range2 = $request->input('range2', 30); // default 30
+        $range2 = $request->input('range2', 300); // default 30
         $testingChart = HasilTesting::orderBy('date', 'desc')
             ->take($range2)
             ->get()
             ->sortBy('date')
             ->values();
 
-        $rangeTraining = $request->input('rangeTraining', 200); // default 100 data terakhir
+        $rangeTraining = $request->input('rangeTraining', 300); // default 100 data terakhir
 
         $trainingChart = HasilTraining::orderBy('date', 'desc')
             ->take($rangeTraining)

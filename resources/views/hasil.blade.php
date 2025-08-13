@@ -115,6 +115,11 @@
                                             $paramUpdatedAt = $param->updated_at ?? null;
                                             $akurasiUpdatedAt = $akurasi->first()->updated_at ?? null;
                                         @endphp
+                                        {{-- @if ($mape > 10 && $paramUpdatedAt > $akurasiUpdatedAt)
+                                            <div>
+                                                <a href="#" class="btn btn-outline-success">Update Peramalan</a>
+                                            </div>
+                                        @endif --}}
                                     </div>
                                 @endif
                                 @php
@@ -228,7 +233,7 @@
                                                     <tr class="table-warning">
                                                         <td>{{ \Carbon\Carbon::parse($testing->date)->translatedFormat('d F Y') }}
                                                         </td>
-                                                        <td>{{ number_format($testing->actual, 0, ',', '.') }}
+                                                        <td>{{ number_format($testing->actual, 3, ',', '.') }}
                                                             <small>(Data aktual 1 hari sebelum hasil prediksi)</small>
                                                         </td>
                                                     </tr>
@@ -238,7 +243,7 @@
                                                     <tr>
                                                         <td>{{ \Carbon\Carbon::parse($item->date_forecast)->translatedFormat('d F Y') }}
                                                         </td>
-                                                        <td>{{ number_format($item->forecast, 0, ',', '.') }}</td>
+                                                        <td>{{ number_format($item->forecast, 3, ',', '.') }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -436,7 +441,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- ini sebagai contoh tambahan --}}
                 </div>
             </div>
         </div>
@@ -585,7 +589,7 @@
             yaxis: {
                 min: {{ $yMin }},
                 max: {{ $yMax }},
-                tickAmount: 7,
+                tickAmount: 3,
                 title: {
                     text: 'Nilai'
                 }

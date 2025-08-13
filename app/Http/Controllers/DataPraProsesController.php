@@ -695,105 +695,451 @@ class DataPraProsesController extends Controller
         }
     }
 
-    private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
+    // kode lama
+    // private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
+    //     $data = DataPraProses::orderBy('date')->get();
+
+    //     $n = count($data);
+    //     if ($n < 2 * $seasonLength) {
+    //         throw new \Exception("Data tidak cukup untuk melakukan peramalan (minimal 2 × season length)");
+    //     }
+
+    //     $level = [];
+    //     $trend = [];
+    //     $seasonal = [];
+    //     $forecast = [];
+
+    //     // Inisialisasi komponen awal
+    //     $avgSeason = $data->take($seasonLength)->avg('price');
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonal[$i] = $data[$i]->price / $avgSeason;
+    //     }
+
+    //     $level[$seasonLength - 1] = $avgSeason;
+
+    //     $sum = 0;
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+    //     }
+    //     $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //     // =============================
+    //     // ⚠️ BLOK OPSIONAL: Forecast seluruh data historis
+    //     // =============================
+    //     // Kamu bisa komentari seluruh blok ini kalau tidak ingin digunakan
+    //     $hitungSemuaData = false;
+    //     if ($hitungSemuaData) {
+    //         // Forecast seluruh data historis dan isi level/trend/seasonal
+    //         for ($i = $seasonLength; $i < $n; $i++) {
+    //             $price = $data[$i]->price;
+
+    //             $prevLevel = $level[$i - 1] ?? $price;
+    //             $prevTrend = $trend[$i - 1] ?? 0;
+    //             $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //             $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //             $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //             $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+
+    //             $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
+
+    //             DataHasil::create([
+    //                 'source_id'     => $sourceId,
+    //                 'date_forecast' => $data[$i]->date,
+    //                 'forecast'      => round($forecast[$i], 2),
+    //                 'level'         => round($level[$i], 8),
+    //                 'trend'         => round($trend[$i], 8),
+    //                 'seasonal'      => round($seasonal[$i - $seasonLength] ?? 1, 8),
+    //             ]);
+
+    //         }
+    //     } else {
+    //         // ❗ Tambahkan ini agar array seasonal cukup panjang untuk forecast ke depan
+    //         for ($i = $seasonLength; $i < $n; $i++) {
+    //             $price = $data[$i]->price;
+
+    //             $prevLevel = $level[$i - 1] ?? $price;
+    //             $prevTrend = $trend[$i - 1] ?? 0;
+    //             $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //             $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //             $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //             $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+
+    //             // ❌ Jangan simpan ke DataHasil
+    //         }
+    //     }
+
+    //     // =============================
+    //     // ✅ BLOK WAJIB: Forecast 30 hari ke depan
+    //     // =============================
+    //     $jumlahHariKeDepan = 30;
+    //     $lastLevel = $level[$n - 1];
+    //     $lastTrend = $trend[$n - 1];
+    //     $startDate = Carbon::parse($data->last()->date);
+
+    //     for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+    //         $futureDate = $startDate->copy()->addDays($h);
+    //         $seasonIndex = ($n - 1 + $h) % $seasonLength;
+    //         $seasonFactor = $seasonal[$seasonIndex] ?? 1;
+
+    //         $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+
+    //         DataHasil::create([
+    //             'source_id' => $sourceId,
+    //             'date_forecast' => $futureDate->format('Y-m-d'),
+    //             'forecast' => round($futureForecast, 8),
+    //             'level' => round($lastLevel, 8),
+    //             'trend' => round($lastTrend, 8),
+    //             'seasonal' => round($seasonFactor, 8),
+    //         ]);
+    //     }
+    // }
+
+    // kode dibawah ini sudah sama pakai rumus yang di post()
+    // private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
+    //     $data = DataPraProses::orderBy('date')->get();
+
+    //     $n = count($data);
+    //     if ($n < 2 * $seasonLength) {
+    //         throw new \Exception("Data tidak cukup untuk melakukan peramalan (minimal 2 × season length)");
+    //     }
+
+    //     $level = [];
+    //     $trend = [];
+    //     $seasonal = [];
+
+    //     // Inisialisasi komponen awal
+    //     $avgSeason = $data->take($seasonLength)->avg('price');
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonal[$i] = $data[$i]->price / $avgSeason;
+    //     }
+
+    //     $level[$seasonLength - 1] = $avgSeason;
+
+    //     $sum = 0;
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+    //     }
+    //     $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //     // Proses seluruh data historis untuk memperbarui level/trend/seasonal terakhir
+    //     for ($i = $seasonLength; $i < $n; $i++) {
+    //         $price = $data[$i]->price;
+
+    //         $prevLevel = $level[$i - 1] ?? $price;
+    //         $prevTrend = $trend[$i - 1] ?? 0;
+    //         $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //         $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //         $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //         $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+    //     }
+
+    //     // Ambil komponen terakhir
+    //     $lastLevel = $level[$n - 1];
+    //     $lastTrend = $trend[$n - 1];
+    //     $startDate = Carbon::parse($data->last()->date);
+
+    //     // Siapkan seasonalIndices seperti pada fungsi post()
+    //     $seasonalIndices = [];
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonalIndices[] = $seasonal[$n - $seasonLength + $i] ?? 1;
+    //     }
+
+    //     // Forecast 30 hari ke depan
+    //     $jumlahHariKeDepan = 30;
+
+    //     for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+    //         $futureDate = $startDate->copy()->addDays($h);
+    //         $seasonIndex = ($h - 1) % $seasonLength;
+    //         $seasonFactor = $seasonalIndices[$seasonIndex] ?? 1;
+
+    //         $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+
+    //         DataHasil::create([
+    //             'source_id' => $sourceId,
+    //             'date_forecast' => $futureDate->format('Y-m-d'),
+    //             'forecast' => round($futureForecast, 8),
+    //             'level' => round($lastLevel, 8),
+    //             'trend' => round($lastTrend, 8),
+    //             'seasonal' => round($seasonFactor, 8),
+    //         ]);
+    //     }
+    // }
+
+    // selalu naik stabil
+    // private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
+    //     $data = DataPraProses::orderBy('date')->get();
+
+    //     $n = count($data);
+    //     if ($n < 2 * $seasonLength) {
+    //         throw new \Exception("Data tidak cukup untuk melakukan peramalan (minimal 2 × season length)");
+    //     }
+
+    //     $level = [];
+    //     $trend = [];
+    //     $seasonal = [];
+
+    //     // Inisialisasi awal komponen TES
+    //     $avgSeason = $data->take($seasonLength)->avg('price');
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonal[$i] = $data[$i]->price / $avgSeason;
+    //     }
+
+    //     $level[$seasonLength - 1] = $avgSeason;
+
+    //     $sum = 0;
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+    //     }
+    //     $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //     // Hitung komponen TES hingga data terakhir
+    //     for ($i = $seasonLength; $i < $n; $i++) {
+    //         $price = $data[$i]->price;
+
+    //         $prevLevel = $level[$i - 1] ?? $price;
+    //         $prevTrend = $trend[$i - 1] ?? 0;
+    //         $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //         $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
+    //         $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
+    //         $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+    //     }
+
+    //     // ======================================
+    //     // 🔧 Penyesuaian Komponen Untuk Forecast
+    //     // ======================================
+
+    //     // Override lastLevel agar mendekati data aktual terakhir
+    //     $lastActual = $data[$n - 1]->price;
+    //     $lastSeason = $seasonal[$n - $seasonLength] ?? 1;
+    //     $lastLevel = $lastActual / $lastSeason;
+
+    //     // Penyesuaian tren agar tidak terlalu tajam
+    //     $trendAdjustmentFactor = 0.8; // bisa kamu atur sesuai kebutuhan
+    //     $lastTrend = $trend[$n - 1] * $trendAdjustmentFactor;
+
+    //     // Rata-rata seasonal dari 2 musim terakhir untuk kestabilan
+    //     $seasonalIndices = [];
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $slice = array_slice($seasonal, max(0, $n - $seasonLength * 2 + $i), $seasonLength);
+    //         $seasonalIndices[] = array_sum($slice) / count($slice);
+    //     }
+
+    //     // ======================================
+    //     // ✅ Forecast 30 Hari Ke Depan
+    //     // ======================================
+    //     $jumlahHariKeDepan = 30;
+    //     $startDate = Carbon::parse($data->last()->date);
+
+    //     for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+    //         $futureDate = $startDate->copy()->addDays($h);
+    //         $seasonIndex = ($h - 1) % $seasonLength;
+    //         $seasonFactor = $seasonalIndices[$seasonIndex] ?? 1;
+
+    //         $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+
+    //         DataHasil::create([
+    //             'source_id'     => $sourceId,
+    //             'date_forecast' => $futureDate->format('Y-m-d'),
+    //             'forecast'      => round($futureForecast, 8),
+    //             'level'         => round($lastLevel, 8),
+    //             'trend'         => round($lastTrend, 8),
+    //             'seasonal'      => round($seasonFactor, 8),
+    //         ]);
+    //     }
+    // }
+
+    // pakai TES damped
+    // private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma){
+    //     $phi = 0.95; // 🔧 Nilai phi (faktor redaman), bisa dituning (0 < phi < 1)
+
+    //     $data = DataPraProses::orderBy('date')->get();
+    //     $n = count($data);
+
+    //     if ($n < 2 * $seasonLength) {
+    //         throw new \Exception("Data tidak cukup untuk melakukan peramalan (minimal 2 × season length)");
+    //     }
+
+    //     $level = [];
+    //     $trend = [];
+    //     $seasonal = [];
+
+    //     // Inisialisasi seasonal awal
+    //     $avgSeason = $data->take($seasonLength)->avg('price');
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $seasonal[$i] = $data[$i]->price / $avgSeason;
+    //     }
+
+    //     // Inisialisasi level dan trend awal
+    //     $level[$seasonLength - 1] = $avgSeason;
+    //     $sum = 0;
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+    //     }
+    //     $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
+
+    //     // Komputasi TES dengan damped trend
+    //     for ($i = $seasonLength; $i < $n; $i++) {
+    //         $price = $data[$i]->price;
+
+    //         $prevLevel = $level[$i - 1] ?? $price;
+    //         $prevTrend = $trend[$i - 1] ?? 0;
+    //         $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+
+    //         $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $phi * $prevTrend);
+    //         $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $phi * $prevTrend;
+    //         $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
+    //     }
+
+    //     // ============================================
+    //     // 🔧 Penyesuaian Komponen Untuk Peramalan
+    //     // ============================================
+    //     $lastActual = $data[$n - 1]->price;
+    //     $lastSeason = $seasonal[$n - $seasonLength] ?? 1;
+    //     $lastLevel = $lastActual / $lastSeason;
+    //     $lastTrend = $trend[$n - 1];
+
+    //     // Ambil seasonal index rata-rata dari 2 musim terakhir
+    //     $seasonalIndices = [];
+    //     for ($i = 0; $i < $seasonLength; $i++) {
+    //         $slice = array_slice($seasonal, max(0, $n - $seasonLength * 2 + $i), $seasonLength);
+    //         $seasonalIndices[] = array_sum($slice) / count($slice);
+    //     }
+
+    //     // ============================================
+    //     // ✅ Forecast 30 Hari Ke Depan (dengan damping)
+    //     // ============================================
+    //     $jumlahHariKeDepan = 30;
+    //     $startDate = Carbon::parse($data->last()->date);
+
+    //     for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+    //         $futureDate = $startDate->copy()->addDays($h);
+    //         $seasonIndex = ($h - 1) % $seasonLength;
+    //         $seasonFactor = $seasonalIndices[$seasonIndex] ?? 1;
+
+    //         // Rumus Damped TES: level + (phi^h) × trend
+    //         $dampedTrend = pow($phi, $h) * $lastTrend;
+    //         $futureForecast = ($lastLevel + $dampedTrend) * $seasonFactor;
+
+    //         DataHasil::create([
+    //             'source_id'     => $sourceId,
+    //             'date_forecast' => $futureDate->format('Y-m-d'),
+    //             'forecast'      => round($futureForecast, 8),
+    //             'level'         => round($lastLevel, 8),
+    //             'trend'         => round($dampedTrend, 8),
+    //             'seasonal'      => round($seasonFactor, 8),
+    //         ]);
+    //     }
+    // }
+
+    // cuma buat ngecek biar grafik gak terlalu stabil naik terus, naik turun cuma di angka ratusan saja
+    private function forecastFutureFromAllData($sourceId, $seasonLength, $alpha, $beta, $gamma) {
+        $phi = 0.95; // 🔧 redaman
+        $forecastHorizon = 30;
+        $trendBoostFactor = 1.0;
+
         $data = DataPraProses::orderBy('date')->get();
 
-        $n = count($data);
-        if ($n < 2 * $seasonLength) {
-            throw new \Exception("Data tidak cukup untuk melakukan peramalan (minimal 2 × season length)");
+        // Ambil harga (high + low) / 2
+        $priceArray = [];
+        foreach ($data as $d) {
+            $high = $d->high ?? 0;
+            $low = $d->low ?? 0;
+
+            if ($high > 0 && $low > 0) {
+                $priceArray[] = ($high + $low) / 2;
+            } elseif ($d->price > 0) {
+                $priceArray[] = $d->price;
+            }
         }
+
+        $n = count($priceArray);
+        if ($n < 2 * $seasonLength) {
+            throw new \Exception("Jumlah data valid tidak cukup untuk melakukan peramalan (minimal 2 × season length).");
+        }
+
+        // Inisialisasi seasonal awal
+        $firstSeasonPrices = array_slice($priceArray, 0, $seasonLength);
+        $validPrices = array_filter($firstSeasonPrices, fn($v) => $v > 0);
+
+        if (count($validPrices) === 0) {
+            throw new \Exception("Tidak ada nilai valid pada musim pertama untuk menghitung avgSeason.");
+        }
+
+        $avgSeason = array_sum($validPrices) / count($validPrices);
 
         $level = [];
         $trend = [];
         $seasonal = [];
-        $forecast = [];
 
-        // Inisialisasi komponen awal
-        $avgSeason = $data->take($seasonLength)->avg('price');
         for ($i = 0; $i < $seasonLength; $i++) {
-            $seasonal[$i] = $data[$i]->price / $avgSeason;
+            $seasonal[$i] = ($priceArray[$i] > 0) ? $priceArray[$i] / $avgSeason : 1.0;
         }
 
+        // Inisialisasi level dan trend awal
         $level[$seasonLength - 1] = $avgSeason;
-
         $sum = 0;
         for ($i = 0; $i < $seasonLength; $i++) {
-            $sum += ($data[$i + $seasonLength]->price - $data[$i]->price) / $seasonal[$i];
+            $idx = $i + $seasonLength;
+            if ($idx < count($priceArray) && $seasonal[$i] != 0) {
+                $sum += ($priceArray[$idx] - $priceArray[$i]) / $seasonal[$i];
+            }
         }
         $trend[$seasonLength - 1] = $sum / ($seasonLength * $seasonLength);
 
-        // =============================
-        // ⚠️ BLOK OPSIONAL: Forecast seluruh data historis
-        // =============================
-        // Kamu bisa komentari seluruh blok ini kalau tidak ingin digunakan
-        $hitungSemuaData = false;
-        if ($hitungSemuaData) {
-            // Forecast seluruh data historis dan isi level/trend/seasonal
-            for ($i = $seasonLength; $i < $n; $i++) {
-                $price = $data[$i]->price;
+        // TES Damped Trend Multiplicative
+        for ($i = $seasonLength; $i < $n; $i++) {
+            $price = $priceArray[$i];
 
-                $prevLevel = $level[$i - 1] ?? $price;
-                $prevTrend = $trend[$i - 1] ?? 0;
-                $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
+            $prevLevel = $level[$i - 1] ?? $price;
+            $prevTrend = $trend[$i - 1] ?? 0;
+            $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
 
-                $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
-                $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
-                $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
-
-                $forecast[$i] = ($prevLevel + $prevTrend) * $prevSeasonal;
-
-                DataHasil::create([
-                    'source_id'     => $sourceId,
-                    'date_forecast' => $data[$i]->date,
-                    'forecast'      => round($forecast[$i], 2),
-                    'level'         => round($level[$i], 8),
-                    'trend'         => round($trend[$i], 8),
-                    'seasonal'      => round($seasonal[$i - $seasonLength] ?? 1, 8),
-                ]);
-
-            }
-        } else {
-            // ❗ Tambahkan ini agar array seasonal cukup panjang untuk forecast ke depan
-            for ($i = $seasonLength; $i < $n; $i++) {
-                $price = $data[$i]->price;
-
-                $prevLevel = $level[$i - 1] ?? $price;
-                $prevTrend = $trend[$i - 1] ?? 0;
-                $prevSeasonal = $seasonal[$i - $seasonLength] ?? 1;
-
-                $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $prevTrend);
-                $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $prevTrend;
-                $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
-
-                // ❌ Jangan simpan ke DataHasil
-            }
+            $level[$i] = $alpha * ($price / $prevSeasonal) + (1 - $alpha) * ($prevLevel + $phi * $prevTrend);
+            $trend[$i] = $beta * ($level[$i] - $prevLevel) + (1 - $beta) * $phi * $prevTrend;
+            $seasonal[$i] = $gamma * ($price / $level[$i]) + (1 - $gamma) * $prevSeasonal;
         }
 
-        // =============================
-        // ✅ BLOK WAJIB: Forecast 30 hari ke depan
-        // =============================
-        $jumlahHariKeDepan = 30;
-        $lastLevel = $level[$n - 1];
-        $lastTrend = $trend[$n - 1];
+        // Forecast
+        $lastPrice = $priceArray[$n - 1];
+        $lastSeason = $seasonal[$n - $seasonLength] ?? 1;
+        $lastLevel = $lastPrice / $lastSeason;
+        $lastTrend = $trend[$n - 1] * $trendBoostFactor;
+
+        $seasonalIndices = [];
+        for ($i = 0; $i < $seasonLength; $i++) {
+            $values = [];
+            for ($j = 0; $j < 2; $j++) {
+                $idx = $n - ($seasonLength * (2 - $j)) + $i;
+                if (isset($seasonal[$idx])) {
+                    $values[] = $seasonal[$idx];
+                }
+            }
+            $seasonalIndices[] = count($values) > 0 ? array_sum($values) / count($values) : 1.0;
+        }
+
         $startDate = Carbon::parse($data->last()->date);
-
-        for ($h = 1; $h <= $jumlahHariKeDepan; $h++) {
+        for ($h = 1; $h <= $forecastHorizon; $h++) {
             $futureDate = $startDate->copy()->addDays($h);
-            $seasonIndex = ($n - 1 + $h) % $seasonLength;
-            $seasonFactor = $seasonal[$seasonIndex] ?? 1;
-
-            $futureForecast = ($lastLevel + $h * $lastTrend) * $seasonFactor;
+            $seasonIndex = ($h - 1) % $seasonLength;
+            $seasonFactor = $seasonalIndices[$seasonIndex] ?? 1;
+            $dampedTrend = pow($phi, $h) * $lastTrend;
+            $futureForecast = ($lastLevel + $dampedTrend) * $seasonFactor;
 
             DataHasil::create([
-                'source_id' => $sourceId,
+                'source_id'     => $sourceId,
                 'date_forecast' => $futureDate->format('Y-m-d'),
-                'forecast' => round($futureForecast, 8),
-                'level' => round($lastLevel, 8),
-                'trend' => round($lastTrend, 8),
-                'seasonal' => round($seasonFactor, 8),
+                'forecast'      => round($futureForecast, 8),
+                'level'         => round($lastLevel, 8),
+                'trend'         => round($dampedTrend, 8),
+                'seasonal'      => round($seasonFactor, 8),
             ]);
         }
     }
+
 
     public function hapus(Request $request){
         if ($request->method() !== 'DELETE') {

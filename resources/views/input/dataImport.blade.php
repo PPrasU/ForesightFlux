@@ -57,7 +57,7 @@
                     <div class="d-flex justify-content-center">
 
                         <div class="col-xl-6">
-                            <div class="card" style="margin-top: 10px; min-height: 450px;">
+                            <div class="card" style="margin-top: 10px; min-height: 300px;">
                                 <div class="card-body px-5 py-4">
                                     @if(session('error'))
                                         <div class="alert alert-danger" role="alert" style="text-align: center">
@@ -81,13 +81,13 @@
                                     <form action="{{ route('data.postImportData') }}" method="POST" enctype="multipart/form-data" id="importData">
                                         @csrf
                                         {{-- Jenis Kripto --}}
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label>Nama Kripto</label>
                                             <input type="text" class="form-control" placeholder="Masukkan jenis kriptonya" value="{{ old('name') }}" name="name"/>
-                                        </div>
+                                        </div> --}}
                     
                                         {{-- Jangka Waktu --}}
-                                        <div>
+                                        {{-- <div>
                                             <div class="form-group mb-4">
                                                 <label class="font-weight-bold">Jangka Waktu</label>
                                                 <div class="d-flex align-items-center">
@@ -96,7 +96,7 @@
                                                     <input type="text" id="date-endd" name="date-end" class="form-control" value="{{ old('date-end') }}" placeholder="Tanggal akhir" >
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         {{-- Import File CSV --}}
                                         <div class="form-group" style="margin-top: -10px">

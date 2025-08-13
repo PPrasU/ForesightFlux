@@ -174,6 +174,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/setting-params', [SettingParamController::class, 'index'])->name('settingParams');
 Route::post('/setting-params/update/{id}', [SettingParamController::class, 'update'])->name('updateSettingParams');
 Route::post('/optimize', [SettingParamController::class, 'optimize'])->name('optimize');
+Route::post('/slidingWindowForecast', [SettingParamController::class, 'slidingWindowForecast'])->name('slidingWindowForecast');
 
 Route::get('/clear-notifications', function() {
     session()->forget('notifications');

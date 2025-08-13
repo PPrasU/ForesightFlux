@@ -25,6 +25,9 @@ class SettingParamController extends Controller
 
         $jenisData = '-';
         $seasonLength = 0;
+        $windowSize = 0;
+        $forecastHorizon = 0;
+        $slidingStep = 0;
 
         $totalCounts = [
             60 => ['training' => 0, 'testing' => 0],
@@ -44,6 +47,9 @@ class SettingParamController extends Controller
             'jenisData',
             'seasonLength',
             'totalCounts',
+            'windowSize',
+            'forecastHorizon',
+            'slidingStep',
         ));
     }
 
@@ -365,6 +371,8 @@ class SettingParamController extends Controller
             'grid_results' => $results,
             'best_results' => $bestResults,
             'totalCounts' => $totalCounts,
+            'forecastHorizon' => 0,
+            'slidingStep' => 0,
         ]);
     }
 
@@ -458,5 +466,109 @@ class SettingParamController extends Controller
             'rrmse' => $rrmse,
         ];
     }
+
+public function slidingWindowForecast(Request $request){
+    ini_set('max_execution_time', 300);
+
+    $allData = DataPraProses::orderBy('date')->get();
+    if ($allData->isEmpty()) {
+        return redirect()->back()->with('error', 'Data tidak tersedia.');
+    }
+
+    $windowSizes = [90, 180, 365];
+    $forecastHorizon = 7;
+    $slidingStep = 7;
+
+    $param = SettingParam::first();
+    $alpha = (float) $param->alpha;
+    $beta = (float) $param->beta;
+    $gamma = (float) $param->gamma;
+
+    $sourceId = $allData->first()->source_id;
+    $jenisData = DataSource::find($sourceId)?->jenis_data ?? 'Harian';
+    $seasonLength = match ($jenisData) {
+        'Harian' => (int) $param->season_length_harian,
+        'Mingguan' => (int) $param->season_length_mingguan,
+    };
+
+    $allResults = [];
+
+    foreach ($windowSizes as $windowSize) {
+        $slidingResults = [];
+        $count = 0;
+
+        for ($start = 0; $start + $windowSize + $forecastHorizon <= $allData->count(); $start += $slidingStep) {
+            $trainSlice = $allData->slice($start, $windowSize)->values();
+            $testSlice = $allData->slice($start + $windowSize, $forecastHorizon)->values();
+
+            try {
+                $result = $this->runTES($trainSlice, $testSlice, $alpha, $beta, $gamma, $seasonLength);
+
+                $slidingResults[] = [
+                    'iterasi' => ++$count,
+                    'start_date' => $trainSlice->first()->date,
+                    'end_date' => $testSlice->last()->date,
+                    'mape' => round($result['mape'], 4),
+                    'rmse' => round($result['rmse'], 4),
+                    'rrmse' => round($result['rrmse'], 4),
+                ];
+            } catch (\Throwable $e) {
+                continue;
+            }
+        }
+
+        $mapeList = array_column($slidingResults, 'mape');
+        $rmseList = array_column($slidingResults, 'rmse');
+
+        $summary = [
+            'window_size' => $windowSize,
+            'mape_mean' => count($mapeList) > 0 ? round(array_sum($mapeList) / count($mapeList), 4) : 0,
+            'mape_max' => count($mapeList) > 0 ? round(max($mapeList), 4) : 0,
+            'mape_min' => count($mapeList) > 0 ? round(min($mapeList), 4) : 0,
+            'mape_std' => count($mapeList) > 0 ? round($this->stats_standard_deviation($mapeList), 4) : 0,
+            
+            'rmse_mean' => count($rmseList) > 0 ? round(array_sum($rmseList) / count($rmseList), 4) : 0,
+            'rmse_max' => count($rmseList) > 0 ? round(max($rmseList), 4) : 0,
+            'rmse_min' => count($rmseList) > 0 ? round(min($rmseList), 4) : 0,
+            'rmse_std' => count($rmseList) > 0 ? round($this->stats_standard_deviation($rmseList), 4) : 0,
+
+        ];
+
+        $allResults[] = [
+            'window_size' => $windowSize,
+            'results' => $slidingResults,
+            'summary' => $summary,
+        ];
+    }
+    $totalCounts = [
+        60 => ['training' => 0, 'testing' => 0],
+        70 => ['training' => 0, 'testing' => 0],
+        80 => ['training' => 0, 'testing' => 0],
+        90 => ['training' => 0, 'testing' => 0],
+    ];
+
+    return view('admin.settingParams', [
+        'allResults' => $allResults,
+        'forecastHorizon' => $forecastHorizon,
+        'slidingStep' => $slidingStep,
+        'jenisData' => $jenisData,
+        'seasonLength' => $seasonLength,
+        'dataParam' => SettingParam::all(),
+        'training' => HasilTraining::all(),
+        'testing' => HasilTesting::all(),
+        'akurasi' => HasilAkurasi::all(),
+        'dataPraproses' => DataPraProses::all(),
+        'setting' => $param,
+        'totalCounts' => $totalCounts,
+    ]);
+}
+
+function stats_standard_deviation(array $a): float{
+    $n = count($a);
+    if ($n === 0) return 0;
+    $mean = array_sum($a) / $n;
+    $variance = array_sum(array_map(fn($x) => pow($x - $mean, 2), $a)) / $n;
+    return sqrt($variance);
+}
 
 }

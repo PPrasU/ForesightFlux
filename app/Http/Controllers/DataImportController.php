@@ -129,11 +129,11 @@ class DataImporTController extends Controller
             ini_set('memory_limit', '512M');
 
             $request->validate([
-                'name' => 'required|string|max:50',
+                // 'name' => 'required|string|max:50',
                 'sumber' => 'required|in:Import',
                 'file' => 'required|file|mimes:csv,txt',
             ], [
-                'name.required' => '🚨Kolom Jenis Kripto wajib diisi.⚠️',
+                // 'name.required' => '🚨Kolom Jenis Kripto wajib diisi.⚠️',
                 'sumber.required' => '🔎 Sumber data wajib diisi.',
                 'file.required' => '❗Jenis data harus dipilih.',
             ]);
@@ -173,11 +173,19 @@ class DataImporTController extends Controller
             // Hapus header
             array_shift($rows);
 
+            // Ambil nama file tanpa ekstensi
+            $originalName = $file->getClientOriginalName(); // e.g., "Bitcoin Historical Data.csv"
+            $fileNameOnly = pathinfo($originalName, PATHINFO_FILENAME); // e.g., "Bitcoin Historical Data"
+            $cryptoName = explode(' ', $fileNameOnly)[0]; // Ambil kata pertama: "Bitcoin"
+
+            $periodeAwal = Carbon::createFromFormat('m/d/Y', $rows[0][0])->format('Y-m-d');
+            $periodeAkhir = Carbon::createFromFormat('m/d/Y', end($rows)[0])->format('Y-m-d');
+
             // Simpan ke tabel data_source
             $source = DataSource::create([
-                'name' => $request->name,
-                'periode_awal' => $request->input('date-start'),
-                'periode_akhir' => $request->input('date-end'),
+                'name' => $cryptoName, // atau bisa pakai $fileNameOnly jika ingin full
+                'periode_awal' => $periodeAwal,
+                'periode_akhir' => $periodeAkhir,
                 'sumber' => $request->sumber,
             ]);
 
