@@ -1,4 +1,4 @@
-# Cryptocurrency Price Forecasting Web System
+# Cryptocurrency Price Forecasting Web System (ForesightFluxCP)
 
 This project is a web-based application designed to forecast cryptocurrency prices using the **Triple Exponential Smoothing (TES)** method. The system processes historical cryptocurrency data and generates future price predictions, presented through an interactive web interface.
 
